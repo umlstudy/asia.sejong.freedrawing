@@ -10,8 +10,8 @@ public class FDRectangleFigure extends Label {
 
 	public static final Image RECTANGLE_IMAGE = new Image(Display.getCurrent(), FDRectangleFigure.class.getResourceAsStream("rectangle.png"));
 
-	public FDRectangleFigure(String note) {
-		super(note);
+	public FDRectangleFigure() {
+		super("AAAAAAA");
 		//setBorder(new NoteBorder());
 	}
 	

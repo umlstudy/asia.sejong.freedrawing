@@ -29,7 +29,7 @@ import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.dialogs.SaveAsDialog;
 import org.eclipse.ui.part.FileEditorInput;
 
-import asia.sejong.freedrawing.model.FreedrawingData;
+import asia.sejong.freedrawing.model.area.FreedrawingData;
 import asia.sejong.freedrawing.model.io.FreedrawingDataWriter;
 import asia.sejong.freedrawing.parts.FreedrawingEditPartFactory;
 

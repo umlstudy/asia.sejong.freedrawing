@@ -1,24 +1,41 @@
-package asia.sejong.freedrawing.parts;
+package asia.sejong.freedrawing.parts.area;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.FreeformLayer;
 import org.eclipse.draw2d.FreeformLayout;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.MarginBorder;
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
+import org.eclipse.gef.EditPolicy;
+import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
+import org.eclipse.gef.editpolicies.RootComponentEditPolicy;
+import org.eclipse.gef.editpolicies.XYLayoutEditPolicy;
+import org.eclipse.gef.requests.ChangeBoundsRequest;
+import org.eclipse.gef.requests.CreateRequest;
 
-import asia.sejong.freedrawing.model.FreedrawingData;
+import asia.sejong.freedrawing.commands.CreateRectangleCommand;
+import asia.sejong.freedrawing.model.area.AbstractFDElement;
+import asia.sejong.freedrawing.model.area.FDRectangle;
+import asia.sejong.freedrawing.model.area.FreedrawingData;
+import asia.sejong.freedrawing.model.listener.FDContainerListener;
 
 /**
  * The {@link EditPart} for the {@link GenealogyGraph} model object. This EditPart is
  * responsible for creating the layer in which all other figures are placed and for
  * returning the collection of top level model objects to be displayed in that layer.
  */
-public class FreedrawingDataEditPart extends AbstractGraphicalEditPart {
+public class FreedrawingDataEditPart extends AbstractGraphicalEditPart implements FDContainerListener {
+	
+	final List<FDContainerListener> listeners = new ArrayList<FDContainerListener>();
 	
 	public FreedrawingDataEditPart(FreedrawingData freedrawingData) {
 		setModel(freedrawingData);
+		freedrawingData.addFreedrawingDataListener(this);
 	}
 
 	public FreedrawingData getModel() {
@@ -45,59 +62,53 @@ public class FreedrawingDataEditPart extends AbstractGraphicalEditPart {
 
 	protected void createEditPolicies() {
 		
-//		// Disallows the removal of this edit part from its parent
-//		installEditPolicy(EditPolicy.COMPONENT_ROLE, new RootComponentEditPolicy());
-//		
-//		// Handles constraint changes (e.g. moving and/or resizing) of model elements
-//		// and creation of new model elements
-//		installEditPolicy("EditPolicy.LAYOUT_ROLE", new XYLayoutEditPolicy() {
-//			protected Command getCreateCommand(CreateRequest request) {
-//				Object type = request.getNewObjectType();
-//				Rectangle box = (Rectangle) getConstraintFor(request);
-//				GenealogyGraph graph = getModel();
-//				if (type == Person.class) {
-//					Person person = (Person) request.getNewObject();
-//					return new CreatePersonCommand(graph, person, box);
-//				}
-//				if (type == Marriage.class) {
-//					Marriage marriage = (Marriage) request.getNewObject();
-//					return new CreateMarriageCommand(graph, marriage, box);
-//				}
-//				if (type == Note.class) {
-//					Note note = (Note) request.getNewObject();
-//					return new CreateNoteCommand(graph, note, box);
-//				}
-//				return null;
-//			}
-//
-//			/**
-//			 * IGNORE: This method is a holdover from earlier GEF frameworks
-//			 * and will be removed in future versions of GEF.
-//			 */
-//			protected Command createChangeConstraintCommand(EditPart child, Object constraint) {
-//				return null;
-//			}
-//			
-//			/**
-//			 * Return a command for moving elements around the canvas
-//			 */
-//			protected Command createChangeConstraintCommand(
-//				ChangeBoundsRequest request, EditPart child, Object constraint
-//			) {
-//				GenealogyElement elem = (GenealogyElement) child.getModel();
-//				Rectangle box = (Rectangle) constraint;
-//				return new MoveAndResizeGenealogyElementCommand(elem, box);
-//			}
-//			
-//			/**
-//			 * Exclude MarriageEditParts from being resized
-//			 */
-//			protected EditPolicy createChildEditPolicy(EditPart child) {
+		// Disallows the removal of this edit part from its parent
+		installEditPolicy(EditPolicy.COMPONENT_ROLE, new RootComponentEditPolicy());
+		
+		// Handles constraint changes (e.g. moving and/or resizing) of model elements
+		// and creation of new model elements
+		installEditPolicy("EditPolicy.LAYOUT_ROLE", new XYLayoutEditPolicy() {
+			
+			protected Command getCreateCommand(CreateRequest request) {
+				Object type = request.getNewObjectType();
+				Rectangle box = (Rectangle) getConstraintFor(request);
+				FreedrawingData freedrawingData = getModel();
+				if (type == FDRectangle.class) {
+					System.out.println("getCreateCommand " + request) ;
+					FDRectangle rectangle = (FDRectangle) request.getNewObject();
+					rectangle.setRectangle(box);
+					return new CreateRectangleCommand(freedrawingData, rectangle);
+				}
+				return null;
+			}
+
+			/**
+			 * IGNORE: This method is a holdover from earlier GEF frameworks
+			 * and will be removed in future versions of GEF.
+			 */
+			protected Command createChangeConstraintCommand(EditPart child, Object constraint) {
+				return null;
+			}
+			
+			/**
+			 * Return a command for moving elements around the canvas
+			 */
+			protected Command createChangeConstraintCommand(ChangeBoundsRequest request, EditPart child, Object constraint) {
+				AbstractFDElement elem = (AbstractFDElement) child.getModel();
+				Rectangle box = (Rectangle) constraint;
+				//return new MoveAndResizeGenealogyElementCommand(elem, box);
+				return null;
+			}
+			
+			/**
+			 * Exclude MarriageEditParts from being resized
+			 */
+			protected EditPolicy createChildEditPolicy(EditPart child) {
 //				if (child instanceof MarriageEditPart)
 //					return new NonResizableMarriageEditPolicy();
-//				return super.createChildEditPolicy(child);
-//			}
-//			
+				return super.createChildEditPolicy(child);
+			}
+			
 //			/**
 //			 * Called when a Note is dragged from a Person on the canvas.
 //			 * Return a command for reparenting the note
@@ -112,7 +123,15 @@ public class FreedrawingDataEditPart extends AbstractGraphicalEditPart {
 //				cmd.setOldContainer(oldContainer);
 //				return cmd;
 //			}
-//		});
+		});
+	}
+	
+	// ===============================================================
+	// FDContainerListener
+
+	@Override
+	public void childAdded(AbstractFDElement child) {
+		addChild(createChild(child), 0);
 	}
 
 //	// ===============================================================

@@ -2,7 +2,7 @@ package asia.sejong.freedrawing.model.io;
 
 import java.io.PrintWriter;
 
-import asia.sejong.freedrawing.model.FreedrawingData;
+import asia.sejong.freedrawing.model.area.FreedrawingData;
 
 public class FreedrawingDataWriter {
 
