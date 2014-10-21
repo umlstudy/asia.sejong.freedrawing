@@ -1,11 +1,14 @@
 package asia.sejong.freedrawing.parts.area;
 
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.gef.EditPolicy;
 
 import asia.sejong.freedrawing.figures.FDRectangleFigure;
 import asia.sejong.freedrawing.model.area.FDRectangle;
+import asia.sejong.freedrawing.model.connection.FDBendpointConnection;
+import asia.sejong.freedrawing.policies.FDBendpointNodeEditPolicy;
 
-public class FDRectangeEditPart extends AbstractFDElementEditPart {
+public class FDRectangeEditPart extends AbstractFDNodeEditPart {
 	public FDRectangeEditPart(FDRectangle rectangle) {
 		setModel(rectangle);
 	}
@@ -25,7 +28,7 @@ public class FDRectangeEditPart extends AbstractFDElementEditPart {
 	/**
 	 * Answer the rectangle figure associated with the receiver
 	 */
-	private FDRectangleFigure getRectangleFigure() {
+	protected FDRectangleFigure getRectangleFigure() {
 		return (FDRectangleFigure) getFigure();
 	}
 	
@@ -33,7 +36,7 @@ public class FDRectangeEditPart extends AbstractFDElementEditPart {
 	@Override
 	protected void createEditPolicies() {
 		// TODO Auto-generated method stub
-		
+		installEditPolicy(EditPolicy.GRAPHICAL_NODE_ROLE, new FDBendpointNodeEditPolicy(getModel()));
 	}
 	
 	//

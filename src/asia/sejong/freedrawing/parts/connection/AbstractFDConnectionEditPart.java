@@ -3,10 +3,14 @@ package asia.sejong.freedrawing.parts.connection;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.gef.editparts.AbstractConnectionEditPart;
 
+import asia.sejong.freedrawing.commands.CreateConnectionCommand;
+import asia.sejong.freedrawing.model.area.AbstractFDElement;
 import asia.sejong.freedrawing.model.connection.AbstractFDConnection;
+import asia.sejong.freedrawing.model.connection.listener.FDConnectionListener;
+import asia.sejong.freedrawing.util.DebugUtil;
 
-public abstract class AbstractFDConnectionEditPart extends AbstractConnectionEditPart
-{
+public abstract class AbstractFDConnectionEditPart extends AbstractConnectionEditPart implements FDConnectionListener {
+
 	protected static final PointList ARROWHEAD = new PointList(new int[]{
 		0, 0, -2, 2, -2, 0, -2, -2, 0, 0
 	});
@@ -17,6 +21,19 @@ public abstract class AbstractFDConnectionEditPart extends AbstractConnectionEdi
 
 	public AbstractFDConnection getModel() {
 		return (AbstractFDConnection) super.getModel();
+	}
+	
+
+	@Override
+	public void sourceChanged(AbstractFDElement source) {
+		DebugUtil.printLogStart();
+		DebugUtil.printLogEnd();
+	}
+
+	@Override
+	public void targetChanged(AbstractFDElement target) {
+		DebugUtil.printLogStart();
+		DebugUtil.printLogEnd();
 	}
 //	
 //	/**
@@ -117,4 +134,6 @@ public abstract class AbstractFDConnectionEditPart extends AbstractConnectionEdi
 //			}
 //		});
 //	}
+
+	public abstract CreateConnectionCommand recreateCommand() ;
 }

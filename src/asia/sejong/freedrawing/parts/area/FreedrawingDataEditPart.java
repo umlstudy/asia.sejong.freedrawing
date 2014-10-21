@@ -22,7 +22,7 @@ import asia.sejong.freedrawing.commands.CreateRectangleCommand;
 import asia.sejong.freedrawing.model.area.AbstractFDElement;
 import asia.sejong.freedrawing.model.area.FDRectangle;
 import asia.sejong.freedrawing.model.area.FreedrawingData;
-import asia.sejong.freedrawing.model.listener.FDContainerListener;
+import asia.sejong.freedrawing.model.area.listener.FDContainerListener;
 
 /**
  * The {@link EditPart} for the {@link GenealogyGraph} model object. This EditPart is
