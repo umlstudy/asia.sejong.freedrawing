@@ -2,6 +2,7 @@ package asia.sejong.freedrawing.parts.common;
 
 import java.util.Map;
 
+import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
@@ -31,5 +32,24 @@ public abstract class AbstractNodeEditPart extends AbstractGraphicalEditPart {
 		}
 		
 		return null;
+	}
+	
+	// ==========================================================================
+	// FDNodeListener
+
+	/**
+	 * Update the figure based upon the new model location
+	 */
+	public void locationChanged(int x, int y) {
+		figure.setLocation(new Point(x, y));
+//		figure.getParent().getLayoutManager().setConstraint(figure, figure.getClientArea());
+	}
+
+	/**
+	 * Update the figure based upon the new model size
+	 */
+	public void sizeChanged(int width, int height) {
+		getFigure().setSize(width, height);
+		figure.getParent().getLayoutManager().setConstraint(figure, figure.getClientArea());
 	}
 }

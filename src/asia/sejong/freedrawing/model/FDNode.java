@@ -31,12 +31,10 @@ public class FDNode {
 			return false;
 		x = newX;
 		y = newY;
-//		fireLocationChanged(x, y);
+		fireLocationChanged(x, y);
 		return true;
 	}
 
-	//protected abstract void fireLocationChanged(int newX, int newY);
-	
 	public int getWidth() {
 		return width;
 	}
@@ -50,7 +48,7 @@ public class FDNode {
 			return false;
 		width = newWidth;
 		height = newHeight;
-//		fireSizeChanged(width, height);
+		fireSizeChanged(width, height);
 		return true;
 	}
 	
@@ -59,18 +57,17 @@ public class FDNode {
 		setSize(rect.width, rect.height);
 	}
 	
-//	protected abstract void fireSizeChanged(int newWidth, int newHeight);
-
 	public FDNode getSource() {
 		return source;
 	}
 	
 	public void setSource(FDNode source) {
+		FDNode oldSource = this.source;
 		this.source = source;
 
 		// notify event
 		for ( FDNodeListener l : listeners ) {
-			l.sourceChanged(source);
+			l.sourceChanged(oldSource, source);
 		}
 	}
 
@@ -79,11 +76,12 @@ public class FDNode {
 	}
 
 	public void setTarget(FDNode target) {
+		FDNode oldTarget = this.target;
 		this.target = target;
 		
 		// notify event
 		for ( FDNodeListener l : listeners ) {
-			l.targetChanged(target);
+			l.targetChanged(oldTarget, target);
 		}
 	}
 	
@@ -97,5 +95,18 @@ public class FDNode {
 		if ( listener != null ) {
 			listeners.remove(listener);
 		}
+	}
+	
+	//============================================================
+	// FDNode
+
+	protected void fireLocationChanged(int newX, int newY) {
+		for (FDNodeListener l : listeners)
+			l.locationChanged(newX, newY);
+	}
+
+	protected void fireSizeChanged(int newWidth, int newHeight) {
+		for (FDNodeListener l : listeners)
+			l.sizeChanged(newWidth, newHeight);
 	}
 }

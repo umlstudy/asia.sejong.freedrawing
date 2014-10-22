@@ -17,6 +17,7 @@ import org.eclipse.gef.KeyStroke;
 import org.eclipse.gef.dnd.TemplateTransferDragSourceListener;
 import org.eclipse.gef.editparts.ScalableFreeformRootEditPart;
 import org.eclipse.gef.palette.PaletteRoot;
+import org.eclipse.gef.ui.actions.DeleteAction;
 import org.eclipse.gef.ui.actions.DirectEditAction;
 import org.eclipse.gef.ui.palette.PaletteViewer;
 import org.eclipse.gef.ui.palette.PaletteViewerProvider;
@@ -37,6 +38,7 @@ public class FreedrawingEditor extends GraphicalEditorWithFlyoutPalette {
 
 	private final FDNodeRoot freedrawingData = new FDNodeRoot();
 	private DirectEditAction directEditAction;
+	private DeleteAction deleteAction;
 
 	public FreedrawingEditor() {
 		setEditDomain(new DefaultEditDomain(this));
@@ -53,18 +55,23 @@ public class FreedrawingEditor extends GraphicalEditorWithFlyoutPalette {
 		viewer.setRootEditPart(new ScalableFreeformRootEditPart());
 
 		// 액션 생성
+		// 액션 생성 - directEditAction
 		directEditAction = new DirectEditAction(getEditorSite().getPart());
-
-		// 선택액션
 		getSelectionActions().add(directEditAction.getId());
 		getActionRegistry().registerAction(directEditAction);
+
+		// 액션 생성 - deleteAction
+		deleteAction = new DeleteAction(getEditorSite().getPart());
+		getSelectionActions().add(deleteAction.getId());
+		getActionRegistry().registerAction(deleteAction);
 		
-		// 단축키 추가
+		// 단축키 추가 #1
 		GraphicalViewerKeyHandler graphicalViewerKeyHandler = new GraphicalViewerKeyHandler(viewer);
 		viewer.setKeyHandler(graphicalViewerKeyHandler);
 		
-		// F3
+		// 단축키 추가 #2
 		graphicalViewerKeyHandler.put(KeyStroke.getPressed(SWT.F3, 0), directEditAction);
+		graphicalViewerKeyHandler.put(KeyStroke.getPressed(SWT.DEL, (int)SWT.DEL, 0), deleteAction);
 	}
 
 	/**

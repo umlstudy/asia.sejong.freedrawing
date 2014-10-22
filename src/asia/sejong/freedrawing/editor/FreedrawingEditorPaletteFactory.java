@@ -84,6 +84,7 @@ public class FreedrawingEditorPaletteFactory {
 					factory,
 					CONNECTION_IMAGE_DESCRIPTOR,
 					CONNECTION_IMAGE_DESCRIPTOR);
+			connection.setToolClass(FDConnectionCreationTool.class);
 			componentsDrawer.add(connection);
 		}
 		

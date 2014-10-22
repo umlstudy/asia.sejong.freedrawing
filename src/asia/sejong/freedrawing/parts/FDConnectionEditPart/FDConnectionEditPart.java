@@ -1,10 +1,5 @@
 package asia.sejong.freedrawing.parts.FDConnectionEditPart;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.eclipse.draw2d.AbsoluteBendpoint;
-import org.eclipse.draw2d.Bendpoint;
 import org.eclipse.draw2d.BendpointConnectionRouter;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.ConnectionAnchor;
@@ -141,28 +136,6 @@ public class FDConnectionEditPart extends AbstractConnectionEditPart {
 	}
 	
 
-	public PolylineConnection getConnection() {
-		return (PolylineConnection)getFigure();
-	}
-	
-	public BendpointConnectionRouter getConnectionRouter() {
-		return (BendpointConnectionRouter)getConnection().getConnectionRouter();
-	}
-	
-	private void addBendpoint(BendpointRequest bendpointRequest) {
-		BendpointConnectionRouter connectionRouter = getConnectionRouter();
-		@SuppressWarnings("unchecked")
-		List<Bendpoint> bendpoints = (List<Bendpoint>)connectionRouter.getConstraint(getConnection());
-		if ( bendpoints == null ) {
-			bendpoints = new ArrayList<Bendpoint>();
-			connectionRouter.setConstraint(getConnection(), bendpoints);
-		}
-		
-		AbsoluteBendpoint bp = new AbsoluteBendpoint(bendpointRequest.getLocation());
-		bendpoints.add(bendpointRequest.getIndex(), bp);
-//		connectionRouter.invalidate(getConnection());
-	}
-
 	@Override
 	protected void createEditPolicies() {
 		ConnectionEndpointEditPolicy selectionPolicy = new ConnectionEndpointEditPolicy();
@@ -173,41 +146,15 @@ public class FDConnectionEditPart extends AbstractConnectionEditPart {
 		installEditPolicy(EditPolicy.COMPONENT_ROLE, new ConnectionEditPolicy() {
 			@Override
 			protected Command getDeleteCommand(GroupRequest request) {
-				//return new DeleteGenealogyConnectionCommand(getModel());
-				return null;
+				return new DeleteFDConnectionCommand(getModel());
 			}
 		});
 		
-		installEditPolicy(EditPolicy.CONNECTION_BENDPOINTS_ROLE, new BendpointEditPolicy() {
-			@Override
-			protected Command getMoveBendpointCommand(BendpointRequest request) {
-				// TODO Auto-generated method stub
-				return null;
-			}
-			
-			@Override
-			protected Command getDeleteBendpointCommand(BendpointRequest request) {
-				// TODO Auto-generated method stub
-				return null;
-			}
-			
-			final RequestOwnedCommand<BendpointRequest> addBendpointCommand = new RequestOwnedCommand<BendpointRequest>() {
-				public boolean canExecute() {
-					return true;
-				}
-				
-				public void execute() {
-					addBendpoint(getRequest());
-				}
-			};
-			
-			@Override
-			protected Command getCreateBendpointCommand(BendpointRequest request) {
-				System.out.println("AAAAAAAAAAAAAAA" + request.getLocation());
-				addBendpointCommand.setRequest(request);
-				return addBendpointCommand;
-			}
-		});
+		installEditPolicy(EditPolicy.CONNECTION_BENDPOINTS_ROLE, new BendpointFDConnectionEditPolicy());
+	}
+	
+	protected PolylineConnection getConnection() {
+		return (PolylineConnection)getFigure();
 	}
 
 	public CreateFDConnectionCommand recreateCommand() {

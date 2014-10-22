@@ -159,36 +159,65 @@ public class FDNodeEditPart extends AbstractNodeEditPart implements NodeEditPart
 	protected void createEditPolicies() {
 		// TODO Auto-generated method stub
 		installEditPolicy(EditPolicy.GRAPHICAL_NODE_ROLE, new FDNodeEditPolicy());
+		
+		installEditPolicy(EditPolicy.LAYOUT_ROLE, new OrderedLayoutFDNodeEditPolicy());
 	}
 
 	@Override
-	public void sourceChanged(FDNode source) {
-		FDConnection conn = getNodeRoot().createOrFindConnection(source, getModel());
-		if ( conn != null ) {
+	public void sourceChanged(FDNode oldSource, FDNode newSource) {
+		if ( newSource == null ) {
+			// remove connection
+			FDConnection conn = getNodeRoot().findConnection(oldSource, getModel());
 			ConnectionEditPart part = findConnection(conn);
-			
-			if (part == null) {
-				part = createOrFindConnection(conn);
+			if ( conn != null ) {
+				removeTargetConnection(part);
 			}
-			
-			if ( !part.getTargetConnections().contains(part) ) {
-				addTargetConnection(part, 0);
+			return;
+		} else if ( oldSource !=null && oldSource != newSource ) {
+			// ReTarget
+		} else {
+			// New Target
+			FDConnection conn = getNodeRoot().createOrFindConnection(newSource, getModel());
+			if ( conn != null ) {
+				ConnectionEditPart part = findConnection(conn);
+				
+				if (part == null) {
+					part = createOrFindConnection(conn);
+				}
+				
+				if ( !part.getTargetConnections().contains(part) ) {
+					addTargetConnection(part, 0);
+				}
 			}
 		}
 	}
 
 	@Override
-	public void targetChanged(FDNode target) {
-		FDConnection conn = getNodeRoot().createOrFindConnection(getModel(), target);
-		if ( conn != null ) {
+	public void targetChanged(FDNode oldTarget, FDNode newTarget) {
+		if ( newTarget == null ) {
+			// remove connection
+			FDConnection conn = getNodeRoot().findConnection(getModel(), oldTarget);
+			getNodeRoot().removeConnection(conn);
 			ConnectionEditPart part = findConnection(conn);
-			
-			if (part == null) {
-				part = createOrFindConnection(conn);
+			if ( conn != null ) {
+				removeSourceConnection(part);
 			}
+			return;
+		} else if ( oldTarget !=null && oldTarget != newTarget ) {
+			// ReTarget
+		} else {
+			// New Target
+			FDConnection conn = getNodeRoot().createOrFindConnection(getModel(), newTarget);
+			if ( conn != null ) {
+				ConnectionEditPart part = findConnection(conn);
 				
-			if ( !part.getSourceConnections().contains(part) ) {
-				addSourceConnection(part, 0);
+				if (part == null) {
+					part = createOrFindConnection(conn);
+				}
+					
+				if ( !part.getSourceConnections().contains(part) ) {
+					addSourceConnection(part, 0);
+				}
 			}
 		}
 	}

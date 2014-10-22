@@ -47,6 +47,29 @@ public class FDNodeRoot {
 		return fdConnection;
 	}
 	
+	public FDConnection findConnection(FDNode source, FDNode target) {
+		if ( source == null || source == target ) {
+			return null;
+		}
+		FDConnection fdConnection = new FDConnection();
+		fdConnection.setSource(source);
+		fdConnection.setTarget(target);
+		
+		for ( FDConnection item : childConnections ) {
+			if ( item.equals(fdConnection) ) {
+				return item;
+			}
+		}
+		
+		return null;
+	}
+	
+	public void removeConnection(FDConnection conn) {
+		if ( conn != null ) {
+			childConnections.remove(conn);
+		}
+	}
+	
 	//============================================================
 	// Listeners
 	
