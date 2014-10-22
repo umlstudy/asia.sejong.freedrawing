@@ -21,20 +21,27 @@ import org.eclipse.gef.requests.GroupRequest;
 
 import asia.sejong.freedrawing.commands.CreateConnectionCommand;
 import asia.sejong.freedrawing.commands.RequestOwnedCommand;
+import asia.sejong.freedrawing.figures.FDConnectionFigure;
 import asia.sejong.freedrawing.model.connection.FDBendpointConnection;
 
 public class FDBendpointConnectionEditPart extends AbstractFDConnectionEditPart {
 
 	public FDBendpointConnectionEditPart(FDBendpointConnection connection) {
 		super(connection);
+		connection.addFDConnectionListener(this);
 	}
 	
 	protected IFigure createFigure() {
-		return createConnection();
+		return createConnection(true);
 	}
 
-	public static PolylineConnection createConnection() {
-		PolylineConnection connection = new PolylineConnection();
+	public static PolylineConnection createConnection(boolean custom) {
+		PolylineConnection connection = null;
+		if ( custom ) {
+			connection = new FDConnectionFigure();
+		} else {
+			connection = new PolylineConnection();
+		}
 		connection.setConnectionRouter(new BendpointConnectionRouter());
 		connection.setLineWidth(3);
 		connection.setAntialias(1);

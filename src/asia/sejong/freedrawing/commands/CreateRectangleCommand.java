@@ -16,6 +16,6 @@ public class CreateRectangleCommand extends Command {
 	}
 	
 	public void execute() {
-		freedrawingData.add(rectangle);
+		freedrawingData.addElement(rectangle);
 	}
 }

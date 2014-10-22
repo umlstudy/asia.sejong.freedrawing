@@ -1,24 +1,30 @@
 package asia.sejong.freedrawing.commands;
 
+import java.sql.Connection;
+
 import asia.sejong.freedrawing.model.area.AbstractFDElement;
 import asia.sejong.freedrawing.model.connection.FDBendpointConnection;
+import asia.sejong.freedrawing.util.DebugUtil;
 
 public class CreateBendpointConnectionCommand extends CreateConnectionCommand {
 	
-	private FDBendpointConnection connection;
 	private AbstractFDElement source;
 	private AbstractFDElement target;
 	
-	public CreateBendpointConnectionCommand(FDBendpointConnection connection) {
-		this.connection = connection;
+	public CreateBendpointConnectionCommand() {
+		super();
 		System.out.println("CreateBendpointConnectionCommand created!!");
 	}
 	
 	public void execute() {
 		System.out.println(this.getClass().getSimpleName() + " execute started!!");
 		
+		FDBendpointConnection connection = new FDBendpointConnection();
+		
 		connection.setSource(source);
 		connection.setTarget(target);
+		
+		getRootModel().addConnection(connection);
 
 		System.out.println(this.getClass().getSimpleName() + " execute ended!!");
 	}
@@ -38,7 +44,9 @@ public class CreateBendpointConnectionCommand extends CreateConnectionCommand {
 
 	@Override
 	public boolean isValidTarget(Object target) {
-		if ( target instanceof AbstractFDElement && source != target ) {
+		DebugUtil.printLogStart();
+		System.out.println("Source ? " +source + ", Target ? " + target);
+		if ( source != null && target instanceof AbstractFDElement && source != target ) {
 			return true;
 		}
 		return false;

@@ -4,5 +4,5 @@ import asia.sejong.freedrawing.model.area.AbstractFDElement;
 
 public interface FDContainerListener {
 	
-	void childAdded(AbstractFDElement child);
+	void childElementAdded(AbstractFDElement child);
 }

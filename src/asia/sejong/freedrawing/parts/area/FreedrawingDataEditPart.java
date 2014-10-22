@@ -23,13 +23,15 @@ import asia.sejong.freedrawing.model.area.AbstractFDElement;
 import asia.sejong.freedrawing.model.area.FDRectangle;
 import asia.sejong.freedrawing.model.area.FreedrawingData;
 import asia.sejong.freedrawing.model.area.listener.FDContainerListener;
+import asia.sejong.freedrawing.model.area.listener.FreedrawingDataListener;
+import asia.sejong.freedrawing.model.connection.AbstractFDConnection;
 
 /**
  * The {@link EditPart} for the {@link GenealogyGraph} model object. This EditPart is
  * responsible for creating the layer in which all other figures are placed and for
  * returning the collection of top level model objects to be displayed in that layer.
  */
-public class FreedrawingDataEditPart extends AbstractGraphicalEditPart implements FDContainerListener {
+public class FreedrawingDataEditPart extends AbstractGraphicalEditPart implements FreedrawingDataListener {
 	
 	final List<FDContainerListener> listeners = new ArrayList<FDContainerListener>();
 	
@@ -130,7 +132,12 @@ public class FreedrawingDataEditPart extends AbstractGraphicalEditPart implement
 	// FDContainerListener
 
 	@Override
-	public void childAdded(AbstractFDElement child) {
+	public void childElementAdded(AbstractFDElement child) {
+		addChild(createChild(child), 0);
+	}
+
+	@Override
+	public void childConnectionAdded(AbstractFDConnection child) {
 		addChild(createChild(child), 0);
 	}
 

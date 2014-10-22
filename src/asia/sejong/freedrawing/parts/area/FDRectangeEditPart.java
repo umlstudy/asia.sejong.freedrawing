@@ -4,9 +4,11 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.gef.EditPolicy;
 
 import asia.sejong.freedrawing.figures.FDRectangleFigure;
+import asia.sejong.freedrawing.model.area.AbstractFDElement;
 import asia.sejong.freedrawing.model.area.FDRectangle;
-import asia.sejong.freedrawing.model.connection.FDBendpointConnection;
-import asia.sejong.freedrawing.policies.FDBendpointNodeEditPolicy;
+import asia.sejong.freedrawing.model.connection.AbstractFDConnection;
+import asia.sejong.freedrawing.parts.area.policies.FDElementEditPolicy;
+import asia.sejong.freedrawing.parts.connection.FDBendpointConnectionEditPart;
 
 public class FDRectangeEditPart extends AbstractFDNodeEditPart {
 	public FDRectangeEditPart(FDRectangle rectangle) {
@@ -36,9 +38,8 @@ public class FDRectangeEditPart extends AbstractFDNodeEditPart {
 	@Override
 	protected void createEditPolicies() {
 		// TODO Auto-generated method stub
-		installEditPolicy(EditPolicy.GRAPHICAL_NODE_ROLE, new FDBendpointNodeEditPolicy(getModel()));
+		installEditPolicy(EditPolicy.GRAPHICAL_NODE_ROLE, new FDElementEditPolicy());
 	}
-	
 	//
 	// /**
 	// * Override the superclass implementation to return a special figure
@@ -353,4 +354,22 @@ public class FDRectangeEditPart extends AbstractFDNodeEditPart {
 	// if (part instanceof EditPart)
 	// removeChild((EditPart) part);
 	// }
+
+	@Override
+	public void connectionSourceSetted(AbstractFDConnection connection) {
+		FDBendpointConnectionEditPart part = (FDBendpointConnectionEditPart)getViewer().getEditPartRegistry().get(connection);
+		addSourceConnection(part, 0);
+	}
+
+	@Override
+	public void connectionTargetSetted(AbstractFDConnection connection) {
+		FDBendpointConnectionEditPart part = (FDBendpointConnectionEditPart)getViewer().getEditPartRegistry().get(connection);
+		addTargetConnection(part, 0);
+	}
+
+	@Override
+	public void childElementAdded(AbstractFDElement child) {
+		// TODO Auto-generated method stub
+		
+	}
 }

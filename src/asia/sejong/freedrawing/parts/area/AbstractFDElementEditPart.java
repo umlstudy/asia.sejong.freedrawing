@@ -5,8 +5,9 @@ import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 
 import asia.sejong.freedrawing.model.area.AbstractFDElement;
+import asia.sejong.freedrawing.model.area.listener.FDElementListener;
 
-public abstract class AbstractFDElementEditPart  extends AbstractGraphicalEditPart {
+public abstract class AbstractFDElementEditPart  extends AbstractGraphicalEditPart implements FDElementListener {
 	/**
 	 * Update the figure based upon the current model state
 	 */

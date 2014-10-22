@@ -1,12 +1,16 @@
 package asia.sejong.freedrawing.parts.connection;
 
+import java.util.Map;
+
 import org.eclipse.draw2d.geometry.PointList;
+import org.eclipse.gef.EditPart;
 import org.eclipse.gef.editparts.AbstractConnectionEditPart;
 
 import asia.sejong.freedrawing.commands.CreateConnectionCommand;
 import asia.sejong.freedrawing.model.area.AbstractFDElement;
 import asia.sejong.freedrawing.model.connection.AbstractFDConnection;
 import asia.sejong.freedrawing.model.connection.listener.FDConnectionListener;
+import asia.sejong.freedrawing.parts.area.AbstractFDNodeEditPart;
 import asia.sejong.freedrawing.util.DebugUtil;
 
 public abstract class AbstractFDConnectionEditPart extends AbstractConnectionEditPart implements FDConnectionListener {
@@ -25,14 +29,30 @@ public abstract class AbstractFDConnectionEditPart extends AbstractConnectionEdi
 	
 
 	@Override
-	public void sourceChanged(AbstractFDElement source) {
+	public void sourceChanged(AbstractFDElement sourceModel) {
 		DebugUtil.printLogStart();
+		EditPart originalSourceEditPart = getSource();
+		Map<?, ?> registry = getViewer().getEditPartRegistry();
+		if ( registry.get(sourceModel) != originalSourceEditPart ) {
+			if ( registry.get(sourceModel) instanceof AbstractFDNodeEditPart ) {
+				AbstractFDNodeEditPart newEditPart = (AbstractFDNodeEditPart)registry.get(sourceModel);
+				setSource(newEditPart);
+			}
+		}
 		DebugUtil.printLogEnd();
 	}
 
 	@Override
-	public void targetChanged(AbstractFDElement target) {
+	public void targetChanged(AbstractFDElement targetModel) {
 		DebugUtil.printLogStart();
+		EditPart originalTargetEditPart = getTarget();
+		Map<?, ?> registry = getViewer().getEditPartRegistry();
+		if ( registry.get(targetModel) != originalTargetEditPart ) {
+			if ( registry.get(targetModel) instanceof AbstractFDNodeEditPart ) {
+				AbstractFDNodeEditPart newEditPart = (AbstractFDNodeEditPart)registry.get(targetModel);
+				setTarget(newEditPart);
+			}
+		}
 		DebugUtil.printLogEnd();
 	}
 //	
@@ -136,4 +156,22 @@ public abstract class AbstractFDConnectionEditPart extends AbstractConnectionEdi
 //	}
 
 	public abstract CreateConnectionCommand recreateCommand() ;
+	
+	/**
+	 * Override the superclass implementation so that the receiver
+	 * can add itself as a listener to the underlying model object
+	 */
+	public void addNotify() {
+		super.addNotify();
+		getModel().addFDConnectionListener(this);
+	}
+	
+	/**
+	 * Override the superclass implementation so that the receiver
+	 * can stop listening to events from the underlying model object
+	 */
+	public void removeNotify() {
+		getModel().removeFDConnectionListener(this);
+		super.removeNotify();
+	}
 }

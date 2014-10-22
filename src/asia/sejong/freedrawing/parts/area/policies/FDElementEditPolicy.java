@@ -1,31 +1,36 @@
-package asia.sejong.freedrawing.policies;
+package asia.sejong.freedrawing.parts.area.policies;
 
+import org.eclipse.draw2d.Connection;
 import org.eclipse.gef.EditPart;
+import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.GraphicalNodeEditPolicy;
 import org.eclipse.gef.requests.CreateConnectionRequest;
 import org.eclipse.gef.requests.ReconnectRequest;
 
+import asia.sejong.freedrawing.commands.CreateBendpointConnectionCommand;
 import asia.sejong.freedrawing.commands.CreateConnectionCommand;
 import asia.sejong.freedrawing.commands.DeleteConnectionCommand;
 import asia.sejong.freedrawing.model.area.AbstractFDElement;
+import asia.sejong.freedrawing.parts.EditPartUtil;
 import asia.sejong.freedrawing.parts.connection.AbstractFDConnectionEditPart;
+import asia.sejong.freedrawing.parts.connection.FDBendpointConnectionEditPart;
+import asia.sejong.freedrawing.parts.connection.policies.FDBendpointConnectionEditPolicy;
 
 /**
- * A superclass for {@link FDBendpointNodeEditPolicy} and
+ * A superclass for {@link FDBendpointConnectionEditPolicy} and
  * {@link MarriageGraphicalNodeEditPolicy} to share behavior.
  */
-public abstract class FDElementGraphicalNodeEditPolicy extends GraphicalNodeEditPolicy
-{
-	/**
-	 * Answer the model element associated with the receiver
-	 */
-	protected abstract Object getModel();
-
+public class FDElementEditPolicy extends GraphicalNodeEditPolicy {
 	/**
 	 * Answer a new connection command for the receiver.
 	 */
-	public abstract CreateConnectionCommand createConnectionCommand();
+	public CreateConnectionCommand createConnectionCommand() {
+		if ( getHost().getModel() instanceof AbstractFDElement ) {
+			return new CreateBendpointConnectionCommand();
+		}
+		return null;
+	}
 
 	/**
 	 * Return a new connection command with the receiver's model as the "source".
@@ -35,7 +40,12 @@ public abstract class FDElementGraphicalNodeEditPolicy extends GraphicalNodeEdit
 		return request.getStartCommand();
 	}
 	
-	protected abstract AbstractFDElement getTarget();
+	protected Connection createDummyConnection(Request req) {
+		return FDBendpointConnectionEditPart.createConnection(false);
+	}
+	
+//	protected abstract AbstractFDElement getSource();
+//	protected abstract AbstractFDElement getTarget();
 
 	/**
 	 * If the connection is valid with the receiver's model as its target then set the
@@ -48,9 +58,23 @@ public abstract class FDElementGraphicalNodeEditPolicy extends GraphicalNodeEdit
 		if (!(startCmd instanceof CreateConnectionCommand))
 			return null;
 		CreateConnectionCommand connCmd = (CreateConnectionCommand) startCmd;
-		if (!connCmd.isValidTarget(getTarget()))
+		
+		Object source = request.getSourceEditPart().getModel();
+		if (!connCmd.isValidSource(source)) {
 			return null;
-		connCmd.setTarget(getTarget());
+		} else {
+			connCmd.setSource(source);
+		}
+		
+		Object target = request.getTargetEditPart().getModel();
+		if (!connCmd.isValidTarget(target)) {
+			return null;
+		} else {
+			connCmd.setSource(target);
+		}
+		
+		connCmd.setRootModel(EditPartUtil.getFreedrawingData(getHost()));
+		
 		return connCmd;
 	}
 
@@ -66,9 +90,9 @@ public abstract class FDElementGraphicalNodeEditPolicy extends GraphicalNodeEdit
 			return null;
 		AbstractFDConnectionEditPart connPart = (AbstractFDConnectionEditPart) part;
 		CreateConnectionCommand connCmd = connPart.recreateCommand();
-		if (!connCmd.isValidSource(getModel()))
+		if (!connCmd.isValidSource(request.getConnectionEditPart().getModel()))
 			return null;
-		connCmd.setSource(getModel());
+		connCmd.setSource(request.getConnectionEditPart().getModel());
 		Command deleteCmd = new DeleteConnectionCommand(connPart.getModel());
 		Command modifyCmd = deleteCmd.chain(connCmd);
 		modifyCmd.setLabel("Modify " + connCmd.getConnectionName());
@@ -87,9 +111,9 @@ public abstract class FDElementGraphicalNodeEditPolicy extends GraphicalNodeEdit
 			return null;
 		AbstractFDConnectionEditPart connPart = (AbstractFDConnectionEditPart) part;
 		CreateConnectionCommand connCmd = connPart.recreateCommand();
-		if (!connCmd.isValidTarget(getModel()))
+		if (!connCmd.isValidTarget(request.getConnectionEditPart().getModel()))
 			return null;
-		connCmd.setTarget(getModel());
+		connCmd.setTarget(request.getConnectionEditPart().getModel());
 		Command deleteCmd = new DeleteConnectionCommand(connPart.getModel());
 		Command modifyCmd = deleteCmd.chain(connCmd);
 		modifyCmd.setLabel("Modify " + connCmd.getConnectionName());

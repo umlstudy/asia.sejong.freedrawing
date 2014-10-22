@@ -20,19 +20,14 @@ public class DebugUtil {
 
 	public static String methodLog(StackTraceElement ste, String msg) {
 		  String methodName = ste.getMethodName();
-		  String className = ste.getClassName();
+		  String className = ste.getFileName();
 		  int lineNumber = ste.getLineNumber();
 		  
 		  return String.format("%s.%s[%d] %s", className, methodName, lineNumber, msg);
 	}
 	
-	public static String getMethodName(final int depth) {
-	  final StackTraceElement[] ste = Thread.currentThread().getStackTrace();
-	  return ste[ste.length - 1 - depth].getMethodName();
-	}
-	
 	public static StackTraceElement getSte() {
 		final StackTraceElement[] ste = Thread.currentThread().getStackTrace();
-		return ste[ste.length -2];
+		return ste[3];
 	}
 }
