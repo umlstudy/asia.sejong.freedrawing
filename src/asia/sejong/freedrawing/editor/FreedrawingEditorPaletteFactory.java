@@ -14,9 +14,8 @@ import org.eclipse.jface.resource.ImageDescriptor;
 
 import asia.sejong.freedrawing.figures.FDConnectionFigure;
 import asia.sejong.freedrawing.figures.FDRectangleFigure;
-import asia.sejong.freedrawing.model.area.FDRectangle;
-import asia.sejong.freedrawing.model.connection.AbstractFDConnection;
-import asia.sejong.freedrawing.model.connection.FDBendpointConnection;
+import asia.sejong.freedrawing.model.FDConnection;
+import asia.sejong.freedrawing.model.FDNode;
 
 public class FreedrawingEditorPaletteFactory {
 
@@ -56,10 +55,10 @@ public class FreedrawingEditorPaletteFactory {
 		
 		// 사각형 생성을 위한 팩토리 및 툴 생성
 		{
-			SimpleFactory factory = new SimpleFactory(FDRectangle.class) {
+			SimpleFactory factory = new SimpleFactory(FDNode.class) {
 				public Object getNewObject() {
-					FDRectangle rectangle = new FDRectangle();
-					return rectangle;
+					FDNode node = new FDNode();
+					return node;
 				}
 			};
 			CombinedTemplateCreationEntry component = new CombinedTemplateCreationEntry(
@@ -73,9 +72,9 @@ public class FreedrawingEditorPaletteFactory {
 
 		// 커넥션 생성을 위한 팩토리 및 툴 생성
 		{
-			SimpleFactory factory = new SimpleFactory(AbstractFDConnection.class) {
+			SimpleFactory factory = new SimpleFactory(FDConnection.class) {
 				public Object getNewObject() {
-					FDBendpointConnection connection = new FDBendpointConnection();
+					FDConnection connection = new FDConnection();
 					return connection;
 				}
 			};

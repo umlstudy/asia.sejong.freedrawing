@@ -1,4 +1,4 @@
-package asia.sejong.freedrawing.parts.connection;
+package asia.sejong.freedrawing.parts.FDConnectionEditPart;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,25 +11,61 @@ import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.PolygonDecoration;
 import org.eclipse.draw2d.PolylineConnection;
+import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.commands.Command;
+import org.eclipse.gef.editparts.AbstractConnectionEditPart;
 import org.eclipse.gef.editpolicies.BendpointEditPolicy;
 import org.eclipse.gef.editpolicies.ConnectionEditPolicy;
 import org.eclipse.gef.editpolicies.ConnectionEndpointEditPolicy;
 import org.eclipse.gef.requests.BendpointRequest;
 import org.eclipse.gef.requests.GroupRequest;
 
-import asia.sejong.freedrawing.commands.CreateConnectionCommand;
-import asia.sejong.freedrawing.commands.RequestOwnedCommand;
 import asia.sejong.freedrawing.figures.FDConnectionFigure;
-import asia.sejong.freedrawing.model.connection.FDBendpointConnection;
+import asia.sejong.freedrawing.model.FDConnection;
+import asia.sejong.freedrawing.parts.FDNodeEditPart.CreateFDConnectionCommand;
 
-public class FDBendpointConnectionEditPart extends AbstractFDConnectionEditPart {
+public class FDConnectionEditPart extends AbstractConnectionEditPart {
 
-	public FDBendpointConnectionEditPart(FDBendpointConnection connection) {
-		super(connection);
-		connection.addFDConnectionListener(this);
+	protected static final PointList ARROWHEAD = new PointList(new int[]{
+			0, 0, -2, 2, -2, 0, -2, -2, 0, 0
+		});
+
+	public FDConnectionEditPart(FDConnection connection) {
+		setModel(connection);
 	}
+
+	public FDConnection getModel() {
+		return (FDConnection) super.getModel();
+	}
+	
+//	@Override
+//	public void sourceChanged(FDElement sourceModel) {
+//		DebugUtil.printLogStart();
+//		EditPart originalSourceEditPart = getSource();
+//		Map<?, ?> registry = getViewer().getEditPartRegistry();
+//		if ( registry.get(sourceModel) != originalSourceEditPart ) {
+//			if ( registry.get(sourceModel) instanceof AbstractFDNodeEditPart ) {
+//				AbstractFDNodeEditPart newEditPart = (AbstractFDNodeEditPart)registry.get(sourceModel);
+//				setSource(newEditPart);
+//			}
+//		}
+//		DebugUtil.printLogEnd();
+//	}
+//
+//	@Override
+//	public void targetChanged(FDElement targetModel) {
+//		DebugUtil.printLogStart();
+//		EditPart originalTargetEditPart = getTarget();
+//		Map<?, ?> registry = getViewer().getEditPartRegistry();
+//		if ( registry.get(targetModel) != originalTargetEditPart ) {
+//			if ( registry.get(targetModel) instanceof AbstractFDNodeEditPart ) {
+//				AbstractFDNodeEditPart newEditPart = (AbstractFDNodeEditPart)registry.get(targetModel);
+//				setTarget(newEditPart);
+//			}
+//		}
+//		DebugUtil.printLogEnd();
+//	}
 	
 	protected IFigure createFigure() {
 		return createConnection(true);
@@ -174,8 +210,7 @@ public class FDBendpointConnectionEditPart extends AbstractFDConnectionEditPart 
 		});
 	}
 
-	@Override
-	public CreateConnectionCommand recreateCommand() {
+	public CreateFDConnectionCommand recreateCommand() {
 		// TODO Auto-generated method stub
 		return null;
 	}

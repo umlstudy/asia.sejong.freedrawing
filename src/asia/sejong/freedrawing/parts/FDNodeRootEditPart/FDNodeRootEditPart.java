@@ -1,7 +1,4 @@
-package asia.sejong.freedrawing.parts.area;
-
-import java.util.ArrayList;
-import java.util.List;
+package asia.sejong.freedrawing.parts.FDNodeRootEditPart;
 
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.FreeformLayer;
@@ -18,30 +15,23 @@ import org.eclipse.gef.editpolicies.XYLayoutEditPolicy;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.requests.CreateRequest;
 
-import asia.sejong.freedrawing.commands.CreateRectangleCommand;
-import asia.sejong.freedrawing.model.area.AbstractFDElement;
-import asia.sejong.freedrawing.model.area.FDRectangle;
-import asia.sejong.freedrawing.model.area.FreedrawingData;
-import asia.sejong.freedrawing.model.area.listener.FDContainerListener;
-import asia.sejong.freedrawing.model.area.listener.FreedrawingDataListener;
-import asia.sejong.freedrawing.model.connection.AbstractFDConnection;
+import asia.sejong.freedrawing.model.FDNode;
+import asia.sejong.freedrawing.model.FDNodeRoot;
+import asia.sejong.freedrawing.model.listener.FDNodeRootListener;
 
 /**
  * The {@link EditPart} for the {@link GenealogyGraph} model object. This EditPart is
  * responsible for creating the layer in which all other figures are placed and for
  * returning the collection of top level model objects to be displayed in that layer.
  */
-public class FreedrawingDataEditPart extends AbstractGraphicalEditPart implements FreedrawingDataListener {
+public class FDNodeRootEditPart extends AbstractGraphicalEditPart implements FDNodeRootListener {
 	
-	final List<FDContainerListener> listeners = new ArrayList<FDContainerListener>();
-	
-	public FreedrawingDataEditPart(FreedrawingData freedrawingData) {
+	public FDNodeRootEditPart(FDNodeRoot freedrawingData) {
 		setModel(freedrawingData);
-		freedrawingData.addFreedrawingDataListener(this);
 	}
 
-	public FreedrawingData getModel() {
-		return (FreedrawingData) super.getModel();
+	public FDNodeRoot getModel() {
+		return (FDNodeRoot) super.getModel();
 	}
 
 	protected IFigure createFigure() {
@@ -74,12 +64,11 @@ public class FreedrawingDataEditPart extends AbstractGraphicalEditPart implement
 			protected Command getCreateCommand(CreateRequest request) {
 				Object type = request.getNewObjectType();
 				Rectangle box = (Rectangle) getConstraintFor(request);
-				FreedrawingData freedrawingData = getModel();
-				if (type == FDRectangle.class) {
-					System.out.println("getCreateCommand " + request) ;
-					FDRectangle rectangle = (FDRectangle) request.getNewObject();
-					rectangle.setRectangle(box);
-					return new CreateRectangleCommand(freedrawingData, rectangle);
+				FDNodeRoot nodeRoot = getModel();
+				if (type == FDNode.class) {
+					FDNode element = (FDNode) request.getNewObject();
+					element.setRectangle(box);
+					return new CreateFDNodeCommand(nodeRoot, element);
 				}
 				return null;
 			}
@@ -96,8 +85,8 @@ public class FreedrawingDataEditPart extends AbstractGraphicalEditPart implement
 			 * Return a command for moving elements around the canvas
 			 */
 			protected Command createChangeConstraintCommand(ChangeBoundsRequest request, EditPart child, Object constraint) {
-				AbstractFDElement elem = (AbstractFDElement) child.getModel();
-				Rectangle box = (Rectangle) constraint;
+				FDNode node = (FDNode) child.getModel();
+				Rectangle rect = (Rectangle) constraint;
 				//return new MoveAndResizeGenealogyElementCommand(elem, box);
 				return null;
 			}
@@ -129,17 +118,31 @@ public class FreedrawingDataEditPart extends AbstractGraphicalEditPart implement
 	}
 	
 	// ===============================================================
-	// FDContainerListener
+	// FDRootNodeListener
 
 	@Override
-	public void childElementAdded(AbstractFDElement child) {
+	public void childNodeAdded(FDNode child) {
 		addChild(createChild(child), 0);
 	}
 
-	@Override
-	public void childConnectionAdded(AbstractFDConnection child) {
-		addChild(createChild(child), 0);
+	/**
+	 * Override the superclass implementation so that the receiver
+	 * can add itself as a listener to the underlying model object
+	 */
+	public void addNotify() {
+		super.addNotify();
+		getModel().addNodeRootListener(this);
 	}
+	
+	/**
+	 * Override the superclass implementation so that the receiver
+	 * can stop listening to events from the underlying model object
+	 */
+	public void removeNotify() {
+		getModel().removeNodeRootListener(this);
+		super.removeNotify();
+	}
+	
 
 //	// ===============================================================
 //	// GenealogyGraphListener

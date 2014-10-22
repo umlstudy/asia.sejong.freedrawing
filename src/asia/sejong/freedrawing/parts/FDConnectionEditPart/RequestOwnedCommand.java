@@ -1,4 +1,4 @@
-package asia.sejong.freedrawing.commands;
+package asia.sejong.freedrawing.parts.FDConnectionEditPart;
 
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;

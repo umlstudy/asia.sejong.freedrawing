@@ -29,13 +29,13 @@ import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.dialogs.SaveAsDialog;
 import org.eclipse.ui.part.FileEditorInput;
 
-import asia.sejong.freedrawing.model.area.FreedrawingData;
-import asia.sejong.freedrawing.model.io.FreedrawingDataWriter;
-import asia.sejong.freedrawing.parts.FreedrawingEditPartFactory;
+import asia.sejong.freedrawing.model.FDNodeRoot;
+import asia.sejong.freedrawing.model.io.FreedrawingModelWriter;
+import asia.sejong.freedrawing.parts.common.FreedrawingEditPartFactory;
 
 public class FreedrawingEditor extends GraphicalEditorWithFlyoutPalette {
 
-	private final FreedrawingData freedrawingData = new FreedrawingData();
+	private final FDNodeRoot freedrawingData = new FDNodeRoot();
 	private DirectEditAction directEditAction;
 
 	public FreedrawingEditor() {
@@ -108,7 +108,7 @@ public class FreedrawingEditor extends GraphicalEditorWithFlyoutPalette {
 
 		// ¸ðµ¨ Á÷·ÄÈ­
 		StringWriter writer = new StringWriter(5000);
-		FreedrawingDataWriter freedrawingDataWriter = FreedrawingDataWriter.newInstance(freedrawingData);
+		FreedrawingModelWriter freedrawingDataWriter = FreedrawingModelWriter.newInstance(freedrawingData);
 		freedrawingDataWriter.write(new PrintWriter(writer));
 		ByteArrayInputStream stream = new ByteArrayInputStream(writer.toString().getBytes());
 
