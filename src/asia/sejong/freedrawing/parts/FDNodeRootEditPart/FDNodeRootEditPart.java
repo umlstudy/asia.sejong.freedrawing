@@ -5,15 +5,10 @@ import org.eclipse.draw2d.FreeformLayer;
 import org.eclipse.draw2d.FreeformLayout;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.MarginBorder;
-import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
-import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.gef.editpolicies.RootComponentEditPolicy;
-import org.eclipse.gef.editpolicies.XYLayoutEditPolicy;
-import org.eclipse.gef.requests.ChangeBoundsRequest;
-import org.eclipse.gef.requests.CreateRequest;
 
 import asia.sejong.freedrawing.model.FDNode;
 import asia.sejong.freedrawing.model.FDNodeRoot;
@@ -69,6 +64,14 @@ public class FDNodeRootEditPart extends AbstractGraphicalEditPart implements FDN
 	public void childNodeAdded(FDNode child) {
 		addChild(createChild(child), 0);
 	}
+	
+	@Override
+	public void childNodeRemoved(FDNode child) {
+		Object part = getViewer().getEditPartRegistry().get(child);
+		if (part instanceof EditPart) {
+			removeChild((EditPart) part);
+		}
+	}
 
 	/**
 	 * Override the superclass implementation so that the receiver
@@ -87,7 +90,6 @@ public class FDNodeRootEditPart extends AbstractGraphicalEditPart implements FDN
 		getModel().removeNodeRootListener(this);
 		super.removeNotify();
 	}
-	
 
 //	// ===============================================================
 //	// GenealogyGraphListener

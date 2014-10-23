@@ -24,6 +24,14 @@ public class FDNodeRoot {
 		}
 	}
 	
+	public void removeNode(FDNode child) {
+		childElements.remove(child);
+		
+		for (FDContainerListener l : listeners) {
+			l.childNodeRemoved(child);
+		}
+	}
+	
 	public void addConnection(FDConnection child) {
 		childConnections.add(child);
 	}

@@ -5,4 +5,6 @@ import asia.sejong.freedrawing.model.FDNode;
 public interface FDContainerListener {
 	
 	void childNodeAdded(FDNode child);
+
+	void childNodeRemoved(FDNode child);
 }

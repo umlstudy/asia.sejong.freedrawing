@@ -12,7 +12,9 @@ import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.NodeEditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
+import org.eclipse.gef.editpolicies.ComponentEditPolicy;
 import org.eclipse.gef.requests.CreateConnectionRequest;
+import org.eclipse.gef.requests.GroupRequest;
 import org.eclipse.gef.requests.ReconnectRequest;
 
 import asia.sejong.freedrawing.figures.FDRectangleFigure;
@@ -161,6 +163,13 @@ public class FDNodeEditPart extends AbstractNodeEditPart implements NodeEditPart
 		installEditPolicy(EditPolicy.GRAPHICAL_NODE_ROLE, new FDNodeEditPolicy());
 		
 		installEditPolicy(EditPolicy.LAYOUT_ROLE, new OrderedLayoutFDNodeEditPolicy());
+		
+		// Handles deleting the selected person
+		installEditPolicy(EditPolicy.COMPONENT_ROLE, new ComponentEditPolicy() {
+			protected Command createDeleteCommand(GroupRequest request) {
+				return new DeleteFDNodeCommand(getNodeRoot(), getModel());
+			}
+		});
 	}
 
 	@Override
