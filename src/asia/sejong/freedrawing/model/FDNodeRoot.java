@@ -16,19 +16,20 @@ public class FDNodeRoot {
 	
 	public FDNodeRoot() {}
 	
-	public void addNode(FDNode child) {
-		childElements.add(child);
+	public void addNode(FDNode target) {
+		childElements.add(target);
 		
 		for (FDContainerListener l : listeners) {
-			l.childNodeAdded(child);
+			l.childNodeAdded(target);
 		}
 	}
 	
-	public void removeNode(FDNode child) {
-		childElements.remove(child);
+	public void removeNode(FDNode target) {
+		
+		childElements.remove(target);
 		
 		for (FDContainerListener l : listeners) {
-			l.childNodeRemoved(child);
+			l.childNodeRemoved(target);
 		}
 	}
 	

@@ -70,10 +70,11 @@ public class FDNodeEditPolicy extends GraphicalNodeEditPolicy {
 		if (!connCmd.isValidSource(request.getConnectionEditPart().getModel()))
 			return null;
 		connCmd.setSource(request.getConnectionEditPart().getModel());
-		Command deleteCmd = new DeleteFDConnectionCommand(connPart.getModel());
-		Command modifyCmd = deleteCmd.chain(connCmd);
-		modifyCmd.setLabel("Modify " + connCmd.getConnectionName());
-		return modifyCmd;
+//		Command deleteCmd = new DeleteFDConnectionCommand(connPart.getModel());
+//		Command modifyCmd = deleteCmd.chain(connCmd);
+//		modifyCmd.setLabel("Modify " + connCmd.getConnectionName());
+//		return modifyCmd;
+		return null;
 	}
 
 	protected Command getReconnectTargetCommand(ReconnectRequest request) {
@@ -85,9 +86,10 @@ public class FDNodeEditPolicy extends GraphicalNodeEditPolicy {
 		if (!connCmd.isValidTarget(request.getConnectionEditPart().getModel()))
 			return null;
 		connCmd.setTarget(request.getConnectionEditPart().getModel());
-		Command deleteCmd = new DeleteFDConnectionCommand(connPart.getModel());
-		Command modifyCmd = deleteCmd.chain(connCmd);
-		modifyCmd.setLabel("Modify " + connCmd.getConnectionName());
-		return modifyCmd;
+//		Command deleteCmd = new DeleteFDConnectionCommand(connPart.getModel());
+//		Command modifyCmd = deleteCmd.chain(connCmd);
+//		modifyCmd.setLabel("Modify " + connCmd.getConnectionName());
+//		return modifyCmd;
+		return null;
 	}
 }

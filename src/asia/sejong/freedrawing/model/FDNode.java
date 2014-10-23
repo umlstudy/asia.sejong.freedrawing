@@ -1,5 +1,6 @@
 package asia.sejong.freedrawing.model;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -9,14 +10,18 @@ import asia.sejong.freedrawing.model.listener.FDNodeListener;
 
 public class FDNode {
 	
-	private FDNode source;
-	private FDNode target;
+	private HashSet<FDNode> sources;
+	private HashSet<FDNode> targets;
 	
 	private int x, y, width, height;
 
 	private Set<FDNodeListener> listeners = new HashSet<FDNodeListener>();
 	
-	public FDNode() {}
+	public FDNode() {
+		sources = new HashSet<FDNode>();
+		targets = new HashSet<FDNode>();
+		
+	}
 	
 	public int getX() {
 		return x;
@@ -57,31 +62,71 @@ public class FDNode {
 		setSize(rect.width, rect.height);
 	}
 	
-	public FDNode getSource() {
-		return source;
+	public Set<FDNode> getSources() {
+		return new HashSet<FDNode>(sources);
 	}
 	
-	public void setSource(FDNode source) {
-		FDNode oldSource = this.source;
-		this.source = source;
+	private void addSource(FDNode source) {
+		if ( source == null || sources.contains(source) ) {
+			// already exist
+			throw new RuntimeException();
+		}
+
+		sources.add(source);
 
 		// notify event
 		for ( FDNodeListener l : listeners ) {
-			l.sourceChanged(oldSource, source);
+			l.sourceAdded(source);
+		}
+	}
+	
+	private void removeSource(FDNode source) {
+		if ( source == null || !sources.contains(source) ) {
+			// not exist
+			throw new RuntimeException();
+		}
+
+		sources.remove(source);
+
+		// notify event
+		for ( FDNodeListener l : listeners ) {
+			l.sourceRemoved(source);
 		}
 	}
 
-	public FDNode getTarget() {
-		return target;
+	public Set<FDNode> getTargets() {
+		return new HashSet<FDNode>(targets);
 	}
 
-	public void setTarget(FDNode target) {
-		FDNode oldTarget = this.target;
-		this.target = target;
+	public void addTarget(FDNode target) {
+		if ( targets.contains(target) ) {
+			// already exist
+			return;
+		}
+		
+		target.addSource(this);
+		
+		targets.add(target);
 		
 		// notify event
 		for ( FDNodeListener l : listeners ) {
-			l.targetChanged(oldTarget, target);
+			l.targetAdded(target);
+		}
+	}
+	
+	public void removeTarget(FDNode target) {
+		if ( !targets.contains(target) ) {
+			// not exist
+			return;
+		}
+		
+		target.removeSource(this);
+		
+		targets.remove(target);
+		
+		// notify event
+		for ( FDNodeListener l : listeners ) {
+			l.targetRemoved(target);
 		}
 	}
 	

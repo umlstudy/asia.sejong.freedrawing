@@ -20,8 +20,7 @@ public class DeleteFDConnectionCommand extends Command
 	 * Delete the connection
 	 */
 	public void execute() {
-		conn.getTarget().setSource(null);
-		conn.getSource().setTarget(null);
+		conn.getSource().removeTarget(conn.getTarget());
 	}
 	
 	/**

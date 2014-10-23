@@ -2,7 +2,6 @@ package asia.sejong.freedrawing.parts.FDNodeEditPart;
 
 import org.eclipse.gef.commands.Command;
 
-import asia.sejong.freedrawing.model.FDConnection;
 import asia.sejong.freedrawing.model.FDNode;
 import asia.sejong.freedrawing.model.FDNodeRoot;
 
@@ -17,8 +16,7 @@ public class CreateFDConnectionCommand extends Command {
 	}
 
 	public void execute() {
-		source.setTarget(target);
-		target.setSource(source);
+		source.addTarget(target);
 	}
 
 	public String getConnectionName() {
