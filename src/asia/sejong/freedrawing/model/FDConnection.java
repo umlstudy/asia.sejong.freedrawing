@@ -11,13 +11,16 @@ public class FDConnection {
 	private FDNode target;
 	private final List<Point> bendpoints = new ArrayList<Point>();
 	
-	public FDConnection() {
+	private FDConnection() {}
+
+	public static FDConnection newInstance(FDNode source, FDNode target) {
+		return new FDConnection(source, target);
 	}
 	
-//	public FDConnection(FDNode source, FDNode target) {
-//		setSource(source);
-//		setTarget(target);
-//	}
+	private FDConnection(FDNode source, FDNode target) {
+		setSource(source);
+		setTarget(target);
+	}
 	
 	public boolean equals(Object obj) {
 		if (!(obj instanceof FDConnection))

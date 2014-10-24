@@ -10,7 +10,7 @@ import asia.sejong.freedrawing.model.listener.FDNodeRootListener;
 public class FDNodeRoot {
 
 	private final Set<FDNode> childElements = new HashSet<FDNode>();
-	private final Set<FDConnection> childConnections = new HashSet<FDConnection>();
+//	private final Set<FDConnection> childConnections = new HashSet<FDConnection>();
 	
 	private final Collection<FDNodeRootListener> listeners = new HashSet<FDNodeRootListener>();
 	
@@ -33,51 +33,51 @@ public class FDNodeRoot {
 		}
 	}
 	
-	public void addConnection(FDConnection child) {
-		childConnections.add(child);
-	}
-	
-	public FDConnection createOrFindConnection(FDNode source, FDNode target) {
-		if ( source == null || source == target ) {
-			return null;
-		}
-		FDConnection fdConnection = new FDConnection();
-		fdConnection.setSource(source);
-		fdConnection.setTarget(target);
-		
-		for ( FDConnection item : childConnections ) {
-			if ( item.equals(fdConnection) ) {
-				return item;
-			}
-		}
-		
-		childConnections.add(fdConnection);
-		
-		return fdConnection;
-	}
-	
-	public FDConnection findConnection(FDNode source, FDNode target) {
-		if ( source == null || source == target ) {
-			return null;
-		}
-		FDConnection fdConnection = new FDConnection();
-		fdConnection.setSource(source);
-		fdConnection.setTarget(target);
-		
-		for ( FDConnection item : childConnections ) {
-			if ( item.equals(fdConnection) ) {
-				return item;
-			}
-		}
-		
-		return null;
-	}
-	
-	public void removeConnection(FDConnection conn) {
-		if ( conn != null ) {
-			childConnections.remove(conn);
-		}
-	}
+//	public void addConnection(FDConnection child) {
+//		childConnections.add(child);
+//	}
+//	
+//	public FDConnection createOrFindConnection(FDNode source, FDNode target) {
+//		if ( source == null || source == target ) {
+//			return null;
+//		}
+//		FDConnection fdConnection = new FDConnection();
+//		fdConnection.setSource(source);
+//		fdConnection.setTarget(target);
+//		
+//		for ( FDConnection item : childConnections ) {
+//			if ( item.equals(fdConnection) ) {
+//				return item;
+//			}
+//		}
+//		
+//		childConnections.add(fdConnection);
+//		
+//		return fdConnection;
+//	}
+//	
+//	public FDConnection findConnection(FDNode source, FDNode target) {
+//		if ( source == null || source == target ) {
+//			return null;
+//		}
+//		FDConnection fdConnection = new FDConnection();
+//		fdConnection.setSource(source);
+//		fdConnection.setTarget(target);
+//		
+//		for ( FDConnection item : childConnections ) {
+//			if ( item.equals(fdConnection) ) {
+//				return item;
+//			}
+//		}
+//		
+//		return null;
+//	}
+//	
+//	public void removeConnection(FDConnection conn) {
+//		if ( conn != null ) {
+//			childConnections.remove(conn);
+//		}
+//	}
 	
 	//============================================================
 	// Listeners

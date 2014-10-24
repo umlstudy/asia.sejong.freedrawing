@@ -177,21 +177,19 @@ public class FDNodeEditPart extends AbstractNodeEditPart implements NodeEditPart
 	
 	@Override
 	public void sourceAdded(FDNode source) {
-		FDConnection conn = getNodeRoot().createOrFindConnection(source, getModel());
-		if ( conn != null ) {
-			ConnectionEditPart part = findConnection(conn);
-			
-			if (part == null) {
-				part = createOrFindConnection(conn);
-				addTargetConnection(part, 0);
-			}
+		FDConnection conn = FDConnection.newInstance(source, getModel());
+		ConnectionEditPart part = findConnection(conn);
+		
+		if (part == null) {
+			part = createOrFindConnection(conn);
+			addTargetConnection(part, 0);
 		}
 	}
 
 	@Override
 	public void sourceRemoved(FDNode source) {
 		// remove connection
-		FDConnection conn = getNodeRoot().findConnection(source, getModel());
+		FDConnection conn = FDConnection.newInstance(source, getModel());
 		ConnectionEditPart part = findConnection(conn);
 		if ( conn != null ) {
 			removeTargetConnection(part);
@@ -201,15 +199,9 @@ public class FDNodeEditPart extends AbstractNodeEditPart implements NodeEditPart
 
 	@Override
 	public void targetAdded(FDNode target) {
-		FDConnection conn = getNodeRoot().findConnection(getModel(), target);
-		
-		if ( conn == null ) {
-			throw new RuntimeException();
-		}
+		FDConnection conn = FDConnection.newInstance(getModel(), target);
 		ConnectionEditPart part = findConnection(conn);
-		
-		part = findConnection(conn);
-		if (part == null) {
+		if ( part == null ) {
 			throw new RuntimeException();
 		}
 		addSourceConnection(part, 0);
@@ -218,8 +210,7 @@ public class FDNodeEditPart extends AbstractNodeEditPart implements NodeEditPart
 	@Override
 	public void targetRemoved(FDNode target) {
 		// remove connection
-		FDConnection conn = getNodeRoot().findConnection(getModel(), target);
-		getNodeRoot().removeConnection(conn);
+		FDConnection conn = FDConnection.newInstance(getModel(), target);
 		ConnectionEditPart part = findConnection(conn);
 		if ( conn != null ) {
 			removeSourceConnection(part);

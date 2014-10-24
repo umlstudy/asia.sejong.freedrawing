@@ -1,8 +1,11 @@
 package asia.sejong.freedrawing.model;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 
 import asia.sejong.freedrawing.model.listener.FDNodeListener;
@@ -11,6 +14,7 @@ public class FDNode {
 	
 	private HashSet<FDNode> sources;
 	private HashSet<FDNode> targets;
+	private HashMap<FDNode, List<Point>> bandpoints;
 	
 	private int x, y, width, height;
 
@@ -19,7 +23,7 @@ public class FDNode {
 	public FDNode() {
 		sources = new HashSet<FDNode>();
 		targets = new HashSet<FDNode>();
-		
+		bandpoints = new HashMap<FDNode, List<Point>>();
 	}
 	
 	public int getX() {

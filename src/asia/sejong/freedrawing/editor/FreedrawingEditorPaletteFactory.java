@@ -14,7 +14,6 @@ import org.eclipse.jface.resource.ImageDescriptor;
 
 import asia.sejong.freedrawing.figures.FDConnectionFigure;
 import asia.sejong.freedrawing.figures.FDRectangleFigure;
-import asia.sejong.freedrawing.model.FDConnection;
 import asia.sejong.freedrawing.model.FDNode;
 
 public class FreedrawingEditorPaletteFactory {
@@ -72,16 +71,10 @@ public class FreedrawingEditorPaletteFactory {
 
 		// 커넥션 생성을 위한 팩토리 및 툴 생성
 		{
-			SimpleFactory factory = new SimpleFactory(FDConnection.class) {
-				public Object getNewObject() {
-					FDConnection connection = new FDConnection();
-					return connection;
-				}
-			};
 			ToolEntry connection = new ConnectionCreationToolEntry(
 					"Connection",
 					"Create a connection", 
-					factory,
+					null,
 					CONNECTION_IMAGE_DESCRIPTOR,
 					CONNECTION_IMAGE_DESCRIPTOR);
 			connection.setToolClass(FDConnectionCreationTool.class);
