@@ -70,7 +70,7 @@ public class FreedrawingEditor extends GraphicalEditorWithFlyoutPalette {
 		viewer.setKeyHandler(graphicalViewerKeyHandler);
 		
 		// 단축키 추가 #2
-		graphicalViewerKeyHandler.put(KeyStroke.getPressed(SWT.F3, 0), directEditAction);
+		graphicalViewerKeyHandler.put(KeyStroke.getPressed(SWT.F2, 0), directEditAction);
 		graphicalViewerKeyHandler.put(KeyStroke.getPressed(SWT.DEL, (int)SWT.DEL, 0), deleteAction);
 	}
 

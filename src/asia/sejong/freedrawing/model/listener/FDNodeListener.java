@@ -10,4 +10,5 @@ public interface FDNodeListener {
 	void targetRemoved(FDNode target);
 	void locationChanged(int newX, int newY);
 	void sizeChanged(int newWidth, int newHeight);
+	void textChanged(String newText);
 }

@@ -1,10 +1,9 @@
-package asia.sejong.freedrawing.parts.FDNodeEditPart;
+package asia.sejong.freedrawing.parts.FDNodeEditPart.cmd;
 
 import java.util.Set;
 
 import org.eclipse.gef.commands.Command;
 
-import asia.sejong.freedrawing.model.FDConnection;
 import asia.sejong.freedrawing.model.FDNode;
 import asia.sejong.freedrawing.model.FDNodeRoot;
 
@@ -12,6 +11,9 @@ public class DeleteFDNodeCommand extends Command
 {
 	private final FDNodeRoot nodeRoot;
 	private final FDNode target;
+	
+	private Set<FDNode> removedSource;
+	private Set<FDNode> removedTarget;
 
 	public DeleteFDNodeCommand(FDNodeRoot nodeRoot, FDNode target) {
 		super("Delete Node");
@@ -24,13 +26,13 @@ public class DeleteFDNodeCommand extends Command
 	 */
 	public void execute() {
 		
-		Set<FDNode> sources = target.getSources();
-		for ( FDNode source : sources ) {
+		removedSource = target.getSources();
+		for ( FDNode source : removedSource ) {
 			source.removeTarget(target);
 		}
 		
-		Set<FDNode> targets = target.getTargets();
-		for ( FDNode targetOfTarget : targets ) {
+		removedTarget = target.getTargets();
+		for ( FDNode targetOfTarget : removedTarget ) {
 			target.removeTarget(targetOfTarget);
 		}
 		
@@ -41,5 +43,16 @@ public class DeleteFDNodeCommand extends Command
 	 * Restore the connection
 	 */
 	public void undo() {
+		
+		nodeRoot.addNode(target);
+		
+		for ( FDNode source : removedSource ) {
+			source.addTarget(target);
+		}
+		
+		removedTarget = target.getTargets();
+		for ( FDNode targetOfTarget : removedTarget ) {
+			target.addTarget(targetOfTarget);
+		}
 	}
 }

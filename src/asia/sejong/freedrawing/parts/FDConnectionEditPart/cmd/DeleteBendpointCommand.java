@@ -1,4 +1,4 @@
-package asia.sejong.freedrawing.parts.FDConnectionEditPart;
+package asia.sejong.freedrawing.parts.FDConnectionEditPart.cmd;
 
 import java.util.List;
 
@@ -8,6 +8,7 @@ import org.eclipse.gef.requests.BendpointRequest;
 public class DeleteBendpointCommand extends BendpointCommand {
 	
 	private BendpointRequest request;
+	private Bendpoint removedBendpoint;
 	
 	public DeleteBendpointCommand(BendpointRequest request) {
 		this.request = request;
@@ -15,6 +16,11 @@ public class DeleteBendpointCommand extends BendpointCommand {
 	
 	public void execute() {
 		List<Bendpoint> bendpoints = getBendpoints(getConnection(request));
-		bendpoints.remove(request.getIndex());
+		removedBendpoint = bendpoints.remove(request.getIndex());
+	}
+	
+	public void undo() {
+		List<Bendpoint> bendpoints = getBendpoints(getConnection(request));
+		bendpoints.add(request.getIndex(), removedBendpoint);
 	}
 }

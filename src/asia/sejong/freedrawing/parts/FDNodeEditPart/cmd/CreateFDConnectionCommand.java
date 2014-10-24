@@ -1,4 +1,4 @@
-package asia.sejong.freedrawing.parts.FDNodeEditPart;
+package asia.sejong.freedrawing.parts.FDNodeEditPart.cmd;
 
 import org.eclipse.gef.commands.Command;
 
@@ -17,6 +17,10 @@ public class CreateFDConnectionCommand extends Command {
 
 	public void execute() {
 		source.addTarget(target);
+	}
+	
+	public void undo() {
+		source.removeTarget(target);
 	}
 
 	public String getConnectionName() {

@@ -10,15 +10,14 @@ import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editparts.AbstractConnectionEditPart;
-import org.eclipse.gef.editpolicies.BendpointEditPolicy;
 import org.eclipse.gef.editpolicies.ConnectionEditPolicy;
 import org.eclipse.gef.editpolicies.ConnectionEndpointEditPolicy;
-import org.eclipse.gef.requests.BendpointRequest;
 import org.eclipse.gef.requests.GroupRequest;
 
 import asia.sejong.freedrawing.figures.FDConnectionFigure;
 import asia.sejong.freedrawing.model.FDConnection;
-import asia.sejong.freedrawing.parts.FDNodeEditPart.CreateFDConnectionCommand;
+import asia.sejong.freedrawing.parts.FDConnectionEditPart.cmd.DeleteFDConnectionCommand;
+import asia.sejong.freedrawing.parts.FDNodeEditPart.cmd.CreateFDConnectionCommand;
 
 public class FDConnectionEditPart extends AbstractConnectionEditPart {
 

@@ -4,6 +4,10 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.BendpointEditPolicy;
 import org.eclipse.gef.requests.BendpointRequest;
 
+import asia.sejong.freedrawing.parts.FDConnectionEditPart.cmd.AddBendpointCommand;
+import asia.sejong.freedrawing.parts.FDConnectionEditPart.cmd.DeleteBendpointCommand;
+import asia.sejong.freedrawing.parts.FDConnectionEditPart.cmd.MoveBendpointCommand;
+
 public class BendpointFDConnectionEditPolicy extends BendpointEditPolicy {
 	@Override
 	protected Command getMoveBendpointCommand(BendpointRequest request) {

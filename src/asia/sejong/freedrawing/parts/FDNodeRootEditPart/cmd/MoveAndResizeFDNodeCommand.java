@@ -1,4 +1,4 @@
-package asia.sejong.freedrawing.parts.FDNodeRootEditPart;
+package asia.sejong.freedrawing.parts.FDNodeRootEditPart.cmd;
 
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.commands.Command;

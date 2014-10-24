@@ -10,6 +10,7 @@ import org.eclipse.gef.requests.ReconnectRequest;
 
 import asia.sejong.freedrawing.model.FDNode;
 import asia.sejong.freedrawing.parts.FDConnectionEditPart.FDConnectionEditPart;
+import asia.sejong.freedrawing.parts.FDNodeEditPart.cmd.CreateFDConnectionCommand;
 import asia.sejong.freedrawing.parts.common.EditPartUtil;
 
 public class FDNodeEditPolicy extends GraphicalNodeEditPolicy {

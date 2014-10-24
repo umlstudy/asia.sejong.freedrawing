@@ -1,4 +1,4 @@
-package asia.sejong.freedrawing.parts.FDNodeRootEditPart;
+package asia.sejong.freedrawing.parts.FDNodeRootEditPart.cmd;
 
 import org.eclipse.gef.commands.Command;
 
@@ -17,5 +17,9 @@ public class CreateFDNodeCommand extends Command {
 	
 	public void execute() {
 		nodeRoot.addNode(node);
+	}
+	
+	public void undo() {
+		nodeRoot.removeNode(node);
 	}
 }

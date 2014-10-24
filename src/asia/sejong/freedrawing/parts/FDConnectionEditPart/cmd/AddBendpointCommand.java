@@ -1,4 +1,4 @@
-package asia.sejong.freedrawing.parts.FDConnectionEditPart;
+package asia.sejong.freedrawing.parts.FDConnectionEditPart.cmd;
 
 import java.util.List;
 
@@ -19,5 +19,10 @@ public class AddBendpointCommand extends BendpointCommand {
 		List<Bendpoint> bendpoints = getBendpoints(getConnection(request));
 		AbsoluteBendpoint bp = new AbsoluteBendpoint(request.getLocation());
 		bendpoints.add(request.getIndex(), bp);
+	}
+	
+	public void undo() {
+		List<Bendpoint> bendpoints = getBendpoints(getConnection(request));
+		bendpoints.remove(request.getIndex());
 	}
 }

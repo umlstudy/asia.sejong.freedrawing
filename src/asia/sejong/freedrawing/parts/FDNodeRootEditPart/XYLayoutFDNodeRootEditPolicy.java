@@ -10,6 +10,8 @@ import org.eclipse.gef.requests.CreateRequest;
 
 import asia.sejong.freedrawing.model.FDNode;
 import asia.sejong.freedrawing.model.FDNodeRoot;
+import asia.sejong.freedrawing.parts.FDNodeRootEditPart.cmd.CreateFDNodeCommand;
+import asia.sejong.freedrawing.parts.FDNodeRootEditPart.cmd.MoveAndResizeFDNodeCommand;
 
 /**
  * Handles constraint changes (e.g. moving and/or resizing) of model elements

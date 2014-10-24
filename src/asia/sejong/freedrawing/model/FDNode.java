@@ -17,6 +17,8 @@ public class FDNode {
 	private HashMap<FDNode, List<Point>> bandpoints;
 	
 	private int x, y, width, height;
+	
+	private String text;
 
 	private Set<FDNodeListener> listeners = new HashSet<FDNodeListener>();
 	
@@ -132,6 +134,32 @@ public class FDNode {
 			l.targetRemoved(target);
 		}
 	}
+
+	public String getText() {
+		return text;
+	}
+
+	public boolean setText(String newText) {
+		if (newText == null) {
+			newText = "";
+		}
+		if (newText.equals(text)) {
+			return false;
+		}
+		
+		text = newText;
+		
+		
+		// notify event
+		for ( FDNodeListener l : listeners ) {
+			l.textChanged(text);
+		}
+		
+		return true;
+	}
+	
+	//============================================================
+	// Listener add and remove
 	
 	public void addFDNodeListener(FDNodeListener listener ) {
 		if ( listener != null ) {

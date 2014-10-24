@@ -11,17 +11,28 @@ import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.NodeEditPart;
 import org.eclipse.gef.Request;
+import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.ComponentEditPolicy;
+import org.eclipse.gef.editpolicies.DirectEditPolicy;
 import org.eclipse.gef.requests.CreateConnectionRequest;
+import org.eclipse.gef.requests.DirectEditRequest;
 import org.eclipse.gef.requests.GroupRequest;
 import org.eclipse.gef.requests.ReconnectRequest;
+import org.eclipse.gef.tools.CellEditorLocator;
+import org.eclipse.gef.tools.DirectEditManager;
+import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.jface.viewers.TextCellEditor;
+import org.eclipse.swt.widgets.Text;
 
 import asia.sejong.freedrawing.figures.FDRectangleFigure;
 import asia.sejong.freedrawing.model.FDConnection;
 import asia.sejong.freedrawing.model.FDNode;
 import asia.sejong.freedrawing.model.listener.FDNodeListener;
 import asia.sejong.freedrawing.parts.FDConnectionEditPart.FDConnectionEditPart;
+import asia.sejong.freedrawing.parts.FDNodeEditPart.cmd.CreateFDConnectionCommand;
+import asia.sejong.freedrawing.parts.FDNodeEditPart.cmd.DeleteFDNodeCommand;
+import asia.sejong.freedrawing.parts.FDNodeEditPart.cmd.TextChangeCommand;
 import asia.sejong.freedrawing.parts.common.AbstractNodeEditPart;
 import asia.sejong.freedrawing.util.DebugUtil;
 
@@ -29,7 +40,6 @@ public class FDNodeEditPart extends AbstractNodeEditPart implements NodeEditPart
 	
 	public FDNodeEditPart(FDNode element) {
 		setModel(element);
-		((Label)getFigure()).setText("A " + Integer.toHexString(System.identityHashCode(element)));
 	}
 	
 	/**
@@ -39,6 +49,11 @@ public class FDNodeEditPart extends AbstractNodeEditPart implements NodeEditPart
 		FDNode m = (FDNode) getModel();
 		Rectangle bounds = new Rectangle(m.getX(), m.getY(), m.getWidth(), m.getHeight());
 		((GraphicalEditPart) getParent()).setLayoutConstraint(this, getFigure(), bounds);
+		
+		if ( m.getText() != null ) {
+			((Label)getFigure()).setText(m.getText());
+		}
+		
 		super.refreshVisuals();
 	}
 
@@ -170,6 +185,59 @@ public class FDNodeEditPart extends AbstractNodeEditPart implements NodeEditPart
 				return new DeleteFDNodeCommand(getNodeRoot(), getModel());
 			}
 		});
+		
+		installEditPolicy(EditPolicy.DIRECT_EDIT_ROLE, new DirectEditPolicy() {
+			
+			@Override
+			protected void showCurrentEditValue(DirectEditRequest request) {
+			}
+			
+			@Override
+			protected Command getDirectEditCommand(DirectEditRequest request) {
+				String newValue = (String)request.getCellEditor().getValue();
+				if ( !newValue.equals(getModel().getText() ) ) {
+					return new TextChangeCommand(getModel(), newValue);
+				}
+				return null;
+			}
+		});
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.gef.editparts.AbstractEditPart#performRequest(org.eclipse.gef.Request)
+	 * Direct Edit
+	 */
+	public void performRequest(Request req) {
+		if ( req != null && req.getType().equals(RequestConstants.REQ_DIRECT_EDIT) ) {
+			
+			DirectEditManager dem = new DirectEditManager(this, TextCellEditor.class, null) {
+				@Override
+				protected void initCellEditor() {
+					String text = ((FDRectangleFigure) getFigure()).getText();
+					getCellEditor().setValue(text);
+				}
+			};
+			dem.setLocator(new CellEditorLocator() {
+				@Override
+				public void relocate(final CellEditor celleditor) {
+					final IFigure figure = getFigure();
+					final Text text = (Text) celleditor.getControl();
+					final Rectangle rect = figure.getBounds();
+//					figure.translateToAbsolute(rect);
+//					final Point size = text.computeSize(SWT.DEFAULT,
+//							SWT.DEFAULT, true);
+//					final org.eclipse.swt.graphics.Rectangle trim = text
+//							.computeTrim(0, 0, 0, 0);
+//					rect.translate(trim.x, trim.y);
+//					rect.width = Math.max(size.x, rect.width);
+//					rect.width += trim.width;
+//					rect.height += trim.height;
+//					text.setBounds(rect.x, rect.y, rect.width, rect.height);
+					text.setBounds(rect.x, rect.y, rect.width, rect.height);
+				}
+			});
+			dem.show();
+		}
 	}
 
 	//============================================================
@@ -215,6 +283,11 @@ public class FDNodeEditPart extends AbstractNodeEditPart implements NodeEditPart
 		if ( conn != null ) {
 			removeSourceConnection(part);
 		}
+	}
+	
+	@Override
+	public void textChanged(String newText) {
+		((Label)getFigure()).setText(newText);
 	}
 
 //	@Override
