@@ -42,7 +42,8 @@ public abstract class AbstractNodeEditPart extends AbstractGraphicalEditPart {
 	 */
 	public void locationChanged(int x, int y) {
 		figure.setLocation(new Point(x, y));
-//		figure.getParent().getLayoutManager().setConstraint(figure, figure.getClientArea());
+		// update parent layout ( any good idea ? ) 
+		figure.getParent().getLayoutManager().setConstraint(figure, figure.getClientArea());
 	}
 
 	/**
@@ -50,6 +51,7 @@ public abstract class AbstractNodeEditPart extends AbstractGraphicalEditPart {
 	 */
 	public void sizeChanged(int width, int height) {
 		getFigure().setSize(width, height);
+		// update parent layout ( any good idea ? ) 
 		figure.getParent().getLayoutManager().setConstraint(figure, figure.getClientArea());
 	}
 }
