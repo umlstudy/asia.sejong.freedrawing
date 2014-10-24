@@ -3,6 +3,8 @@ package asia.sejong.freedrawing.editor;
 import java.io.ByteArrayInputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -11,7 +13,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.gef.DefaultEditDomain;
 import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.KeyStroke;
 import org.eclipse.gef.dnd.TemplateTransferDragSourceListener;
@@ -23,25 +24,125 @@ import org.eclipse.gef.ui.palette.PaletteViewer;
 import org.eclipse.gef.ui.palette.PaletteViewerProvider;
 import org.eclipse.gef.ui.parts.GraphicalEditorWithFlyoutPalette;
 import org.eclipse.gef.ui.parts.GraphicalViewerKeyHandler;
+import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.dialogs.SaveAsDialog;
 import org.eclipse.ui.part.FileEditorInput;
 
+import asia.sejong.freedrawing.editor.actions.AbstractSelectionAction;
+import asia.sejong.freedrawing.editor.actions.ConnectionSelectionAction;
+import asia.sejong.freedrawing.editor.actions.MarqueeSelectionAction;
+import asia.sejong.freedrawing.editor.actions.PaletteActionGroup;
+import asia.sejong.freedrawing.editor.actions.PanningSelectionAction;
+import asia.sejong.freedrawing.editor.actions.RectangleSelectionAction;
+import asia.sejong.freedrawing.editor.actions.SubGroupAction;
 import asia.sejong.freedrawing.model.FDNodeRoot;
 import asia.sejong.freedrawing.model.io.FreedrawingModelWriter;
 import asia.sejong.freedrawing.parts.common.FreedrawingEditPartFactory;
+import asia.sejong.freedrawing.resources.image.ImageManager;
 
 public class FreedrawingEditor extends GraphicalEditorWithFlyoutPalette {
 
 	private final FDNodeRoot freedrawingData = new FDNodeRoot();
 	private DirectEditAction directEditAction;
 	private DeleteAction deleteAction;
+	
+	private ToolBarManager toolbarManager;
+	private ImageManager imageManager;
+	private PaletteActionGroup actionGroup;
 
 	public FreedrawingEditor() {
-		setEditDomain(new DefaultEditDomain(this));
+		this.imageManager = ImageManager.newInstance(); // must dispose, run before creating EditDomain
+		
+		FreedrawingEditDomain freedrawingEditDomain = new FreedrawingEditDomain(this);
+		this.setEditDomain(freedrawingEditDomain);
+		
+		this.actionGroup = new PaletteActionGroup(freedrawingEditDomain) {
+			
+			@Override
+			public List<SubGroupAction> createSubGroupActions() {
+				
+				List<SubGroupAction> subGroupActions = new ArrayList<SubGroupAction>();
+				
+				{
+					List<AbstractSelectionAction> actions = new ArrayList<AbstractSelectionAction>();
+					ImageDescriptor desc = null;
+					
+					desc = imageManager.getSelectImageDescriptor();
+					AbstractSelectionAction defaultAction = buildSelectionAction(PanningSelectionAction.class, "선택", desc);
+					actions.add(defaultAction);
+					setDefaultAction(defaultAction);
+					
+					desc = imageManager.getMarqueeImageDescriptor();
+					actions.add(buildSelectionAction(MarqueeSelectionAction.class, "범위선택", desc));
+					
+					subGroupActions.add(SubGroupAction.newInstance(actions));
+				}
+				
+				{
+					List<AbstractSelectionAction> actions = new ArrayList<AbstractSelectionAction>();
+					ImageDescriptor desc = null;
+					
+					desc = imageManager.getRectangleImageDescriptor();
+					actions.add(buildSelectionAction(RectangleSelectionAction.class, "상자", desc));
+					
+					desc = imageManager.getConnectionImageDescriptor();
+					actions.add(buildSelectionAction(ConnectionSelectionAction.class, "연결", desc));
+					
+					subGroupActions.add(SubGroupAction.newInstance(actions));
+				}
+				
+				return subGroupActions;
+			}
+		};
+		
+		freedrawingEditDomain.setPaletteActionGroup(actionGroup);
+	}
+	
+	public void createPartControl(Composite parent) {
+		parent.setBackground(getSite().getShell().getDisplay().getSystemColor(SWT.COLOR_BLACK));
+		parent.setLayout(GridLayoutFactory.fillDefaults().create());
+//		parent.setLayout(RowLayoutFactory.fillDefaults().fill(true).type(SWT.VERTICAL).create());
+		ToolBar toolbar = new ToolBar(parent, SWT.FLAT | SWT.RIGHT);
+//		toolbar.setBackground(getSite().getShell().getDisplay().getSystemColor(SWT.COLOR_BLACK));
+		toolbar.setLayoutData(GridDataFactory.swtDefaults().grab(true, false).align(SWT.FILL, SWT.FILL).create());
+		toolbarManager = createToolBarManager(toolbar, actionGroup);
+		
+		super.createPartControl(parent);
+		
+		for ( Control ctrl : parent.getChildren() ) {
+			if ( ctrl.getLayoutData() == null ) {
+				ctrl.setLayoutData(GridDataFactory.swtDefaults().grab(true, true).align(SWT.FILL, SWT.FILL).create());
+			}
+		}
+	}
+
+	private static ToolBarManager createToolBarManager(ToolBar toolbar, PaletteActionGroup actionGroup) {
+		ToolBarManager toolbarManager = new ToolBarManager(toolbar);
+		boolean start = true;
+		for ( SubGroupAction subGroupAction : actionGroup.getSubGroupActions() ) {
+			if ( start ) {
+				start = false;
+			} else {
+				toolbarManager.add(new Separator());
+			}
+			for (AbstractSelectionAction action : subGroupAction.getActions()) {
+				toolbarManager.add(action);
+			}
+		}
+		toolbarManager.update(true);
+		
+		return toolbarManager;
 	}
 
 	/**
@@ -83,6 +184,8 @@ public class FreedrawingEditor extends GraphicalEditorWithFlyoutPalette {
 	}
 
 	public void dispose() {
+		this.toolbarManager.dispose();
+		this.imageManager.dispose();
 		super.dispose();
 	}
 
@@ -203,7 +306,7 @@ public class FreedrawingEditor extends GraphicalEditorWithFlyoutPalette {
 	 * 팔레트 팩토리
 	 */
 	protected PaletteRoot getPaletteRoot() {
-		return FreedrawingEditorPaletteFactory.createPalette();
+		return FreedrawingEditorPaletteFactory.createPalette(imageManager);
 	}
 
 	/**

@@ -13,8 +13,6 @@ import org.eclipse.swt.widgets.Display;
 
 public class FDRectangleFigure extends Label {
 
-	public static final Image RECTANGLE_IMAGE = new Image(Display.getCurrent(), FDRectangleFigure.class.getResourceAsStream("rectangle.png"));
-
 	public FDRectangleFigure() {
 		setPreferredSize(100, 100);
 		setBorder(new CompoundBorder(new LineBorder(2), new MarginBorder(2, 2, 2, 2)));

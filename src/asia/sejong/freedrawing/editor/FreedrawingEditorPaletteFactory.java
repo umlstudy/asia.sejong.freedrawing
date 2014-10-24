@@ -10,21 +10,17 @@ import org.eclipse.gef.palette.PaletteToolbar;
 import org.eclipse.gef.palette.PanningSelectionToolEntry;
 import org.eclipse.gef.palette.ToolEntry;
 import org.eclipse.gef.requests.SimpleFactory;
-import org.eclipse.jface.resource.ImageDescriptor;
 
-import asia.sejong.freedrawing.figures.FDConnectionFigure;
-import asia.sejong.freedrawing.figures.FDRectangleFigure;
+import asia.sejong.freedrawing.editor.tools.FDConnectionCreationTool;
 import asia.sejong.freedrawing.model.FDNode;
+import asia.sejong.freedrawing.resources.image.ImageManager;
 
 public class FreedrawingEditorPaletteFactory {
 
-	private static final ImageDescriptor RECTANGLE_IMAGE_DESCRIPTOR = ImageDescriptor.createFromImage(FDRectangleFigure.RECTANGLE_IMAGE);
-	private static final ImageDescriptor CONNECTION_IMAGE_DESCRIPTOR = ImageDescriptor.createFromImage(FDConnectionFigure.CONNECTION_IMAGE);
-	
-	public static PaletteRoot createPalette() {
+	public static PaletteRoot createPalette(ImageManager imageManager) {
 		PaletteRoot palette = new PaletteRoot();
 		palette.add(createToolsGroup(palette));
-		palette.add(createElementsDrawer());
+		palette.add(createElementsDrawer(imageManager));
 		return palette;
 	}
 
@@ -49,7 +45,7 @@ public class FreedrawingEditorPaletteFactory {
 	/**
 	 * Create a drawer containing tools to add the various genealogy model elements
 	 */
-	private static PaletteEntry createElementsDrawer() {
+	private static PaletteEntry createElementsDrawer(ImageManager imageManager) {
 		PaletteDrawer componentsDrawer = new PaletteDrawer("Elements");
 		
 		// 사각형 생성을 위한 팩토리 및 툴 생성
@@ -64,8 +60,8 @@ public class FreedrawingEditorPaletteFactory {
 				"사각형",
 				"사각형 추가",
 				factory, 
-				RECTANGLE_IMAGE_DESCRIPTOR, 
-				RECTANGLE_IMAGE_DESCRIPTOR);
+				imageManager.getRectangleImageDescriptor(), 
+				imageManager.getRectangleImageDescriptor());
 			componentsDrawer.add(component);
 		}
 
@@ -75,8 +71,8 @@ public class FreedrawingEditorPaletteFactory {
 					"Connection",
 					"Create a connection", 
 					null,
-					CONNECTION_IMAGE_DESCRIPTOR,
-					CONNECTION_IMAGE_DESCRIPTOR);
+					imageManager.getConnectionImageDescriptor(),
+					imageManager.getConnectionImageDescriptor());
 			connection.setToolClass(FDConnectionCreationTool.class);
 			componentsDrawer.add(connection);
 		}
