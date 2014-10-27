@@ -7,15 +7,19 @@ import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.LineBorder;
 import org.eclipse.draw2d.MarginBorder;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Pattern;
 import org.eclipse.swt.widgets.Display;
 
 public class FDRectangleFigure extends Label {
 
+	private LineBorder lineBorder;
+	
 	public FDRectangleFigure() {
 		setPreferredSize(100, 100);
-		setBorder(new CompoundBorder(new LineBorder(2), new MarginBorder(2, 2, 2, 2)));
+		lineBorder = new LineBorder(2);
+		setBorder(new CompoundBorder(lineBorder, new MarginBorder(2, 2, 2, 2)));
 	}
 	
 	protected void paintFigure(Graphics graphics) {
@@ -33,6 +37,11 @@ public class FDRectangleFigure extends Label {
 		
 		super.paintFigure(graphics);
 	}
+	
+	public void setBorderColor(Color color) {
+		getLineBorder().setColor(color);
+	}
+	
 //
 //	/**
 //	 * Adjust the receiver's appearance based upon whether the receiver is selected
@@ -45,4 +54,8 @@ public class FDRectangleFigure extends Label {
 //		((NoteBorder) getBorder()).setLineWidth(selected ? 2 : 1);
 //		erase();
 //	}
+
+	public LineBorder getLineBorder() {
+		return lineBorder;
+	}
 }

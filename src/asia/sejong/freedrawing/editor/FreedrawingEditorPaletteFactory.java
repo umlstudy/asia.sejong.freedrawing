@@ -13,7 +13,7 @@ import org.eclipse.gef.requests.SimpleFactory;
 
 import asia.sejong.freedrawing.editor.tools.FDConnectionCreationTool;
 import asia.sejong.freedrawing.model.FDNode;
-import asia.sejong.freedrawing.resources.image.ImageManager;
+import asia.sejong.freedrawing.resources.ImageManager;
 
 public class FreedrawingEditorPaletteFactory {
 

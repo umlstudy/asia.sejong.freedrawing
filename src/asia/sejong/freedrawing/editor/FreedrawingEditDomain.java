@@ -3,7 +3,7 @@ package asia.sejong.freedrawing.editor;
 import org.eclipse.gef.DefaultEditDomain;
 import org.eclipse.ui.IEditorPart;
 
-import asia.sejong.freedrawing.editor.actions.PaletteActionGroup;
+import asia.sejong.freedrawing.editor.actions.selection.PaletteSelectionActionGroup;
 
 public class FreedrawingEditDomain extends DefaultEditDomain {
 	
@@ -12,13 +12,13 @@ public class FreedrawingEditDomain extends DefaultEditDomain {
 		setPaletteActionGroup(paletteActionGroup);
 	}
 
-	private PaletteActionGroup paletteActionGroup;
+	private PaletteSelectionActionGroup paletteActionGroup;
 
-	public PaletteActionGroup getPaletteActionGroup() {
+	public PaletteSelectionActionGroup getPaletteActionGroup() {
 		return paletteActionGroup;
 	}
 
-	void setPaletteActionGroup(PaletteActionGroup paletteActionGroup) {
+	void setPaletteActionGroup(PaletteSelectionActionGroup paletteActionGroup) {
 		this.paletteActionGroup = paletteActionGroup;
 	}
 	

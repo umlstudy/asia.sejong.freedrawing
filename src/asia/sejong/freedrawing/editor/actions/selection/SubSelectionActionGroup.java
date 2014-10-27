@@ -1,13 +1,13 @@
-package asia.sejong.freedrawing.editor.actions;
+package asia.sejong.freedrawing.editor.actions.selection;
 
 import java.util.List;
 
-public class SubGroupAction {
+public class SubSelectionActionGroup {
 	
 	private List<AbstractSelectionAction> actions;
 
-	public static SubGroupAction newInstance(List<AbstractSelectionAction> actions) {
-		SubGroupAction  sgAction = new SubGroupAction();
+	public static SubSelectionActionGroup newInstance(List<AbstractSelectionAction> actions) {
+		SubSelectionActionGroup  sgAction = new SubSelectionActionGroup();
 		sgAction.setActions(actions);
 		return sgAction;
 	}

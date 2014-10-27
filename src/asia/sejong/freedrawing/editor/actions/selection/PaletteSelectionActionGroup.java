@@ -1,4 +1,4 @@
-package asia.sejong.freedrawing.editor.actions;
+package asia.sejong.freedrawing.editor.actions.selection;
 
 import java.util.Collections;
 import java.util.List;
@@ -7,21 +7,21 @@ import org.eclipse.jface.resource.ImageDescriptor;
 
 import asia.sejong.freedrawing.editor.FreedrawingEditDomain;
 
-public abstract class PaletteActionGroup {
+public abstract class PaletteSelectionActionGroup {
 	
-	private List<SubGroupAction> actions;
+	private List<SubSelectionActionGroup> actions;
 	private AbstractSelectionAction defaultAction;
 	
 	private FreedrawingEditDomain editDomain;
 	
-	public PaletteActionGroup(FreedrawingEditDomain editDomain) {
+	public PaletteSelectionActionGroup(FreedrawingEditDomain editDomain) {
 		this.editDomain = editDomain;
 		this.actions = createSubGroupActions();
 	}
 
-	public abstract List<SubGroupAction> createSubGroupActions();
+	public abstract List<SubSelectionActionGroup> createSubGroupActions();
 	
-	public List<SubGroupAction> getSubGroupActions() {
+	public List<SubSelectionActionGroup> getSubGroupActions() {
 		return Collections.unmodifiableList(actions);
 	}
 	

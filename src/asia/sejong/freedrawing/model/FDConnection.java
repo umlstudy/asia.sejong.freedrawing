@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.swt.graphics.RGB;
 
-public class FDConnection {
+public class FDConnection extends BaseObject {
 
 	private FDNode source;
 	private FDNode target;
@@ -56,5 +57,11 @@ public class FDConnection {
 	
 	public void add(int index, Point point) {
 		bendpoints.add(index, point);
+	}
+	
+
+	@Override
+	public void borderColorChanged(RGB rgbColor) {
+		// TODO
 	}
 }

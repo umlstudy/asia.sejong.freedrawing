@@ -23,17 +23,22 @@ import org.eclipse.gef.tools.CellEditorLocator;
 import org.eclipse.gef.tools.DirectEditManager;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.TextCellEditor;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Text;
 
 import asia.sejong.freedrawing.figures.FDRectangleFigure;
 import asia.sejong.freedrawing.model.FDConnection;
 import asia.sejong.freedrawing.model.FDNode;
+import asia.sejong.freedrawing.model.FontInfo;
 import asia.sejong.freedrawing.model.listener.FDNodeListener;
 import asia.sejong.freedrawing.parts.FDConnectionEditPart.FDConnectionEditPart;
 import asia.sejong.freedrawing.parts.FDNodeEditPart.cmd.CreateFDConnectionCommand;
 import asia.sejong.freedrawing.parts.FDNodeEditPart.cmd.DeleteFDNodeCommand;
 import asia.sejong.freedrawing.parts.FDNodeEditPart.cmd.TextChangeCommand;
 import asia.sejong.freedrawing.parts.common.AbstractNodeEditPart;
+import asia.sejong.freedrawing.resources.ContextManager;
 import asia.sejong.freedrawing.util.DebugUtil;
 
 public class FDNodeEditPart extends AbstractNodeEditPart implements NodeEditPart, FDNodeListener {
@@ -288,6 +293,20 @@ public class FDNodeEditPart extends AbstractNodeEditPart implements NodeEditPart
 	@Override
 	public void textChanged(String newText) {
 		((Label)getFigure()).setText(newText);
+	}
+
+	@Override
+	public void borderColorChanged(RGB rgbColor) {
+		Color color = ContextManager.getInstance().getColorManager().get(rgbColor);
+		((FDRectangleFigure)getFigure()).setBorderColor(color);
+		getFigure().repaint();
+	}
+
+	@Override
+	public void fontChanged(FontInfo fontInfo) {
+		Font font = ContextManager.getInstance().getFontManager().get(fontInfo);
+		((FDRectangleFigure)getFigure()).setFont(font);
+		getFigure().repaint();
 	}
 
 //	@Override

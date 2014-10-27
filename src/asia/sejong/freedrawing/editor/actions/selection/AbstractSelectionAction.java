@@ -1,4 +1,4 @@
-package asia.sejong.freedrawing.editor.actions;
+package asia.sejong.freedrawing.editor.actions.selection;
 
 import org.eclipse.gef.EditDomain;
 import org.eclipse.gef.tools.AbstractTool;
@@ -9,14 +9,14 @@ public abstract class AbstractSelectionAction extends Action {
 	
 	private EditDomain editDomain;
 	private AbstractTool tool;
-	private PaletteActionGroup actionGroup;
+	private PaletteSelectionActionGroup actionGroup;
 	
-	public AbstractSelectionAction() {
+	protected AbstractSelectionAction() {
 		super("", AS_CHECK_BOX);
 		this.tool = createTool();
 	}
 	
-	static final AbstractSelectionAction build(Class<? extends AbstractSelectionAction> actionClass, String title, ImageDescriptor desc, EditDomain editDomain, PaletteActionGroup actionGroup) {
+	static final AbstractSelectionAction build(Class<? extends AbstractSelectionAction> actionClass, String title, ImageDescriptor desc, EditDomain editDomain, PaletteSelectionActionGroup actionGroup) {
 		AbstractSelectionAction newInstance;
 		try {
 			newInstance = actionClass.newInstance();
@@ -27,7 +27,7 @@ public abstract class AbstractSelectionAction extends Action {
 		}
 	}
 	
-	public void build(String title, ImageDescriptor desc, EditDomain editDomain, PaletteActionGroup actionGroup) {
+	public void build(String title, ImageDescriptor desc, EditDomain editDomain, PaletteSelectionActionGroup actionGroup) {
 		this.setText(title);
 		this.setImageDescriptor(desc);
 		this.editDomain = editDomain;
@@ -37,7 +37,7 @@ public abstract class AbstractSelectionAction extends Action {
 	protected abstract AbstractTool createTool();
 
 	public void run() {
-		for ( SubGroupAction sgAction : actionGroup.getSubGroupActions() ) {
+		for ( SubSelectionActionGroup sgAction : actionGroup.getSubGroupActions() ) {
 			for ( AbstractSelectionAction action : sgAction.getActions() ) {
 				if ( action == this ) {
 					action.setChecked(true);

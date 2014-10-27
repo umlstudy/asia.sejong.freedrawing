@@ -1,4 +1,4 @@
-package asia.sejong.freedrawing.editor.actions;
+package asia.sejong.freedrawing.editor.actions.selection;
 
 import org.eclipse.gef.tools.AbstractTool;
 

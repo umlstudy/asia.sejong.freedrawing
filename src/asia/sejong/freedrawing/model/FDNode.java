@@ -7,10 +7,11 @@ import java.util.Set;
 
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.swt.graphics.RGB;
 
 import asia.sejong.freedrawing.model.listener.FDNodeListener;
 
-public class FDNode {
+public class FDNode extends TextObject {
 	
 	private HashSet<FDNode> sources;
 	private HashSet<FDNode> targets;
@@ -177,12 +178,28 @@ public class FDNode {
 	// FDNode
 
 	protected void fireLocationChanged(int newX, int newY) {
-		for (FDNodeListener l : listeners)
+		for (FDNodeListener l : listeners) {
 			l.locationChanged(newX, newY);
+		}
 	}
 
 	protected void fireSizeChanged(int newWidth, int newHeight) {
-		for (FDNodeListener l : listeners)
+		for (FDNodeListener l : listeners) {
 			l.sizeChanged(newWidth, newHeight);
+		}
+	}
+	
+	@Override
+	public void borderColorChanged(RGB rgbColor) {
+		for (FDNodeListener l : listeners) {
+			l.borderColorChanged(rgbColor);
+		}
+	}
+
+	@Override
+	public void fontChanged(FontInfo fontInfo) {
+		for (FDNodeListener l : listeners) {
+			l.fontChanged(fontInfo);
+		}
 	}
 }

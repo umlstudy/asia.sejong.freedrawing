@@ -2,7 +2,7 @@ package asia.sejong.freedrawing.model.listener;
 
 import asia.sejong.freedrawing.model.FDNode;
 
-public interface FDNodeListener {
+public interface FDNodeListener extends TextObjectListener {
 
 	void sourceAdded(FDNode source);
 	void sourceRemoved(FDNode source);
