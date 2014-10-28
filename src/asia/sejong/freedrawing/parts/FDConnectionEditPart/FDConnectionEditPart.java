@@ -72,9 +72,10 @@ public class FDConnectionEditPart extends AbstractConnectionEditPart {
 		} else {
 			connection = new PolylineConnection();
 		}
-		connection.setConnectionRouter(new BendpointConnectionRouter());
 		connection.setLineWidth(3);
 		connection.setAntialias(1);
+
+		connection.setConnectionRouter(new BendpointConnectionRouter());
 
 		PolygonDecoration decoration = new PolygonDecoration();
 		decoration.setTemplate(ARROWHEAD);
@@ -159,5 +160,9 @@ public class FDConnectionEditPart extends AbstractConnectionEditPart {
 	public CreateFDConnectionCommand recreateCommand() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	public void deactivate() {
+		super.deactivate();
 	}
 }

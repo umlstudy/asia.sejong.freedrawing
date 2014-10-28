@@ -1,5 +1,9 @@
 package asia.sejong.freedrawing.parts.FDNodeEditPart;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.eclipse.draw2d.ChopboxAnchor;
 import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.IFigure;
@@ -176,6 +180,25 @@ public class FDNodeEditPart extends AbstractNodeEditPart implements NodeEditPart
 		return (FDRectangleFigure) getFigure();
 	}
 	
+	@Override
+	protected List<FDConnection> getModelSourceConnections() {
+		// this -> modelX ?
+		List<FDConnection> list = new ArrayList<FDConnection>();
+		for ( FDNode target : getModel().getTargets() ) {
+			list.add(FDConnection.newInstance(getModel(), target));
+		}
+		return list;
+	}
+
+	@Override
+	protected List<FDConnection> getModelTargetConnections() {
+		// nodeX -> this ?
+		List<FDConnection> list = new ArrayList<FDConnection>();
+		for ( FDNode source : getModel().getSources() ) {
+			list.add(FDConnection.newInstance(source, getModel()));
+		}
+		return list;
+	}
 
 	@Override
 	protected void createEditPolicies() {
@@ -297,18 +320,24 @@ public class FDNodeEditPart extends AbstractNodeEditPart implements NodeEditPart
 
 	@Override
 	public void borderColorChanged(RGB rgbColor) {
-		Color color = ContextManager.getInstance().getColorManager().get(rgbColor);
+		Color color = null;
+		if ( rgbColor != null ) {
+			color = ContextManager.getInstance().getColorManager().get(rgbColor);
+		}
 		((FDRectangleFigure)getFigure()).setBorderColor(color);
 		getFigure().repaint();
 	}
 
 	@Override
 	public void fontChanged(FontInfo fontInfo) {
-		Font font = ContextManager.getInstance().getFontManager().get(fontInfo);
+		Font font = null;
+		if ( fontInfo != null ) {
+			font = ContextManager.getInstance().getFontManager().get(fontInfo);
+		}
 		((FDRectangleFigure)getFigure()).setFont(font);
 		getFigure().repaint();
 	}
-
+	
 //	@Override
 //	public void connectionSourceSetted(Link connection) {
 //		LinkEditPart part = (LinkEditPart)getViewer().getEditPartRegistry().get(connection);
