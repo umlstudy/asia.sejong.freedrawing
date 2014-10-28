@@ -1,22 +1,22 @@
 package asia.sejong.freedrawing.parts.FDConnectionEditPart.cmd;
 
-import org.eclipse.draw2d.Bendpoint;
+import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.requests.BendpointRequest;
 
 
 public class MoveBendpointCommand extends BendpointCommand {
 	
-	private Bendpoint oldBendpoint;
+	private Point oldPoint;
 	
 	public MoveBendpointCommand(BendpointRequest request) {
 		super(request);
 	}
 	
 	public void execute() {
-		oldBendpoint = replaceBendpoint(getLocationIndex(), getLocation());
+		oldPoint = moveBendpoint(getLocationIndex(), getLocation());
 	}
 
 	public void undo() {
-		replaceBendpoint(getLocationIndex(), oldBendpoint.getLocation());
+		moveBendpoint(getLocationIndex(), oldPoint);
 	}
 }

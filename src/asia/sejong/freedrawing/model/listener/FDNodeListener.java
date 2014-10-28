@@ -1,5 +1,7 @@
 package asia.sejong.freedrawing.model.listener;
 
+import org.eclipse.draw2d.geometry.Point;
+
 import asia.sejong.freedrawing.model.FDNode;
 
 public interface FDNodeListener extends TextObjectListener {
@@ -11,4 +13,7 @@ public interface FDNodeListener extends TextObjectListener {
 	void locationChanged(int newX, int newY);
 	void sizeChanged(int newWidth, int newHeight);
 	void textChanged(String newText);
+	void bendpointAdded(int locationIndex, Point location, FDNode target);
+	void bendpointRemoved(int locationIndex, FDNode target);
+	void bendpointMoved(int locationIndex, Point newPoint, FDNode target);
 }

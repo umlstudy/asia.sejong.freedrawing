@@ -2,9 +2,7 @@ package asia.sejong.freedrawing.model;
 
 import org.eclipse.swt.graphics.RGB;
 
-import asia.sejong.freedrawing.model.listener.BaseObjectListener;
-
-public abstract class BaseObject implements BaseObjectListener {
+public abstract class BaseObject {
 	
 	private RGB borderColor;
 
@@ -15,7 +13,9 @@ public abstract class BaseObject implements BaseObjectListener {
 	public final void setBorderColor(RGB borderColor) {
 		this.borderColor = borderColor;
 		
-		// listener
-		borderColorChanged(borderColor);
+		// send event
+		fireBorderColorChanged(borderColor);
 	}
+
+	protected abstract void fireBorderColorChanged(RGB borderColor);
 }

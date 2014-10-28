@@ -1,8 +1,7 @@
 package asia.sejong.freedrawing.model;
 
-import asia.sejong.freedrawing.model.listener.TextObjectListener;
 
-public abstract class TextObject extends BaseObject implements TextObjectListener {
+public abstract class TextObject extends BaseObject {
 	
 	private FontInfo fontInfo;
 
@@ -13,6 +12,9 @@ public abstract class TextObject extends BaseObject implements TextObjectListene
 	public void setFontInfo(FontInfo fontInfo) {
 		this.fontInfo = fontInfo;
 		
-		fontChanged(fontInfo);
+		// send event
+		fireFontChanged(fontInfo);
 	}
+
+	protected abstract void fireFontChanged(FontInfo fontInfo);
 }

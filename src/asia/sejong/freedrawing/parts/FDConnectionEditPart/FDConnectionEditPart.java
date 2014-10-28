@@ -1,11 +1,17 @@
 package asia.sejong.freedrawing.parts.FDConnectionEditPart;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.draw2d.AbsoluteBendpoint;
+import org.eclipse.draw2d.Bendpoint;
 import org.eclipse.draw2d.BendpointConnectionRouter;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.PolygonDecoration;
 import org.eclipse.draw2d.PolylineConnection;
+import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.commands.Command;
@@ -164,5 +170,40 @@ public class FDConnectionEditPart extends AbstractConnectionEditPart {
 	
 	public void deactivate() {
 		super.deactivate();
+	}
+	
+	private List<Bendpoint> getBendpoints() {
+		PolylineConnection connection = getConnection();
+		BendpointConnectionRouter connectionRouter = (BendpointConnectionRouter)connection.getConnectionRouter();
+		@SuppressWarnings("unchecked")
+		List<Bendpoint> bendpoints = (List<Bendpoint>)connectionRouter.getConstraint(connection);
+		if ( bendpoints == null ) {
+			bendpoints = new ArrayList<Bendpoint>();
+			connectionRouter.setConstraint(connection, bendpoints);
+		}
+		
+		return bendpoints;
+	}
+	
+	public void bendpointAdded(int locationIndex, Point location) {
+		List<Bendpoint> bendpoints = getBendpoints();
+		AbsoluteBendpoint bp = new AbsoluteBendpoint(location);
+		bendpoints.add(locationIndex, bp);
+		
+		refresh();
+	}
+	
+	public void bendpointRemoved(int locationIndex) {
+		List<Bendpoint> bendpoints = getBendpoints();
+		bendpoints.remove(locationIndex);
+
+		refresh();
+	}
+	
+	public void bendpointMoved(int locationIndex, Point newPoint) {
+		AbsoluteBendpoint newBendpoint = new AbsoluteBendpoint(newPoint);
+		getBendpoints().set(locationIndex, newBendpoint);
+		
+		refresh();
 	}
 }

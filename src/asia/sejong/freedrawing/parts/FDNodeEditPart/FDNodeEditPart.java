@@ -1,13 +1,13 @@
 package asia.sejong.freedrawing.parts.FDNodeEditPart;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.draw2d.ChopboxAnchor;
 import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
+import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.EditPart;
@@ -336,6 +336,24 @@ public class FDNodeEditPart extends AbstractNodeEditPart implements NodeEditPart
 		}
 		((FDRectangleFigure)getFigure()).setFont(font);
 		getFigure().repaint();
+	}
+
+	@Override
+	public void bendpointAdded(int locationIndex, Point location, FDNode target) {
+		FDConnectionEditPart connectionEditPart = (FDConnectionEditPart)findConnection(FDConnection.newInstance(getModel(), target));
+		connectionEditPart.bendpointAdded(locationIndex, location);
+	}
+
+	@Override
+	public void bendpointRemoved(int locationIndex, FDNode target) {
+		FDConnectionEditPart connectionEditPart = (FDConnectionEditPart)findConnection(FDConnection.newInstance(getModel(), target));
+		connectionEditPart.bendpointRemoved(locationIndex);
+	}
+
+	@Override
+	public void bendpointMoved(int locationIndex, Point newPoint, FDNode target) {
+		FDConnectionEditPart connectionEditPart = (FDConnectionEditPart)findConnection(FDConnection.newInstance(getModel(), target));
+		connectionEditPart.bendpointMoved(locationIndex, newPoint);
 	}
 	
 //	@Override

@@ -1,5 +1,6 @@
 package asia.sejong.freedrawing.model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -74,8 +75,7 @@ public class FDNode extends TextObject {
 	
 	private void addSource(FDNode source) {
 		if ( source == null || sources.contains(source) ) {
-			// already exist
-			throw new RuntimeException();
+			throw new RuntimeException("already exist");
 		}
 
 		sources.add(source);
@@ -88,8 +88,7 @@ public class FDNode extends TextObject {
 	
 	private void removeSource(FDNode source) {
 		if ( source == null || !sources.contains(source) ) {
-			// not exist
-			throw new RuntimeException();
+			throw new RuntimeException("not exist");
 		}
 
 		sources.remove(source);
@@ -150,7 +149,6 @@ public class FDNode extends TextObject {
 		
 		text = newText;
 		
-		
 		// notify event
 		for ( FDNodeListener l : listeners ) {
 			l.textChanged(text);
@@ -158,7 +156,45 @@ public class FDNode extends TextObject {
 		
 		return true;
 	}
+
+	public void addBendpoint(int locationIndex, Point location, FDNode target) {
+		List<Point> list = bandpoints.get(target);
+		if ( list == null ) {
+			list = new ArrayList<Point>();
+			bandpoints.put(target, list);
+		}
+		
+		list.add(locationIndex, location);
+		
+		fireBendpointAdded(locationIndex, location, target);
+	}
+
+	public Point removeBendpoint(int locationIndex, FDNode target) {
+		List<Point> list = bandpoints.get(target);
+		if ( list == null ) {
+			throw new RuntimeException();
+		}
+		
+		Point removed = list.remove(locationIndex);
+		
+		fireBendpointRemoved(locationIndex, target);
+		
+		return removed;
+	}
 	
+	public Point moveBendpoint(int locationIndex, Point newPoint, FDNode target) {
+		List<Point> list = bandpoints.get(target);
+		if ( list == null ) {
+			throw new RuntimeException();
+		}
+		
+		Point oldPoint = list.set(locationIndex, newPoint);
+		
+		fireBendpointMoved(locationIndex, newPoint, target);
+		
+		return oldPoint;
+	}
+
 	//============================================================
 	// Listener add and remove
 	
@@ -189,15 +225,33 @@ public class FDNode extends TextObject {
 		}
 	}
 	
+	protected void fireBendpointAdded(int locationIndex, Point location, FDNode target) {
+		for (FDNodeListener l : listeners) {
+			l.bendpointAdded(locationIndex, location, target);
+		}
+	}
+	
+	protected void fireBendpointRemoved(int locationIndex, FDNode target) {
+		for (FDNodeListener l : listeners) {
+			l.bendpointRemoved(locationIndex, target);
+		}
+	}
+	
+	protected void fireBendpointMoved(int locationIndex, Point newPoint, FDNode target) {
+		for (FDNodeListener l : listeners) {
+			l.bendpointMoved(locationIndex, newPoint, target);
+		}
+	}
+	
 	@Override
-	public void borderColorChanged(RGB rgbColor) {
+	protected void fireBorderColorChanged(RGB rgbColor) {
 		for (FDNodeListener l : listeners) {
 			l.borderColorChanged(rgbColor);
 		}
 	}
 
 	@Override
-	public void fontChanged(FontInfo fontInfo) {
+	protected void fireFontChanged(FontInfo fontInfo) {
 		for (FDNodeListener l : listeners) {
 			l.fontChanged(fontInfo);
 		}

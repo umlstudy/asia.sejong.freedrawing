@@ -58,10 +58,9 @@ public class FDConnection extends BaseObject {
 	public void add(int index, Point point) {
 		bendpoints.add(index, point);
 	}
-	
 
 	@Override
-	public void borderColorChanged(RGB rgbColor) {
-		// TODO
+	protected void fireBorderColorChanged(RGB borderColor) {
+		
 	}
 }
