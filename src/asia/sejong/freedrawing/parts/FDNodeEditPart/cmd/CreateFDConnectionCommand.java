@@ -1,5 +1,9 @@
 package asia.sejong.freedrawing.parts.FDNodeEditPart.cmd;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.commands.Command;
 
 import asia.sejong.freedrawing.model.FDNode;
@@ -11,16 +15,22 @@ public class CreateFDConnectionCommand extends Command {
 	private FDNode source;
 	private FDNode target;
 	
+	private List<Point> undoBendpoints;
+	
 	public CreateFDConnectionCommand() {
 		setLabel("Create " + getConnectionName());
 	}
 
 	public void execute() {
-		source.addTarget(target);
+		if ( undoBendpoints == null ) {
+			source.addTarget(target, new ArrayList<Point>());
+		} else {
+			source.addTarget(target, undoBendpoints);
+		}
 	}
 	
 	public void undo() {
-		source.removeTarget(target);
+		undoBendpoints = source.removeTarget(target);
 	}
 
 	public String getConnectionName() {

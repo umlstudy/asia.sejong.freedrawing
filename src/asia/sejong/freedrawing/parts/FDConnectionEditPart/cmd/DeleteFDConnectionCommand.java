@@ -1,5 +1,8 @@
 package asia.sejong.freedrawing.parts.FDConnectionEditPart.cmd;
 
+import java.util.List;
+
+import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.commands.Command;
 
 import asia.sejong.freedrawing.model.FDConnection;
@@ -14,6 +17,8 @@ public class DeleteFDConnectionCommand extends Command
 	private FDNode source;
 	private FDNode target;
 	
+	private List<Point> removedBendpoints;
+	
 	public DeleteFDConnectionCommand(FDConnection conn) {
 		super("Delete Connection");
 		
@@ -25,13 +30,13 @@ public class DeleteFDConnectionCommand extends Command
 	 * Delete the connection
 	 */
 	public void execute() {
-		source.removeTarget(target);
+		removedBendpoints = source.removeTarget(target);
 	}
 	
 	/**
 	 * Restore the connection
 	 */
 	public void undo() {
-		source.addTarget(target);
+		source.addTarget(target, removedBendpoints);
 	}
 }

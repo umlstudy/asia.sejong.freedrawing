@@ -206,4 +206,16 @@ public class FDConnectionEditPart extends AbstractConnectionEditPart {
 		
 		refresh();
 	}
+
+	public void setBendpoints(List<Point> targetBendpoints) {
+		PolylineConnection connection = getConnection();
+		BendpointConnectionRouter connectionRouter = (BendpointConnectionRouter)connection.getConnectionRouter();
+		List<Bendpoint> bendpoints = new ArrayList<Bendpoint>();
+		if ( targetBendpoints != null ) {
+			for ( Point point : targetBendpoints  ) {
+				bendpoints.add(new AbsoluteBendpoint(point));
+			}
+			connectionRouter.setConstraint(connection, bendpoints);
+		}
+	}
 }

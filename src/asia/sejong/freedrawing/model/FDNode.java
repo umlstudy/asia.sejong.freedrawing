@@ -16,7 +16,7 @@ public class FDNode extends TextObject {
 	
 	private HashSet<FDNode> sources;
 	private HashSet<FDNode> targets;
-	private HashMap<FDNode, List<Point>> bandpoints;
+	private HashMap<FDNode, List<Point>> bendpoints;
 	
 	private int x, y, width, height;
 	
@@ -27,7 +27,7 @@ public class FDNode extends TextObject {
 	public FDNode() {
 		sources = new HashSet<FDNode>();
 		targets = new HashSet<FDNode>();
-		bandpoints = new HashMap<FDNode, List<Point>>();
+		bendpoints = new HashMap<FDNode, List<Point>>();
 	}
 	
 	public int getX() {
@@ -102,8 +102,12 @@ public class FDNode extends TextObject {
 	public Set<FDNode> getTargets() {
 		return new HashSet<FDNode>(targets);
 	}
+	
+	public List<Point> getBendpoints(FDNode target) {
+		return bendpoints.get(target);
+	}
 
-	public void addTarget(FDNode target) {
+	public void addTarget(FDNode target, List<Point> targetBendpoints) {
 		if ( targets.contains(target) ) {
 			// already exist
 			return;
@@ -112,27 +116,32 @@ public class FDNode extends TextObject {
 		target.addSource(this);
 		
 		targets.add(target);
+		bendpoints.put(target, targetBendpoints);
 		
 		// notify event
 		for ( FDNodeListener l : listeners ) {
-			l.targetAdded(target);
+			l.targetAdded(target, targetBendpoints);
 		}
 	}
 	
-	public void removeTarget(FDNode target) {
+	public List<Point> removeTarget(FDNode target) {
 		if ( !targets.contains(target) ) {
 			// not exist
-			return;
+			return null;
 		}
 		
 		target.removeSource(this);
 		
 		targets.remove(target);
 		
+		List<Point> bendpointList = bendpoints.remove(target);
+		
 		// notify event
 		for ( FDNodeListener l : listeners ) {
 			l.targetRemoved(target);
 		}
+		
+		return bendpointList;
 	}
 
 	public String getText() {
@@ -156,12 +165,12 @@ public class FDNode extends TextObject {
 		
 		return true;
 	}
-
+	
 	public void addBendpoint(int locationIndex, Point location, FDNode target) {
-		List<Point> list = bandpoints.get(target);
+		List<Point> list = bendpoints.get(target);
 		if ( list == null ) {
 			list = new ArrayList<Point>();
-			bandpoints.put(target, list);
+			bendpoints.put(target, list);
 		}
 		
 		list.add(locationIndex, location);
@@ -170,7 +179,7 @@ public class FDNode extends TextObject {
 	}
 
 	public Point removeBendpoint(int locationIndex, FDNode target) {
-		List<Point> list = bandpoints.get(target);
+		List<Point> list = bendpoints.get(target);
 		if ( list == null ) {
 			throw new RuntimeException();
 		}
@@ -183,7 +192,7 @@ public class FDNode extends TextObject {
 	}
 	
 	public Point moveBendpoint(int locationIndex, Point newPoint, FDNode target) {
-		List<Point> list = bandpoints.get(target);
+		List<Point> list = bendpoints.get(target);
 		if ( list == null ) {
 			throw new RuntimeException();
 		}

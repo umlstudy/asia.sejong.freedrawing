@@ -294,12 +294,14 @@ public class FDNodeEditPart extends AbstractNodeEditPart implements NodeEditPart
 	}
 
 	@Override
-	public void targetAdded(FDNode target) {
+	public void targetAdded(FDNode target, List<Point> targetBendpoints) {
 		FDConnection conn = FDConnection.newInstance(getModel(), target);
-		ConnectionEditPart part = findConnection(conn);
+		FDConnectionEditPart part = (FDConnectionEditPart)findConnection(conn);
 		if ( part == null ) {
 			throw new RuntimeException();
 		}
+		part.setBendpoints(targetBendpoints);
+		
 		addSourceConnection(part, 0);
 	}
 
