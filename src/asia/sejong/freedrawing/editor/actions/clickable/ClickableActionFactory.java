@@ -9,10 +9,10 @@ import asia.sejong.freedrawing.resources.ContextManager;
 public class ClickableActionFactory {
 
 	public static ColorPickAction createColorPickAction(ContextManager cm, EditDomain domain, IWorkbenchPart part) {
-		return (ColorPickAction)AbstractClickableAction.build(ColorPickAction.class, "ƒÆ∂Ûº±≈√", cm.getImageManager().getColorPickImageDescriptor(), domain, part);
+		return (ColorPickAction)AbstractClickableAction.build(ColorPickAction.class, "ÏπºÎùºÏÑ†ÌÉù", cm.getImageManager().getColorPickImageDescriptor(), domain, part);
 	}
 
 	public static FontPickAction createFontPickAction(ContextManager cm, DefaultEditDomain domain, IWorkbenchPart part) {
-		return (FontPickAction)AbstractClickableAction.build(FontPickAction.class, "ƒÆ∂Ûº±≈√", cm.getImageManager().getFontPickImageDescriptor(), domain, part);
+		return (FontPickAction)AbstractClickableAction.build(FontPickAction.class, "ÏπºÎùºÏÑ†ÌÉù", cm.getImageManager().getFontPickImageDescriptor(), domain, part);
 	}
 }

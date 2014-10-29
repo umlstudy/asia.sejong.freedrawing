@@ -29,9 +29,11 @@ import org.eclipse.gef.tools.CellEditorLocator;
 import org.eclipse.gef.tools.DirectEditManager;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.TextCellEditor;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
 import asia.sejong.freedrawing.figures.FDRectangleFigure;
@@ -120,7 +122,7 @@ public class FDNodeEditPart extends AbstractNodeEditPart implements NodeEditPart
 			}
 			return new ChopboxAnchor(getFigure());
 		} else {
-			// ���ο� Ŀ�ؼ�
+			// 새로운 커넥션
 			return new ChopboxAnchor(getFigure());
 		}
 	}
@@ -259,11 +261,23 @@ public class FDNodeEditPart extends AbstractNodeEditPart implements NodeEditPart
 	public void performRequest(Request req) {
 		if ( req != null && req.getType().equals(RequestConstants.REQ_DIRECT_EDIT) ) {
 			
-			DirectEditManager dem = new DirectEditManager(this, TextCellEditor.class, null) {
+			DirectEditManager dem = new DirectEditManager(this, null, null) {
 				@Override
 				protected void initCellEditor() {
 					String text = ((FDRectangleFigure) getFigure()).getText();
 					getCellEditor().setValue(text);
+				}
+				protected CellEditor createCellEditorOn(Composite parent) {
+					TextCellEditor cellEditor = new TextCellEditor(parent, SWT.MULTI | SWT.CENTER);
+					Text text = (Text)cellEditor.getControl();
+					Font font = null;
+					FontInfo fontInfo = getModel().getFontInfo();
+					if ( fontInfo != null ) {
+						font = ContextManager.getInstance().getFontManager().get(fontInfo);
+						text.setFont(font);
+					}
+					
+					return cellEditor;
 				}
 			};
 			dem.setLocator(new CellEditorLocator() {
@@ -386,7 +400,7 @@ public class FDNodeEditPart extends AbstractNodeEditPart implements NodeEditPart
 	}
 	
 	/**
-	 * TODO
+	 * 노드위로 노드가 지나갈 때 무브 액션이 활성화 되도록 함
 	 * @see org.eclipse.gef.editparts.AbstractEditPart#getTargetEditPart(org.eclipse.gef.Request)
 	 */
 	public EditPart getTargetEditPart(Request request) {

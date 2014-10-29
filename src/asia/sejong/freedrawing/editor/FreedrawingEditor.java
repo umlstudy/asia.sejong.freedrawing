@@ -24,12 +24,16 @@ import org.eclipse.gef.ui.palette.PaletteViewer;
 import org.eclipse.gef.ui.palette.PaletteViewerProvider;
 import org.eclipse.gef.ui.parts.GraphicalEditorWithFlyoutPalette;
 import org.eclipse.gef.ui.parts.GraphicalViewerKeyHandler;
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -63,6 +67,7 @@ public class FreedrawingEditor extends GraphicalEditorWithFlyoutPalette {
 	private ToolBarManager toolbarManager;
 	private ContextManager contextManager;
 	private PaletteSelectionActionGroup actionGroup;
+	private MenuManager contextMenuManger;
 
 	public FreedrawingEditor() {
 		
@@ -129,12 +134,12 @@ public class FreedrawingEditor extends GraphicalEditorWithFlyoutPalette {
 		// add actions to ToolBar
 		toolbarManager = createToolBarManager(toolbar, actionGroup);
 		toolbarManager.add(new Separator());
-		ColorPickAction colorPickAction = ClickableActionFactory.createColorPickAction(contextManager, getEditDomain(), getSite().getPart());
+		final ColorPickAction colorPickAction = ClickableActionFactory.createColorPickAction(contextManager, getEditDomain(), getSite().getPart());
 		toolbarManager.add(colorPickAction);
 		getSelectionActions().add(colorPickAction.getId());
 		getActionRegistry().registerAction(colorPickAction);
 		
-		FontPickAction fontPickAction = ClickableActionFactory.createFontPickAction(contextManager, getEditDomain(), getSite().getPart());
+		final FontPickAction fontPickAction = ClickableActionFactory.createFontPickAction(contextManager, getEditDomain(), getSite().getPart());
 		toolbarManager.add(fontPickAction);
 		getSelectionActions().add(fontPickAction.getId());
 		getActionRegistry().registerAction(fontPickAction);
@@ -142,9 +147,26 @@ public class FreedrawingEditor extends GraphicalEditorWithFlyoutPalette {
 		
 		super.createPartControl(parent);
 		
-		for ( Control ctrl : parent.getChildren() ) {
-			if ( ctrl.getLayoutData() == null ) {
-				ctrl.setLayoutData(GridDataFactory.swtDefaults().grab(true, true).align(SWT.FILL, SWT.FILL).create());
+		contextMenuManger = new MenuManager("FreedrawingEditorPopup");
+//		contextMenuManger.setRemoveAllWhenShown(true);
+		contextMenuManger.add(fontPickAction);
+		contextMenuManger.add(colorPickAction);
+			
+//		contextMenuManger.addMenuListener(new IMenuListener() {
+//			@Override
+//			public void menuAboutToShow(IMenuManager manager) {
+//				manager.removeAll();
+//				ISelection selection = getGraphicalViewer().getSelection();
+//				contextMenuManger.add(fontPickAction);
+//				contextMenuManger.add(colorPickAction);
+//			}
+//		});
+//		getGraphicalViewer().getControl().setMenu(contextMenuManger.createContextMenu(getGraphicalViewer().getControl()));
+		getGraphicalViewer().setContextMenu(contextMenuManger);
+		
+		for ( Control control : parent.getChildren() ) {
+			if ( control.getLayoutData() == null ) {
+				control.setLayoutData(GridDataFactory.swtDefaults().grab(true, true).align(SWT.FILL, SWT.FILL).create());
 			}
 		}
 	}

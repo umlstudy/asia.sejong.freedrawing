@@ -12,6 +12,7 @@ import org.eclipse.gef.palette.ToolEntry;
 import org.eclipse.gef.requests.SimpleFactory;
 
 import asia.sejong.freedrawing.editor.tools.FDConnectionCreationTool;
+import asia.sejong.freedrawing.editor.tools.FDPanningSelectionTool;
 import asia.sejong.freedrawing.model.FDNode;
 import asia.sejong.freedrawing.resources.ImageManager;
 
@@ -32,9 +33,10 @@ public class FreedrawingEditorPaletteFactory {
 		PaletteToolbar toolbar = new PaletteToolbar("Tools");
 	
 		// 셀렉션툴을 그룹에 추가하고 디톨트 선택으로 함
-		ToolEntry tool = new PanningSelectionToolEntry();
-		toolbar.add(tool);
-		palette.setDefaultEntry(tool);
+		ToolEntry selectionToolEntry = new PanningSelectionToolEntry();
+		selectionToolEntry.setToolClass(FDPanningSelectionTool.class);
+		toolbar.add(selectionToolEntry);
+		palette.setDefaultEntry(selectionToolEntry);
 	
 		// 범위 선택툴을 추가
 		toolbar.add(new MarqueeToolEntry());
