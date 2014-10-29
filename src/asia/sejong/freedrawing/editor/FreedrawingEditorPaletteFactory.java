@@ -25,18 +25,18 @@ public class FreedrawingEditorPaletteFactory {
 	}
 
 	/**
-	 * Ä¿¸óÅøÀ» Æ÷ÇÔÇÏ´Â Åø¹Ù »ı¼º(ÆÈ·¹Æ®ÀÇ ÃÖ »ó´Ü¿¡ Ç¥½ÃµÊ)
-	 * µğÆúÆ® Åø·Î ¼¿·º¼Ç Åø ¼±ÅÃ
+	 * ì»¤ëª¬íˆ´ì„ í¬í•¨í•˜ëŠ” íˆ´ë°” ìƒì„±(íŒ”ë ˆíŠ¸ì˜ ìµœ ìƒë‹¨ì— í‘œì‹œë¨)
+	 * ë””í´íŠ¸ íˆ´ë¡œ ì…€ë ‰ì…˜ íˆ´ ì„ íƒ
 	 */
 	private static PaletteEntry createToolsGroup(PaletteRoot palette) {
 		PaletteToolbar toolbar = new PaletteToolbar("Tools");
 	
-		// ¼¿·º¼ÇÅøÀ» ±×·ì¿¡ Ãß°¡ÇÏ°í µğÅçÆ® ¼±ÅÃÀ¸·Î ÇÔ
+		// ì…€ë ‰ì…˜íˆ´ì„ ê·¸ë£¹ì— ì¶”ê°€í•˜ê³  ë””í†¨íŠ¸ ì„ íƒìœ¼ë¡œ í•¨
 		ToolEntry tool = new PanningSelectionToolEntry();
 		toolbar.add(tool);
 		palette.setDefaultEntry(tool);
 	
-		// ¹üÀ§ ¼±ÅÃÅøÀ» Ãß°¡
+		// ë²”ìœ„ ì„ íƒíˆ´ì„ ì¶”ê°€
 		toolbar.add(new MarqueeToolEntry());
 		
 		return toolbar;
@@ -48,7 +48,7 @@ public class FreedrawingEditorPaletteFactory {
 	private static PaletteEntry createElementsDrawer(ImageManager imageManager) {
 		PaletteDrawer componentsDrawer = new PaletteDrawer("Elements");
 		
-		// »ç°¢Çü »ı¼ºÀ» À§ÇÑ ÆÑÅä¸® ¹× Åø »ı¼º
+		// ì‚¬ê°í˜• ìƒì„±ì„ ìœ„í•œ íŒ©í† ë¦¬ ë° íˆ´ ìƒì„±
 		{
 			SimpleFactory factory = new SimpleFactory(FDNode.class) {
 				public Object getNewObject() {
@@ -57,15 +57,15 @@ public class FreedrawingEditorPaletteFactory {
 				}
 			};
 			CombinedTemplateCreationEntry component = new CombinedTemplateCreationEntry(
-				"»ç°¢Çü",
-				"»ç°¢Çü Ãß°¡",
+				"ì‚¬ê°í˜•",
+				"ì‚¬ê°í˜• ì¶”ê°€",
 				factory, 
 				imageManager.getRectangleImageDescriptor(), 
 				imageManager.getRectangleImageDescriptor());
 			componentsDrawer.add(component);
 		}
 
-		// Ä¿³Ø¼Ç »ı¼ºÀ» À§ÇÑ ÆÑÅä¸® ¹× Åø »ı¼º
+		// ì»¤ë„¥ì…˜ ìƒì„±ì„ ìœ„í•œ íŒ©í† ë¦¬ ë° íˆ´ ìƒì„±
 		{
 			ToolEntry connection = new ConnectionCreationToolEntry(
 					"Connection",

@@ -10,6 +10,7 @@ import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.ConnectionEditPart;
+import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
@@ -19,6 +20,7 @@ import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.ComponentEditPolicy;
 import org.eclipse.gef.editpolicies.DirectEditPolicy;
+import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.requests.CreateConnectionRequest;
 import org.eclipse.gef.requests.DirectEditRequest;
 import org.eclipse.gef.requests.GroupRequest;
@@ -367,6 +369,33 @@ public class FDNodeEditPart extends AbstractNodeEditPart implements NodeEditPart
 	public void bendpointMoved(int locationIndex, Point newPoint, FDNode target) {
 		FDConnectionEditPart connectionEditPart = (FDConnectionEditPart)findConnection(FDConnection.newInstance(getModel(), target));
 		connectionEditPart.bendpointMoved(locationIndex, newPoint);
+	}
+	
+	// -------------------------------------------
+	// FOR DEBUG
+	public DragTracker getDragTracker(Request request) {
+		return new org.eclipse.gef.tools.DragEditPartsTracker(this) {
+			protected Command getCommand() {
+				return super.getCommand();
+			}
+			
+			protected String getCommandName() {
+				return super.getCommandName();
+			}
+		};
+	}
+	
+	/**
+	 * TODO
+	 * @see org.eclipse.gef.editparts.AbstractEditPart#getTargetEditPart(org.eclipse.gef.Request)
+	 */
+	public EditPart getTargetEditPart(Request request) {
+		EditPart targetEditPart = super.getTargetEditPart(request);
+		System.out.println("TARGET EDITPART ? " + request + "," + targetEditPart);
+		if ( request instanceof ChangeBoundsRequest && targetEditPart instanceof FDNodeEditPart ) {
+			return targetEditPart.getParent();
+		}
+		return targetEditPart;
 	}
 	
 //	@Override

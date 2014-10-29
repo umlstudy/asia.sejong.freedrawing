@@ -54,7 +54,7 @@ public class FDNodeRootEditPart extends AbstractGraphicalEditPart implements FDN
 		
 		// Handles constraint changes (e.g. moving and/or resizing) of model elements
 		// and creation of new model elements
-		installEditPolicy("EditPolicy.LAYOUT_ROLE", new XYLayoutFDNodeRootEditPolicy());
+		installEditPolicy(EditPolicy.LAYOUT_ROLE, new XYLayoutFDNodeRootEditPolicy());
 	}
 	
 	// ===============================================================

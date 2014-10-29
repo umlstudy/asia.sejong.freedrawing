@@ -84,12 +84,12 @@ public class FreedrawingEditor extends GraphicalEditorWithFlyoutPalette {
 					ImageDescriptor desc = null;
 					
 					desc = contextManager.getImageManager().getSelectImageDescriptor();
-					AbstractSelectionAction defaultAction = buildSelectionAction(PanningSelectionAction.class, "¼±ÅÃ", desc);
+					AbstractSelectionAction defaultAction = buildSelectionAction(PanningSelectionAction.class, "ì„ íƒ", desc);
 					actions.add(defaultAction);
 					setDefaultAction(defaultAction);
 					
 					desc = contextManager.getImageManager().getMarqueeImageDescriptor();
-					actions.add(buildSelectionAction(MarqueeSelectionAction.class, "¹üÀ§¼±ÅÃ", desc));
+					actions.add(buildSelectionAction(MarqueeSelectionAction.class, "ë²”ìœ„ì„ íƒ", desc));
 					
 					subGroupActions.add(SubSelectionActionGroup.newInstance(actions));
 				}
@@ -99,10 +99,10 @@ public class FreedrawingEditor extends GraphicalEditorWithFlyoutPalette {
 					ImageDescriptor desc = null;
 					
 					desc = contextManager.getImageManager().getRectangleImageDescriptor();
-					actions.add(buildSelectionAction(RectangleSelectionAction.class, "»óÀÚ", desc));
+					actions.add(buildSelectionAction(RectangleSelectionAction.class, "ìƒì", desc));
 					
 					desc = contextManager.getImageManager().getConnectionImageDescriptor();
-					actions.add(buildSelectionAction(ConnectionSelectionAction.class, "¿¬°á", desc));
+					actions.add(buildSelectionAction(ConnectionSelectionAction.class, "ì—°ê²°", desc));
 					
 					subGroupActions.add(SubSelectionActionGroup.newInstance(actions));
 				}
@@ -168,7 +168,7 @@ public class FreedrawingEditor extends GraphicalEditorWithFlyoutPalette {
 	}
 
 	/**
-	 * freedrawingData¸¦ ºä¿¡ Ç¥½ÃÇÏ±â À§ÇÑ ¼³Á¤
+	 * freedrawingDataë¥¼ ë·°ì— í‘œì‹œí•˜ê¸° ìœ„í•œ ì„¤ì •
 	 */
 	@SuppressWarnings("unchecked")
 	protected void configureGraphicalViewer() {
@@ -177,28 +177,28 @@ public class FreedrawingEditor extends GraphicalEditorWithFlyoutPalette {
 		viewer.setEditPartFactory(new FreedrawingEditPartFactory());
 		viewer.setRootEditPart(new ScalableFreeformRootEditPart());
 
-		// ¾×¼Ç »ı¼º
-		// ¾×¼Ç »ı¼º - directEditAction
+		// ì•¡ì…˜ ìƒì„±
+		// ì•¡ì…˜ ìƒì„± - directEditAction
 		directEditAction = new DirectEditAction(getEditorSite().getPart());
 		getSelectionActions().add(directEditAction.getId());
 		getActionRegistry().registerAction(directEditAction);
 
-		// ¾×¼Ç »ı¼º - deleteAction
+		// ì•¡ì…˜ ìƒì„± - deleteAction
 		deleteAction = new DeleteAction(getEditorSite().getPart());
 		getSelectionActions().add(deleteAction.getId());
 		getActionRegistry().registerAction(deleteAction);
 		
-		// ´ÜÃàÅ° Ãß°¡ #1
+		// ë‹¨ì¶•í‚¤ ì¶”ê°€ #1
 		GraphicalViewerKeyHandler graphicalViewerKeyHandler = new GraphicalViewerKeyHandler(viewer);
 		viewer.setKeyHandler(graphicalViewerKeyHandler);
 		
-		// ´ÜÃàÅ° Ãß°¡ #2
+		// ë‹¨ì¶•í‚¤ ì¶”ê°€ #2
 		graphicalViewerKeyHandler.put(KeyStroke.getPressed(SWT.F2, 0), directEditAction);
 		graphicalViewerKeyHandler.put(KeyStroke.getPressed(SWT.DEL, (int)SWT.DEL, 0), deleteAction);
 	}
 
 	/**
-	 * È­¸é¿¡ Ç¥½ÃÇÏ±â À§ÇØ ÃÊ±âÈ­ ÀÛ¾÷ ¼öÇà
+	 * í™”ë©´ì— í‘œì‹œí•˜ê¸° ìœ„í•´ ì´ˆê¸°í™” ì‘ì—… ìˆ˜í–‰
 	 */
 	protected void initializeGraphicalViewer() {
 		super.initializeGraphicalViewer();
@@ -212,7 +212,7 @@ public class FreedrawingEditor extends GraphicalEditorWithFlyoutPalette {
 	}
 
 	/**
-	 * ÁöÁ¤ÇÑ ÆÄÀÏ·ÎºÎÅÍ ¸ğµ¨À» ÀĞÀ½
+	 * ì§€ì •í•œ íŒŒì¼ë¡œë¶€í„° ëª¨ë¸ì„ ì½ìŒ
 	 */
 	protected void setInput(IEditorInput input) {
 		super.setInput(input);
@@ -236,20 +236,20 @@ public class FreedrawingEditor extends GraphicalEditorWithFlyoutPalette {
 	}
 
 	/**
-	 * ÆíÁıÁß¿¡ ¿¡µğÅÍ ³»¿ëÀ» ÆÄÀÏ·Î ÀúÀåÇÑ´Ù.
-	 * ÀúÀå ÈÄ °ü·Ã »óÅÂ¸¦ °»½ÅÇÏ°í ¸®½º³Ê¿¡°Ô ÅëÁöÇÑ´Ù.
+	 * í¸ì§‘ì¤‘ì— ì—ë””í„° ë‚´ìš©ì„ íŒŒì¼ë¡œ ì €ì¥í•œë‹¤.
+	 * ì €ì¥ í›„ ê´€ë ¨ ìƒíƒœë¥¼ ê°±ì‹ í•˜ê³  ë¦¬ìŠ¤ë„ˆì—ê²Œ í†µì§€í•œë‹¤.
 	 * 
-	 * @param monitor ÁøÇà ¸ğ´ÏÅÍ
+	 * @param monitor ì§„í–‰ ëª¨ë‹ˆí„°
 	 */
 	public void doSave(IProgressMonitor monitor) {
 
-		// ¸ğµ¨ Á÷·ÄÈ­
+		// ëª¨ë¸ ì§ë ¬í™”
 		StringWriter writer = new StringWriter(5000);
 		FreedrawingModelWriter freedrawingDataWriter = FreedrawingModelWriter.newInstance(freedrawingData);
 		freedrawingDataWriter.write(new PrintWriter(writer));
 		ByteArrayInputStream stream = new ByteArrayInputStream(writer.toString().getBytes());
 
-		// Á÷·ÄÈ­ ¸ğµ¨À» ÆÄÀÌ·Î ÀúÀåÇÔ
+		// ì§ë ¬í™” ëª¨ë¸ì„ íŒŒì´ë¡œ ì €ì¥í•¨
 		IFile file = ((IFileEditorInput) getEditorInput()).getFile();
 		try {
 			if (file.exists())
@@ -261,15 +261,15 @@ public class FreedrawingEditor extends GraphicalEditorWithFlyoutPalette {
 			return;
 		}
 
-		// ¿¡µğÅÍ »óÅÂ¸¦ ¸ğµ¨ÀÌ ÀúÀåµÈ »óÅÂ·Î º¯°æ ÈÄ ¸®½º³Ê¿¡ ÅëÁöÇÔ
+		// ì—ë””í„° ìƒíƒœë¥¼ ëª¨ë¸ì´ ì €ì¥ëœ ìƒíƒœë¡œ ë³€ê²½ í›„ ë¦¬ìŠ¤ë„ˆì— í†µì§€í•¨
 		getCommandStack().markSaveLocation();
 		firePropertyChange(PROP_DIRTY);
 	}
 
 	/**
-	 * ¿¡·¯Ã³¸®
+	 * ì—ëŸ¬ì²˜ë¦¬
 	 * 
-	 * @param ex ¿¹¿Ü (not <code>null</code>)
+	 * @param ex ì˜ˆì™¸ (not <code>null</code>)
 	 */
 	private void handleException(String when, Exception ex) {
 		ex.printStackTrace();
@@ -278,28 +278,28 @@ public class FreedrawingEditor extends GraphicalEditorWithFlyoutPalette {
 	}
 
 	/**
-	 * ÆÄÀÏ°ú ¿¡µğÅÍÀÇ ÄÜÅÙÃ÷ÀÇ ³»¿ëÀÌ ´Ù¸¦ ¶§ È£Ãâ µÊ
+	 * íŒŒì¼ê³¼ ì—ë””í„°ì˜ ì½˜í…ì¸ ì˜ ë‚´ìš©ì´ ë‹¤ë¥¼ ë•Œ í˜¸ì¶œ ë¨
 	 */
 	public boolean isSaveAsAllowed() {
 		return true;
 	}
 
 	/**
-	 * »õ·Î¿î ÆÄÀÏ·Î ÀúÀå
+	 * ìƒˆë¡œìš´ íŒŒì¼ë¡œ ì €ì¥
 	 */
 	public void doSaveAs() {
 
-		// »õ ÆÄÀÏÁ¤º¸¸¦ ¼±ÅÃÇÏ±â À§ÇÑ ´ÙÀÌ¾ó·Î±×
+		// ìƒˆ íŒŒì¼ì •ë³´ë¥¼ ì„ íƒí•˜ê¸° ìœ„í•œ ë‹¤ì´ì–¼ë¡œê·¸
 		SaveAsDialog dialog = new SaveAsDialog(getSite().getShell());
 		dialog.setOriginalFile(((IFileEditorInput) getEditorInput()).getFile());
 		dialog.open();
 
-		// Äµ½½ Å¬¸¯½Ã °æ·Î´Â ³ÎÀÓ
+		// ìº”ìŠ¬ í´ë¦­ì‹œ ê²½ë¡œëŠ” ë„ì„
 		IPath path = dialog.getResult();
 		if (path == null)
 			return;
 
-		// ¼±ÅÃÇÑ ÆÄÀÏ·Î º¯°æ ¹× ÀúÀå ¹× ÅëÁö
+		// ì„ íƒí•œ íŒŒì¼ë¡œ ë³€ê²½ ë° ì €ì¥ ë° í†µì§€
 		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
 		super.setInput(new FileEditorInput(file));
 		doSave(null);
@@ -313,7 +313,7 @@ public class FreedrawingEditor extends GraphicalEditorWithFlyoutPalette {
 //	}
 
 	/**
-	 * ¾ÆµªÅÍ Ãëµæ
+	 * ì•„ëí„° ì·¨ë“
 	 */
 	@SuppressWarnings("rawtypes")
 	public Object getAdapter(Class type) {
@@ -330,14 +330,14 @@ public class FreedrawingEditor extends GraphicalEditorWithFlyoutPalette {
 	}
 
 	/**
-	 * ÆÈ·¹Æ® ÆÑÅä¸®
+	 * íŒ”ë ˆíŠ¸ íŒ©í† ë¦¬
 	 */
 	protected PaletteRoot getPaletteRoot() {
 		return FreedrawingEditorPaletteFactory.createPalette(contextManager.getImageManager());
 	}
 
 	/**
-	 * ÆÈ·¹Æ® Åø ºä¾î Á¦°ø ¹× µå·¹±× ¸®½º³Ê
+	 * íŒ”ë ˆíŠ¸ íˆ´ ë·°ì–´ ì œê³µ ë° ë“œë ˆê·¸ ë¦¬ìŠ¤ë„ˆ
 	 */
 	protected PaletteViewerProvider createPaletteViewerProvider() {
 		return new PaletteViewerProvider(getEditDomain()) {

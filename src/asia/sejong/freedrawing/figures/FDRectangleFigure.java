@@ -38,6 +38,11 @@ public class FDRectangleFigure extends Label {
 		super.paintFigure(graphics);
 	}
 	
+	public Rectangle getBounds() {
+//		System.out.println("BB ? " + super.getBounds());
+		return super.getBounds();
+	}
+
 	public void setBorderColor(Color color) {
 		getLineBorder().setColor(color);
 	}
