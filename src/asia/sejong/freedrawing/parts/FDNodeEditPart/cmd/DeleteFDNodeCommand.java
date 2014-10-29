@@ -58,7 +58,7 @@ public class DeleteFDNodeCommand extends Command
 		nodeRoot.addNode(target);
 		
 		for ( FDNode source : removedSources ) {
-			source.addTarget(target, removedSourcePoints.get(target));
+			source.addTarget(target, removedSourcePoints.get(source));
 		}
 		
 		for ( FDNode targetOfTarget : removedTargets ) {

@@ -59,13 +59,32 @@ public class FDNodeEditPart extends AbstractNodeEditPart implements NodeEditPart
 		Rectangle bounds = new Rectangle(m.getX(), m.getY(), m.getWidth(), m.getHeight());
 		((GraphicalEditPart) getParent()).setLayoutConstraint(this, getFigure(), bounds);
 		
-		if ( m.getText() != null ) {
-			((Label)getFigure()).setText(m.getText());
-		}
+		setText(m.getText());
+		setFont(m.getFontInfo());
+		setBorderColor(m.getBorderColor());
 		
 		super.refreshVisuals();
 	}
+	
+	private void setFont(FontInfo fontInfo) {
+		Font font = null;
+		if ( fontInfo != null ) {
+			font = ContextManager.getInstance().getFontManager().get(fontInfo);
+		}
+		((FDRectangleFigure)getFigure()).setFont(font);
+	}
+	
+	private void setBorderColor(RGB rgbColor) {
+		Color color = null;
+		if ( rgbColor != null ) {
+			color = ContextManager.getInstance().getColorManager().get(rgbColor);
+		}
+		((FDRectangleFigure)getFigure()).setBorderColor(color);
+	}
 
+	private void setText(String newText) {
+		((Label)getFigure()).setText(newText);
+	}
 	
 	public FDNode getModel() {
 		return (FDNode) super.getModel();
@@ -317,26 +336,18 @@ public class FDNodeEditPart extends AbstractNodeEditPart implements NodeEditPart
 	
 	@Override
 	public void textChanged(String newText) {
-		((Label)getFigure()).setText(newText);
+		setText(newText);
 	}
 
 	@Override
 	public void borderColorChanged(RGB rgbColor) {
-		Color color = null;
-		if ( rgbColor != null ) {
-			color = ContextManager.getInstance().getColorManager().get(rgbColor);
-		}
-		((FDRectangleFigure)getFigure()).setBorderColor(color);
+		setBorderColor(rgbColor);
 		getFigure().repaint();
 	}
 
 	@Override
 	public void fontChanged(FontInfo fontInfo) {
-		Font font = null;
-		if ( fontInfo != null ) {
-			font = ContextManager.getInstance().getFontManager().get(fontInfo);
-		}
-		((FDRectangleFigure)getFigure()).setFont(font);
+		setFont(fontInfo);
 		getFigure().repaint();
 	}
 
