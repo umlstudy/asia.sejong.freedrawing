@@ -1,6 +1,7 @@
 package asia.sejong.freedrawing.editor.actions;
 
 import org.eclipse.gef.EditDomain;
+import org.eclipse.gef.tools.AbstractTool;
 import org.eclipse.gef.ui.actions.DirectEditAction;
 import org.eclipse.gef.ui.actions.SelectionAction;
 import org.eclipse.ui.IEditorPart;
@@ -11,11 +12,7 @@ import org.eclipse.ui.actions.ActionFactory;
 import asia.sejong.freedrawing.editor.actions.clickable.AbstractClickableAction;
 import asia.sejong.freedrawing.editor.actions.clickable.ColorPickAction;
 import asia.sejong.freedrawing.editor.actions.clickable.FontPickAction;
-import asia.sejong.freedrawing.editor.actions.selection.GroupMemberAction;
-import asia.sejong.freedrawing.editor.actions.selection.SelectConnectionAction;
-import asia.sejong.freedrawing.editor.actions.selection.SelectMarqueeAction;
-import asia.sejong.freedrawing.editor.actions.selection.SelectPanningAction;
-import asia.sejong.freedrawing.editor.actions.selection.SelectRectangleAction;
+import asia.sejong.freedrawing.editor.actions.selection.PaletteSelectAction;
 import asia.sejong.freedrawing.editor.actions.selection.SelectableActionGroup;
 import asia.sejong.freedrawing.resources.ContextManager;
 
@@ -35,52 +32,56 @@ public abstract class FreedrawingActionFactory extends ActionFactory {
 	
 	// 팩토리메소드#2
 	public static final FreedrawingActionFactory SELECT_PANNING = new FreedrawingActionFactory("SELECT_PANNING") {
-		public GroupMemberAction create(SelectableActionGroup actionGroup) {
-			SelectPanningAction action = new SelectPanningAction();
+		public PaletteSelectAction create(SelectableActionGroup actionGroup, AbstractTool tool) {
+			PaletteSelectAction action = new PaletteSelectAction();
 			action.setId(getId());
+			action.setTool(tool);
 			action.setImageDescriptor(ContextManager.getInstance().getImageManager().getSelectImageDescriptor());
 			action.setText("선택");
 			action.setEditDomain(actionGroup.getEditDomain());
-			action.setActionGroup(actionGroup);
+			action.setActionGroup(actionGroup, true);
 			
 			return action;
 		}
 	};
 	
 	public static final FreedrawingActionFactory SELECT_RECTANGLE = new FreedrawingActionFactory("SELECT_RECTANGLE") {
-		public GroupMemberAction create(SelectableActionGroup actionGroup) {
-			SelectRectangleAction action = new SelectRectangleAction();
+		public PaletteSelectAction create(SelectableActionGroup actionGroup, AbstractTool tool) {
+			PaletteSelectAction action = new PaletteSelectAction();
 			action.setId(getId());
+			action.setTool(tool);
 			action.setImageDescriptor(ContextManager.getInstance().getImageManager().getRectangleImageDescriptor());
 			action.setText("사각형");
 			action.setEditDomain(actionGroup.getEditDomain());
-			action.setActionGroup(actionGroup);
+			action.setActionGroup(actionGroup, false);
 			
 			return action;
 		}
 	};
 
 	public static final FreedrawingActionFactory SELECT_MARQUEE = new FreedrawingActionFactory("SELECT_MARQUEE") {
-		public GroupMemberAction create(SelectableActionGroup actionGroup) {
-			SelectMarqueeAction action = new SelectMarqueeAction();
+		public PaletteSelectAction create(SelectableActionGroup actionGroup, AbstractTool tool) {
+			PaletteSelectAction action = new PaletteSelectAction();
 			action.setId(getId());
+			action.setTool(tool);
 			action.setImageDescriptor(ContextManager.getInstance().getImageManager().getMarqueeImageDescriptor());
 			action.setText("마큐");
 			action.setEditDomain(actionGroup.getEditDomain());
-			action.setActionGroup(actionGroup);
+			action.setActionGroup(actionGroup, false);
 			
 			return action;
 		}
 	};
 	
 	public static final FreedrawingActionFactory SELECT_CONNECTION = new FreedrawingActionFactory("SELECT_CONNECTION") {
-		public GroupMemberAction create(SelectableActionGroup actionGroup) {
-			SelectConnectionAction action = new SelectConnectionAction();
+		public PaletteSelectAction create(SelectableActionGroup actionGroup, AbstractTool tool) {
+			PaletteSelectAction action = new PaletteSelectAction();
 			action.setId(getId());
+			action.setTool(tool);
 			action.setImageDescriptor(ContextManager.getInstance().getImageManager().getConnectionImageDescriptor());
 			action.setText("연결");
 			action.setEditDomain(actionGroup.getEditDomain());
-			action.setActionGroup(actionGroup);
+			action.setActionGroup(actionGroup, false);
 			
 			return action;
 		}
@@ -135,7 +136,7 @@ public abstract class FreedrawingActionFactory extends ActionFactory {
 	 * @param actionGroup
 	 * @return
 	 */
-	public GroupMemberAction create(SelectableActionGroup actionGroup) {
+	public PaletteSelectAction create(SelectableActionGroup actionGroup, AbstractTool tool) {
 		throw new RuntimeException();
 	}
 	

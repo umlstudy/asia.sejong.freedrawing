@@ -8,35 +8,35 @@ import org.eclipse.gef.EditDomain;
 
 public class SelectableActionGroup {
 	
-	private List<GroupMemberAction> actions;
-	private GroupMemberAction defaultAction;
+	private List<PaletteSelectAction> actions;
+	private PaletteSelectAction defaultAction;
 	private EditDomain editDomain;
 	
 	public SelectableActionGroup(EditDomain editDomain) {
-		this.setActions(new ArrayList<GroupMemberAction>());
+		this.setActions(new ArrayList<PaletteSelectAction>());
 		this.setEditDomain(editDomain);
 	}
 
-	public void addAction(GroupMemberAction action, boolean isDefaultAction) {
+	public void addAction(PaletteSelectAction action, boolean isDefaultAction) {
 		if ( isDefaultAction ) {
 			this.defaultAction = action;
 		}
-		getActions().add(action);
+		actions.add(action);
 	}
 	
 	public void selectDefaultAction() {
 		defaultAction.run();
 	}
 
-	public void setDefaultAction(GroupMemberAction defaultAction) {
+	public void setDefaultAction(PaletteSelectAction defaultAction) {
 		this.defaultAction = defaultAction;
 	}
 
-	public List<GroupMemberAction> getActions() {
+	public List<PaletteSelectAction> getActions() {
 		return Collections.unmodifiableList(actions);
 	}
 
-	private void setActions(List<GroupMemberAction> actions) {
+	private void setActions(List<PaletteSelectAction> actions) {
 		this.actions = actions;
 	}
 

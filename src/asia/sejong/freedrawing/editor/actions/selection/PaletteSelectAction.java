@@ -4,21 +4,18 @@ import org.eclipse.gef.EditDomain;
 import org.eclipse.gef.tools.AbstractTool;
 import org.eclipse.jface.action.Action;
 
-public abstract class GroupMemberAction extends Action {
+public class PaletteSelectAction extends Action {
 	
 	private EditDomain editDomain;
 	private AbstractTool tool;
 	private SelectableActionGroup actionGroup;
 	
-	protected GroupMemberAction() {
+	public PaletteSelectAction() {
 		super("", AS_CHECK_BOX);
-		this.setTool(createTool());
 	}
 	
-	protected abstract AbstractTool createTool();
-
 	public void run() {
-		for ( GroupMemberAction action : getActionGroup().getActions() ) {
+		for ( PaletteSelectAction action : getActionGroup().getActions() ) {
 			if ( action == this ) {
 				action.setChecked(true);
 			} else {
@@ -48,7 +45,8 @@ public abstract class GroupMemberAction extends Action {
 		return actionGroup;
 	}
 
-	public void setActionGroup(SelectableActionGroup actionGroup) {
+	public void setActionGroup(SelectableActionGroup actionGroup, boolean isDefaultAction) {
 		this.actionGroup = actionGroup;
+		this.actionGroup.addAction(this, isDefaultAction);
 	}
 }
