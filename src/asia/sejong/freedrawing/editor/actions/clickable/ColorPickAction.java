@@ -14,9 +14,8 @@ import asia.sejong.freedrawing.model.BaseObject;
 
 public class ColorPickAction extends AbstractClickableAction {
 
-	protected ColorPickAction(IWorkbenchPart part) {
+	public ColorPickAction(IWorkbenchPart part) {
 		super(part);
-		setId("colorPickAction");
 	}
 	
 	public void run() {

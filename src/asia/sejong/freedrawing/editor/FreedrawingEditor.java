@@ -3,8 +3,6 @@ package asia.sejong.freedrawing.editor;
 import java.io.ByteArrayInputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -14,26 +12,20 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.gef.GraphicalViewer;
-import org.eclipse.gef.KeyStroke;
 import org.eclipse.gef.dnd.TemplateTransferDragSourceListener;
 import org.eclipse.gef.editparts.ScalableFreeformRootEditPart;
 import org.eclipse.gef.palette.PaletteRoot;
-import org.eclipse.gef.ui.actions.DeleteAction;
-import org.eclipse.gef.ui.actions.DirectEditAction;
+import org.eclipse.gef.ui.actions.ActionRegistry;
 import org.eclipse.gef.ui.palette.PaletteViewer;
 import org.eclipse.gef.ui.palette.PaletteViewerProvider;
 import org.eclipse.gef.ui.parts.GraphicalEditorWithFlyoutPalette;
-import org.eclipse.gef.ui.parts.GraphicalViewerKeyHandler;
-import org.eclipse.jface.action.IMenuListener;
-import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -43,16 +35,8 @@ import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.dialogs.SaveAsDialog;
 import org.eclipse.ui.part.FileEditorInput;
 
-import asia.sejong.freedrawing.editor.actions.clickable.ClickableActionFactory;
-import asia.sejong.freedrawing.editor.actions.clickable.ColorPickAction;
-import asia.sejong.freedrawing.editor.actions.clickable.FontPickAction;
-import asia.sejong.freedrawing.editor.actions.selection.AbstractSelectionAction;
-import asia.sejong.freedrawing.editor.actions.selection.ConnectionSelectionAction;
-import asia.sejong.freedrawing.editor.actions.selection.MarqueeSelectionAction;
-import asia.sejong.freedrawing.editor.actions.selection.PaletteSelectionActionGroup;
-import asia.sejong.freedrawing.editor.actions.selection.PanningSelectionAction;
-import asia.sejong.freedrawing.editor.actions.selection.RectangleSelectionAction;
-import asia.sejong.freedrawing.editor.actions.selection.SubSelectionActionGroup;
+import asia.sejong.freedrawing.editor.actions.FreedrawingActionFactory;
+import asia.sejong.freedrawing.editor.actions.selection.SelectableActionGroup;
 import asia.sejong.freedrawing.model.FDNodeRoot;
 import asia.sejong.freedrawing.model.io.FreedrawingModelWriter;
 import asia.sejong.freedrawing.parts.common.FreedrawingEditPartFactory;
@@ -61,109 +45,68 @@ import asia.sejong.freedrawing.resources.ContextManager;
 public class FreedrawingEditor extends GraphicalEditorWithFlyoutPalette {
 
 	private final FDNodeRoot freedrawingData = new FDNodeRoot();
-	private DirectEditAction directEditAction;
-	private DeleteAction deleteAction;
 	
 	private ToolBarManager toolbarManager;
 	private ContextManager contextManager;
-	private PaletteSelectionActionGroup actionGroup;
+	private SelectableActionGroup actionGroup;
 	private MenuManager contextMenuManger;
 
-	public FreedrawingEditor() {
-		
-	}
-	
-	private void init() {
-
-		// Create ToolBar Actions
-		FreedrawingEditDomain freedrawingEditDomain = (FreedrawingEditDomain)getEditDomain();
-		actionGroup = new PaletteSelectionActionGroup(freedrawingEditDomain) {
-			
-			@Override
-			public List<SubSelectionActionGroup> createSubGroupActions() {
-				
-				List<SubSelectionActionGroup> subGroupActions = new ArrayList<SubSelectionActionGroup>();
-				
-				{
-					List<AbstractSelectionAction> actions = new ArrayList<AbstractSelectionAction>();
-					ImageDescriptor desc = null;
-					
-					desc = contextManager.getImageManager().getSelectImageDescriptor();
-					AbstractSelectionAction defaultAction = buildSelectionAction(PanningSelectionAction.class, "선택", desc);
-					actions.add(defaultAction);
-					setDefaultAction(defaultAction);
-					
-					desc = contextManager.getImageManager().getMarqueeImageDescriptor();
-					actions.add(buildSelectionAction(MarqueeSelectionAction.class, "범위선택", desc));
-					
-					subGroupActions.add(SubSelectionActionGroup.newInstance(actions));
-				}
-				
-				{
-					List<AbstractSelectionAction> actions = new ArrayList<AbstractSelectionAction>();
-					ImageDescriptor desc = null;
-					
-					desc = contextManager.getImageManager().getRectangleImageDescriptor();
-					actions.add(buildSelectionAction(RectangleSelectionAction.class, "상자", desc));
-					
-					desc = contextManager.getImageManager().getConnectionImageDescriptor();
-					actions.add(buildSelectionAction(ConnectionSelectionAction.class, "연결", desc));
-					
-					subGroupActions.add(SubSelectionActionGroup.newInstance(actions));
-				}
-				
-				return subGroupActions;
-			}
-		};
-		
-		freedrawingEditDomain.setPaletteActionGroup(actionGroup);
-	}
-	
 	@SuppressWarnings("unchecked")
-	public void createPartControl(Composite parent) {
+	protected void createActions() {
 		
-		init();
+		super.createActions();
+		
+		ActionRegistry registry = getActionRegistry();
+		IAction action;
+		
+		// Create ToolBar Actions
+		FreedrawingEditDomain editDomain = (FreedrawingEditDomain)getEditDomain();
+		editDomain.setSelectableActionGroup(actionGroup);
+		actionGroup = new SelectableActionGroup(editDomain);
+		
+		// EDIT_TEXT
+		action = FreedrawingActionFactory.EDIT_TEXT.create(this);
+		registry.registerAction(action);
+		getSelectionActions().add(action.getId());
+		
+		// PANNING_SELECTION
+		action = FreedrawingActionFactory.SELECT_PANNING.create(actionGroup);
+		registry.registerAction(action);
+		
+		// MARQUEE_SELECTION
+		action = FreedrawingActionFactory.SELECT_MARQUEE.create(actionGroup);
+		registry.registerAction(action);
+		
+		// RECTANGLE_SELECTION
+		action = FreedrawingActionFactory.SELECT_RECTANGLE.create(actionGroup);
+		registry.registerAction(action);
+		
+		// CONNECTION_SELECTION
+		action = FreedrawingActionFactory.SELECT_CONNECTION.create(actionGroup);
+		registry.registerAction(action);
+		
+		// FONT_PICK
+		action = FreedrawingActionFactory.FONT_PICK.create(this, editDomain);
+		registry.registerAction(action);
+		getSelectionActions().add(action.getId());
+		
+		// COLOR_PICK
+		action = FreedrawingActionFactory.COLOR_PICK.create(this, editDomain);
+		registry.registerAction(action);
+		getSelectionActions().add(action.getId());
+		
+	}
+
+	public void createPartControl(Composite parent) {
 		
 		parent.setBackground(getSite().getShell().getDisplay().getSystemColor(SWT.COLOR_BLACK));
 		parent.setLayout(GridLayoutFactory.fillDefaults().create());
-//		parent.setLayout(RowLayoutFactory.fillDefaults().fill(true).type(SWT.VERTICAL).create());
-		ToolBar toolbar = new ToolBar(parent, SWT.FLAT | SWT.RIGHT);
-//		toolbar.setBackground(getSite().getShell().getDisplay().getSystemColor(SWT.COLOR_BLACK));
-		toolbar.setLayoutData(GridDataFactory.swtDefaults().grab(true, false).align(SWT.FILL, SWT.FILL).create());
 		
-		// add actions to ToolBar
-		toolbarManager = createToolBarManager(toolbar, actionGroup);
-		toolbarManager.add(new Separator());
-		final ColorPickAction colorPickAction = ClickableActionFactory.createColorPickAction(contextManager, getEditDomain(), getSite().getPart());
-		toolbarManager.add(colorPickAction);
-		getSelectionActions().add(colorPickAction.getId());
-		getActionRegistry().registerAction(colorPickAction);
-		
-		final FontPickAction fontPickAction = ClickableActionFactory.createFontPickAction(contextManager, getEditDomain(), getSite().getPart());
-		toolbarManager.add(fontPickAction);
-		getSelectionActions().add(fontPickAction.getId());
-		getActionRegistry().registerAction(fontPickAction);
-		toolbarManager.update(true);
+		createToolBar(parent);
 		
 		super.createPartControl(parent);
-		
-		contextMenuManger = new MenuManager("FreedrawingEditorPopup");
-//		contextMenuManger.setRemoveAllWhenShown(true);
-		contextMenuManger.add(fontPickAction);
-		contextMenuManger.add(colorPickAction);
-			
-//		contextMenuManger.addMenuListener(new IMenuListener() {
-//			@Override
-//			public void menuAboutToShow(IMenuManager manager) {
-//				manager.removeAll();
-//				ISelection selection = getGraphicalViewer().getSelection();
-//				contextMenuManger.add(fontPickAction);
-//				contextMenuManger.add(colorPickAction);
-//			}
-//		});
-//		getGraphicalViewer().getControl().setMenu(contextMenuManger.createContextMenu(getGraphicalViewer().getControl()));
-		getGraphicalViewer().setContextMenu(contextMenuManger);
-		
+
+		// 툴바와 그래픽컬 뷰 레이아웃을 잡는다.
 		for ( Control control : parent.getChildren() ) {
 			if ( control.getLayoutData() == null ) {
 				control.setLayoutData(GridDataFactory.swtDefaults().grab(true, true).align(SWT.FILL, SWT.FILL).create());
@@ -171,52 +114,45 @@ public class FreedrawingEditor extends GraphicalEditorWithFlyoutPalette {
 		}
 	}
 
-	private static ToolBarManager createToolBarManager(ToolBar toolbar, PaletteSelectionActionGroup actionGroup) {
-		ToolBarManager toolbarManager = new ToolBarManager(toolbar);
-		boolean start = true;
-		for ( SubSelectionActionGroup subGroupAction : actionGroup.getSubGroupActions() ) {
-			if ( start ) {
-				start = false;
-			} else {
-				toolbarManager.add(new Separator());
-			}
-			for (AbstractSelectionAction action : subGroupAction.getActions()) {
-				toolbarManager.add(action);
-			}
-		}
-		toolbarManager.update(true);
+	private void createToolBar(Composite parent) {
+		ToolBar toolbar = new ToolBar(parent, SWT.FLAT | SWT.RIGHT);
+//		toolbar.setBackground(getSite().getShell().getDisplay().getSystemColor(SWT.COLOR_BLACK));
+		toolbar.setLayoutData(GridDataFactory.swtDefaults().grab(true, false).align(SWT.FILL, SWT.FILL).create());
 		
-		return toolbarManager;
+		// add actions to ToolBar
+		toolbarManager = new ToolBarManager(toolbar);
+		toolbarManager.add(getActionRegistry().getAction(FreedrawingActionFactory.SELECT_PANNING.getId()));
+		toolbarManager.add(getActionRegistry().getAction(FreedrawingActionFactory.SELECT_MARQUEE.getId()));
+		toolbarManager.add(new Separator());
+		toolbarManager.add(getActionRegistry().getAction(FreedrawingActionFactory.SELECT_RECTANGLE.getId()));
+		toolbarManager.add(getActionRegistry().getAction(FreedrawingActionFactory.SELECT_CONNECTION.getId()));
+		toolbarManager.add(new Separator());
+		toolbarManager.add(getActionRegistry().getAction(FreedrawingActionFactory.FONT_PICK.getId()));
+		toolbarManager.add(getActionRegistry().getAction(FreedrawingActionFactory.COLOR_PICK.getId()));
+		
+		toolbarManager.update(true);
 	}
 
 	/**
 	 * freedrawingData를 뷰에 표시하기 위한 설정
 	 */
-	@SuppressWarnings("unchecked")
 	protected void configureGraphicalViewer() {
 		super.configureGraphicalViewer();
 		final GraphicalViewer viewer = getGraphicalViewer();
 		viewer.setEditPartFactory(new FreedrawingEditPartFactory());
 		viewer.setRootEditPart(new ScalableFreeformRootEditPart());
-
-		// 액션 생성
-		// 액션 생성 - directEditAction
-		directEditAction = new DirectEditAction(getEditorSite().getPart());
-		getSelectionActions().add(directEditAction.getId());
-		getActionRegistry().registerAction(directEditAction);
-
-		// 액션 생성 - deleteAction
-		deleteAction = new DeleteAction(getEditorSite().getPart());
-		getSelectionActions().add(deleteAction.getId());
-		getActionRegistry().registerAction(deleteAction);
 		
-		// 단축키 추가 #1
-		GraphicalViewerKeyHandler graphicalViewerKeyHandler = new GraphicalViewerKeyHandler(viewer);
-		viewer.setKeyHandler(graphicalViewerKeyHandler);
-		
-		// 단축키 추가 #2
-		graphicalViewerKeyHandler.put(KeyStroke.getPressed(SWT.F2, 0), directEditAction);
-		graphicalViewerKeyHandler.put(KeyStroke.getPressed(SWT.DEL, (int)SWT.DEL, 0), deleteAction);
+		contextMenuManger = new MenuManager("FreedrawingEditorPopup");
+		contextMenuManger.setRemoveAllWhenShown(true);
+		viewer.setContextMenu(contextMenuManger);
+//		
+//		// 단축키 추가 #1
+//		GraphicalViewerKeyHandler graphicalViewerKeyHandler = new GraphicalViewerKeyHandler(viewer);
+//		viewer.setKeyHandler(graphicalViewerKeyHandler);
+//		
+//		// 단축키 추가 #2
+//		graphicalViewerKeyHandler.put(KeyStroke.getPressed(SWT.F2, 0), directEditAction);
+//		graphicalViewerKeyHandler.put(KeyStroke.getPressed(SWT.DEL, (int)SWT.DEL, 0), deleteAction);
 	}
 
 	/**
@@ -228,8 +164,18 @@ public class FreedrawingEditor extends GraphicalEditorWithFlyoutPalette {
 	}
 
 	public void dispose() {
-		this.toolbarManager.dispose();
-		this.contextManager.dispose();
+		if ( toolbarManager != null ) {
+			toolbarManager.dispose();
+		}
+		
+		if ( contextManager != null ) {
+			contextManager.dispose();
+		}
+		
+		if ( contextMenuManger != null ) {
+			contextMenuManger.dispose();
+		}
+		
 		super.dispose();
 	}
 

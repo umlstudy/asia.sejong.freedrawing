@@ -14,9 +14,8 @@ import asia.sejong.freedrawing.model.TextObject;
 
 public class FontPickAction extends AbstractClickableAction {
 	
-	protected FontPickAction(IWorkbenchPart part) {
+	public FontPickAction(IWorkbenchPart part) {
 		super(part);
-		setId("fontPickAction");
 	}
 	
 	public void run() {

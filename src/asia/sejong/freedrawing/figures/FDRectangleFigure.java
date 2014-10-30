@@ -7,6 +7,7 @@ import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.LineBorder;
 import org.eclipse.draw2d.MarginBorder;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Pattern;
@@ -18,7 +19,7 @@ public class FDRectangleFigure extends Label {
 	
 	public FDRectangleFigure() {
 		setPreferredSize(100, 100);
-		lineBorder = new LineBorder(2);
+		lineBorder = new LineBorder(1);
 		setBorder(new CompoundBorder(lineBorder, new MarginBorder(2, 2, 2, 2)));
 	}
 	
@@ -30,9 +31,10 @@ public class FDRectangleFigure extends Label {
 //		graphics.fillRectangle(b.x, b.y + fold, b.width, b.height - fold);
 		
 		Rectangle r = getBounds();
-		graphics.setBackgroundPattern(new Pattern(Display.getCurrent(), r.x,
-				r.y, r.x + r.width, r.y + r.height, ColorConstants.white,
-				ColorConstants.lightGray));
+//		graphics.setBackgroundPattern(new Pattern(Display.getCurrent(), r.x,
+//				r.y, r.x + r.width, r.y + r.height, ColorConstants.white,
+//				ColorConstants.lightGray));
+		graphics.setBackgroundColor(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_CYAN));
 		graphics.fillRectangle(r);
 		
 		super.paintFigure(graphics);

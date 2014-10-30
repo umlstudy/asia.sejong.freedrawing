@@ -8,6 +8,8 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.LabelRetargetAction;
 
+import asia.sejong.freedrawing.editor.actions.FreedrawingActionFactory;
+
 public class FreedrawingEditorActionBarContributor extends ActionBarContributor {
 
 	protected void buildActions() {
@@ -15,6 +17,7 @@ public class FreedrawingEditorActionBarContributor extends ActionBarContributor 
 		addRetargetAction(new RedoRetargetAction());
 		addRetargetAction(new DeleteRetargetAction());
 		addRetargetAction(new LabelRetargetAction(ActionFactory.SELECT_ALL.getId(), "Select All"));
+		addRetargetAction(new LabelRetargetAction(FreedrawingActionFactory.EDIT_TEXT.getId(), "Edit text"));
 	}
 	
 	public void contributeToToolBar(IToolBarManager toolBarManager) {

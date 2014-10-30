@@ -4,7 +4,7 @@ import org.eclipse.gef.tools.AbstractTool;
 
 import asia.sejong.freedrawing.editor.tools.FDConnectionCreationTool;
 
-public class ConnectionSelectionAction extends AbstractSelectionAction {
+public class SelectConnectionAction extends GroupMemberAction {
 	
 	@Override
 	protected AbstractTool createTool() {

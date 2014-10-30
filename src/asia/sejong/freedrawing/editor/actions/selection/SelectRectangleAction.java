@@ -6,7 +6,7 @@ import org.eclipse.gef.tools.CreationTool;
 
 import asia.sejong.freedrawing.model.FDNode;
 
-public class RectangleSelectionAction extends AbstractSelectionAction {
+public class SelectRectangleAction extends GroupMemberAction {
 
 	@Override
 	protected AbstractTool createTool() {
