@@ -13,14 +13,10 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.GraphicalViewer;
-import org.eclipse.gef.dnd.TemplateTransferDragSourceListener;
 import org.eclipse.gef.editparts.ScalableFreeformRootEditPart;
-import org.eclipse.gef.palette.PaletteRoot;
 import org.eclipse.gef.tools.AbstractTool;
 import org.eclipse.gef.ui.actions.ActionRegistry;
-import org.eclipse.gef.ui.palette.PaletteViewer;
-import org.eclipse.gef.ui.palette.PaletteViewerProvider;
-import org.eclipse.gef.ui.parts.GraphicalEditorWithFlyoutPalette;
+import org.eclipse.gef.ui.parts.GraphicalEditor;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -49,7 +45,7 @@ import asia.sejong.freedrawing.parts.FDNodeEditPart.FDNodeEditPart;
 import asia.sejong.freedrawing.parts.common.FreedrawingEditPartFactory;
 import asia.sejong.freedrawing.resources.ContextManager;
 
-public class FreedrawingEditor extends GraphicalEditorWithFlyoutPalette {
+public class FreedrawingEditor extends GraphicalEditor {
 
 	private final FDNodeRoot freedrawingData = new FDNodeRoot();
 	
@@ -186,7 +182,7 @@ public class FreedrawingEditor extends GraphicalEditorWithFlyoutPalette {
 	 * 화면에 표시하기 위해 초기화 작업 수행
 	 */
 	protected void initializeGraphicalViewer() {
-		super.initializeGraphicalViewer();
+//		super.initializeGraphicalViewer();
 		getGraphicalViewer().setContents(freedrawingData);
 	}
 
@@ -324,24 +320,26 @@ public class FreedrawingEditor extends GraphicalEditorWithFlyoutPalette {
 		return value;
 	}
 
-	/**
-	 * 팔레트 팩토리
-	 */
-	protected PaletteRoot getPaletteRoot() {
-		return FreedrawingEditorPaletteFactory.createPalette(contextManager.getImageManager());
-	}
-
-	/**
-	 * 팔레트 툴 뷰어 제공 및 드레그 리스너
-	 */
-	protected PaletteViewerProvider createPaletteViewerProvider() {
-		return new PaletteViewerProvider(getEditDomain()) {
-			protected void configurePaletteViewer(PaletteViewer viewer) {
-				super.configurePaletteViewer(viewer);
-				viewer.addDragSourceListener(new TemplateTransferDragSourceListener(viewer));
-			}
-		};
-	}
+//	/**
+//	 * 팔레트 팩토리
+//	 */
+//	@Override
+//	protected PaletteRoot getPaletteRoot() {
+//		return FreedrawingEditorPaletteFactory.createPalette(contextManager.getImageManager());
+//	}
+//
+//	/**
+//	 * 팔레트 툴 뷰어 제공 및 드레그 리스너
+//	 */
+//	@Override
+//	protected PaletteViewerProvider createPaletteViewerProvider() {
+//		return new PaletteViewerProvider(getEditDomain()) {
+//			protected void configurePaletteViewer(PaletteViewer viewer) {
+//				super.configurePaletteViewer(viewer);
+//				viewer.addDragSourceListener(new TemplateTransferDragSourceListener(viewer));
+//			}
+//		};
+//	}
 	
 	public void setActiveTool() {
 		getActionRegistry().getAction(FreedrawingActionFactory.SELECT_PANNING.getId()).run();
