@@ -167,16 +167,6 @@ public class FreedrawingEditor extends GraphicalEditorWithFlyoutPalette {
 				resetContextMenu();
 			}
 		});
-//		getGraphicalViewer().getControl().setMenu(contextMenuManger.createContextMenu(getGraphicalViewer().getControl()));
-
-//		
-//		// 단축키 추가 #1
-//		GraphicalViewerKeyHandler graphicalViewerKeyHandler = new GraphicalViewerKeyHandler(viewer);
-//		viewer.setKeyHandler(graphicalViewerKeyHandler);
-//		
-//		// 단축키 추가 #2
-//		graphicalViewerKeyHandler.put(KeyStroke.getPressed(SWT.F2, 0), directEditAction);
-//		graphicalViewerKeyHandler.put(KeyStroke.getPressed(SWT.DEL, (int)SWT.DEL, 0), deleteAction);
 	}
 	
 	/**

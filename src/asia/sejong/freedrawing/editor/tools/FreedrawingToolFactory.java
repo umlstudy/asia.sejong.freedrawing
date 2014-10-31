@@ -3,7 +3,6 @@ package asia.sejong.freedrawing.editor.tools;
 import org.eclipse.gef.requests.CreationFactory;
 import org.eclipse.gef.tools.AbstractTool;
 import org.eclipse.gef.tools.CreationTool;
-import org.eclipse.gef.tools.MarqueeSelectionTool;
 
 import asia.sejong.freedrawing.editor.FreedrawingEditor;
 import asia.sejong.freedrawing.model.FDNode;
@@ -27,7 +26,7 @@ public abstract class FreedrawingToolFactory {
 	public static FreedrawingToolFactory MARQUEE_SELECTION_TOOL = new FreedrawingToolFactory() {
 		@Override
 		public AbstractTool createTool(FreedrawingEditor editor) {
-			return new MarqueeSelectionTool();
+			return new FDMarqueeSelectionTool();
 		}
 	};
 

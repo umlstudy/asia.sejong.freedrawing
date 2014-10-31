@@ -1,12 +1,15 @@
 package asia.sejong.freedrawing.editor.actions.selection;
 
+import org.eclipse.gef.DefaultEditDomain;
 import org.eclipse.gef.EditDomain;
+import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.tools.AbstractTool;
+import org.eclipse.gef.ui.parts.GraphicalEditor;
 import org.eclipse.jface.action.Action;
 
 public class PaletteSelectAction extends Action {
 	
-	private EditDomain editDomain;
+	private DefaultEditDomain editDomain;
 	private AbstractTool tool;
 	private SelectableActionGroup actionGroup;
 	
@@ -23,14 +26,20 @@ public class PaletteSelectAction extends Action {
 			}
 		}
 		getEditDomain().setActiveTool(getTool());
+		
+		// 툴에 뷰어 설정
+		GraphicalViewer viewer = (GraphicalViewer)((GraphicalEditor)getEditDomain().getEditorPart()).getAdapter(GraphicalViewer.class);
+		if ( viewer != null ) {
+			getTool().setViewer(viewer);
+		}
 	}
 
-	public EditDomain getEditDomain() {
+	public DefaultEditDomain getEditDomain() {
 		return editDomain;
 	}
 
 	public void setEditDomain(EditDomain editDomain) {
-		this.editDomain = editDomain;
+		this.editDomain = (DefaultEditDomain)editDomain;
 	}
 
 	public AbstractTool getTool() {
