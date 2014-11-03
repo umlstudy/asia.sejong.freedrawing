@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.gef.EditDomain;
+import org.eclipse.gef.Tool;
 
 public class SelectableActionGroup {
 	
@@ -46,5 +47,15 @@ public class SelectableActionGroup {
 
 	public void setEditDomain(EditDomain editDomain) {
 		this.editDomain = editDomain;
+	}
+
+	public void switchActiveTool(Tool tool) {
+		for ( PaletteSelectAction action : actions ) {
+			if ( action.getTool() == tool ) {
+				action.setChecked(true);
+			} else {
+				action.setChecked(false);
+			}
+		}
 	}
 }

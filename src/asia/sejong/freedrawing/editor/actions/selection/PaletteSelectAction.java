@@ -18,20 +18,11 @@ public class PaletteSelectAction extends Action {
 	}
 	
 	public void run() {
-		for ( PaletteSelectAction action : getActionGroup().getActions() ) {
-			if ( action == this ) {
-				action.setChecked(true);
-			} else {
-				action.setChecked(false);
-			}
-		}
 		getEditDomain().setActiveTool(getTool());
 		
 		// 툴에 뷰어 설정
 		GraphicalViewer viewer = (GraphicalViewer)((GraphicalEditor)getEditDomain().getEditorPart()).getAdapter(GraphicalViewer.class);
-		if ( viewer != null ) {
-			getTool().setViewer(viewer);
-		}
+		getTool().setViewer(viewer);
 	}
 
 	public DefaultEditDomain getEditDomain() {

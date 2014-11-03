@@ -2,6 +2,7 @@ package asia.sejong.freedrawing.editor;
 
 import org.eclipse.gef.DefaultEditDomain;
 import org.eclipse.gef.EditPartViewer;
+import org.eclipse.gef.Tool;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.ui.IEditorPart;
 
@@ -28,4 +29,10 @@ public class FreedrawingEditDomain extends DefaultEditDomain {
 		System.out.println("FOCUS GAINED !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 	}
 	
+	public void setActiveTool(Tool tool) {
+		super.setActiveTool(tool);
+		if ( selectableActionGroup != null ) {
+			selectableActionGroup.switchActiveTool(tool);
+		}
+	}
 }

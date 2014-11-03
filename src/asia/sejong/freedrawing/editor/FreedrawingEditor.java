@@ -66,8 +66,8 @@ public class FreedrawingEditor extends GraphicalEditor {
 		
 		// Create ToolBar Actions
 		FreedrawingEditDomain editDomain = (FreedrawingEditDomain)getEditDomain();
-		editDomain.setSelectableActionGroup(actionGroup);
 		actionGroup = new SelectableActionGroup(editDomain);
+		editDomain.setSelectableActionGroup(actionGroup);
 		
 		// EDIT_TEXT
 		action = FreedrawingActionFactory.EDIT_TEXT.create(this);
