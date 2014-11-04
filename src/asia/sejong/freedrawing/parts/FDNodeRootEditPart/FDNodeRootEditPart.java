@@ -7,6 +7,8 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.MarginBorder;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
+import org.eclipse.gef.Request;
+import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.gef.editpolicies.RootComponentEditPolicy;
 
@@ -55,6 +57,11 @@ public class FDNodeRootEditPart extends AbstractGraphicalEditPart implements FDN
 		// Handles constraint changes (e.g. moving and/or resizing) of model elements
 		// and creation of new model elements
 		installEditPolicy(EditPolicy.LAYOUT_ROLE, new XYLayoutFDNodeRootEditPolicy());
+	}
+	
+	public Command getCommand(Request request) {
+		System.out.println("Request ? " + request);
+		return super.getCommand(request);
 	}
 	
 	// ===============================================================

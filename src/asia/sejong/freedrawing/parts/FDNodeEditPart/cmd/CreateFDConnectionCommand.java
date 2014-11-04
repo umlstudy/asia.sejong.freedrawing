@@ -7,13 +7,11 @@ import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.commands.Command;
 
 import asia.sejong.freedrawing.model.FDNode;
-import asia.sejong.freedrawing.model.FDNodeRoot;
 
 public class CreateFDConnectionCommand extends Command {
 
-	private FDNodeRoot root;
-	private FDNode source;
-	private FDNode target;
+	protected FDNode source;
+	protected FDNode target;
 	
 	private List<Point> undoBendpoints;
 	
@@ -38,7 +36,7 @@ public class CreateFDConnectionCommand extends Command {
 	}
 
 	public boolean isValidSource(Object source) {
-		if ( source instanceof FDNode ) {
+		if ( source instanceof FDNode && source != target ) {
 			return true;
 		}
 		return false;
@@ -62,12 +60,12 @@ public class CreateFDConnectionCommand extends Command {
 			this.target = (FDNode)target;
 		}
 	}
-
-	public FDNodeRoot getRoot() {
-		return root;
+	
+	public FDNode getSource() {
+		return source;
 	}
 
-	public void setRoot(FDNodeRoot root) {
-		this.root = root;
+	public FDNode getTarget() {
+		return target;
 	}
 }

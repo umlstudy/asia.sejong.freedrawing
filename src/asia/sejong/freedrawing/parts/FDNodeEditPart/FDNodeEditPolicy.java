@@ -10,8 +10,9 @@ import org.eclipse.gef.requests.ReconnectRequest;
 
 import asia.sejong.freedrawing.model.FDNode;
 import asia.sejong.freedrawing.parts.FDConnectionEditPart.FDConnectionEditPart;
+import asia.sejong.freedrawing.parts.FDConnectionEditPart.cmd.DeleteFDConnectionCommand;
 import asia.sejong.freedrawing.parts.FDNodeEditPart.cmd.CreateFDConnectionCommand;
-import asia.sejong.freedrawing.parts.common.EditPartUtil;
+import asia.sejong.freedrawing.parts.FDNodeEditPart.cmd.RecreateFDConnectionCommand;
 
 public class FDNodeEditPolicy extends GraphicalNodeEditPolicy {
 	
@@ -38,8 +39,6 @@ public class FDNodeEditPolicy extends GraphicalNodeEditPolicy {
 			connCmd.setTarget(target);
 		}
 		
-		connCmd.setRoot(EditPartUtil.getFreedrawingData(getHost()));
-		
 		return connCmd;
 	}
 
@@ -63,34 +62,52 @@ public class FDNodeEditPolicy extends GraphicalNodeEditPolicy {
 	}
 	
 	protected Command getReconnectSourceCommand(ReconnectRequest request) {
-		EditPart part = request.getConnectionEditPart();
-		if (!(part instanceof FDConnectionEditPart))
+		EditPart currentEditPart = request.getConnectionEditPart();
+		if (!(currentEditPart instanceof FDConnectionEditPart)) {
 			return null;
-		FDConnectionEditPart connPart = (FDConnectionEditPart) part;
-		CreateFDConnectionCommand connCmd = connPart.recreateCommand();
-		if (!connCmd.isValidSource(request.getConnectionEditPart().getModel()))
+		}
+		
+		FDConnectionEditPart currentConnectionEditPart = (FDConnectionEditPart) currentEditPart;
+		RecreateFDConnectionCommand recreateConnectionCommand = currentConnectionEditPart.recreateCommand();
+		FDNode source = (FDNode)request.getTarget().getModel();
+		if (!recreateConnectionCommand.isValidSource(source) ) {
 			return null;
-		connCmd.setSource(request.getConnectionEditPart().getModel());
-//		Command deleteCmd = new DeleteFDConnectionCommand(connPart.getModel());
-//		Command modifyCmd = deleteCmd.chain(connCmd);
-//		modifyCmd.setLabel("Modify " + connCmd.getConnectionName());
-//		return modifyCmd;
-		return null;
+		}
+		
+		recreateConnectionCommand.setSource(source);
+		if ( source.containsTarget(recreateConnectionCommand.getTarget()) ) {
+			return null;
+		}
+
+		Command deleteConnCmd = new DeleteFDConnectionCommand(currentConnectionEditPart.getModel());
+		Command modifyConnCmd = deleteConnCmd.chain(recreateConnectionCommand);
+		modifyConnCmd.setLabel("Modify " + recreateConnectionCommand.getConnectionName());
+		
+		return modifyConnCmd;
 	}
 
 	protected Command getReconnectTargetCommand(ReconnectRequest request) {
-		EditPart part = request.getConnectionEditPart();
-		if (!(part instanceof FDConnectionEditPart))
+		EditPart currentEditPart = request.getConnectionEditPart();
+		if (!(currentEditPart instanceof FDConnectionEditPart)) {
 			return null;
-		FDConnectionEditPart connPart = (FDConnectionEditPart) part;
-		CreateFDConnectionCommand connCmd = connPart.recreateCommand();
-		if (!connCmd.isValidTarget(request.getConnectionEditPart().getModel()))
+		}
+		
+		FDConnectionEditPart currentConnectionEditPart = (FDConnectionEditPart) currentEditPart;
+		RecreateFDConnectionCommand recreateConnectionCommand = currentConnectionEditPart.recreateCommand();
+		FDNode target = (FDNode)request.getTarget().getModel();
+		if ( !recreateConnectionCommand.isValidTarget(target) ) {
 			return null;
-		connCmd.setTarget(request.getConnectionEditPart().getModel());
-//		Command deleteCmd = new DeleteFDConnectionCommand(connPart.getModel());
-//		Command modifyCmd = deleteCmd.chain(connCmd);
-//		modifyCmd.setLabel("Modify " + connCmd.getConnectionName());
-//		return modifyCmd;
-		return null;
+		}
+		
+		recreateConnectionCommand.setTarget(target);
+		if ( recreateConnectionCommand.getSource().containsTarget(target) ) {
+			return null;
+		}
+
+		Command deleteConnCmd = new DeleteFDConnectionCommand(currentConnectionEditPart.getModel());
+		Command modifyConnCmd = deleteConnCmd.chain(recreateConnectionCommand);
+		modifyConnCmd.setLabel("Modify " + recreateConnectionCommand.getConnectionName());
+		
+		return modifyConnCmd;
 	}
 }

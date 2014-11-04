@@ -1,13 +1,9 @@
 package asia.sejong.freedrawing.parts.FDNodeEditPart;
 
-import java.util.Iterator;
-import java.util.List;
-
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.OrderedLayoutEditPolicy;
-import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.requests.CreateRequest;
 
 /**

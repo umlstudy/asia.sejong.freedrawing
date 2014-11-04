@@ -44,6 +44,7 @@ import asia.sejong.freedrawing.model.listener.FDNodeListener;
 import asia.sejong.freedrawing.parts.FDConnectionEditPart.FDConnectionEditPart;
 import asia.sejong.freedrawing.parts.FDNodeEditPart.cmd.CreateFDConnectionCommand;
 import asia.sejong.freedrawing.parts.FDNodeEditPart.cmd.DeleteFDNodeCommand;
+import asia.sejong.freedrawing.parts.FDNodeEditPart.cmd.RecreateFDConnectionCommand;
 import asia.sejong.freedrawing.parts.FDNodeEditPart.cmd.TextChangeCommand;
 import asia.sejong.freedrawing.parts.common.AbstractNodeEditPart;
 import asia.sejong.freedrawing.resources.ContextManager;
@@ -110,13 +111,13 @@ public class FDNodeEditPart extends AbstractNodeEditPart implements NodeEditPart
 	 */
 	public ConnectionAnchor getSourceConnectionAnchor(Request request) {
 		if (request instanceof ReconnectRequest) {
-			EditPart part = ((ReconnectRequest) request).getConnectionEditPart();
-			if (!(part instanceof ConnectionEditPart)) {
+			EditPart editPart = ((ReconnectRequest) request).getConnectionEditPart();
+			if (!(editPart instanceof ConnectionEditPart)) {
 				return null;
 			}
 			
-			FDConnectionEditPart connPart = (FDConnectionEditPart) part;
-			CreateFDConnectionCommand connCmd = connPart.recreateCommand();
+			FDConnectionEditPart connectionEditPart = (FDConnectionEditPart) editPart;
+			CreateFDConnectionCommand connCmd = connectionEditPart.recreateCommand();
 			if (!connCmd.isValidSource(getModel())) {
 				return null;
 			}
@@ -146,21 +147,38 @@ public class FDNodeEditPart extends AbstractNodeEditPart implements NodeEditPart
 	 */
 	public ConnectionAnchor getTargetConnectionAnchor(Request request) {
 		if (request instanceof CreateConnectionRequest) {
-			Command cmd = ((CreateConnectionRequest) request).getStartCommand();
-			if (!(cmd instanceof CreateFDConnectionCommand))
+			Command command = ((CreateConnectionRequest) request).getStartCommand();
+			if (!(command instanceof CreateFDConnectionCommand)) {
 				return null;
-			if (!((CreateFDConnectionCommand) cmd).isValidTarget(getModel()))
+			}
+			
+			CreateFDConnectionCommand createConnectionCommand = (CreateFDConnectionCommand) command;
+			FDNode target = getModel();
+			if ( !createConnectionCommand.isValidTarget(target) ) {
 				return null;
+			}
+			if ( createConnectionCommand.getSource().containsTarget(target) ) {
+				return null;
+			}
+			
 			return new ChopboxAnchor(getFigure());
 		}
 		if (request instanceof ReconnectRequest) {
-			EditPart part = ((ReconnectRequest) request).getConnectionEditPart();
-			if (!(part instanceof FDConnectionEditPart))
+			EditPart editPart = ((ReconnectRequest) request).getConnectionEditPart();
+			if (!(editPart instanceof FDConnectionEditPart)) {
 				return null;
-			FDConnectionEditPart connPart = (FDConnectionEditPart) part;
-			CreateFDConnectionCommand connCmd = connPart.recreateCommand();
-			if (!connCmd.isValidTarget(getModel()))
+			}
+			
+			FDConnectionEditPart connectionEditPart = (FDConnectionEditPart) editPart;
+			RecreateFDConnectionCommand recreateConnectionCommand = connectionEditPart.recreateCommand();
+			FDNode target = getModel();
+			if ( !recreateConnectionCommand.isValidTarget(target) ) {
 				return null;
+			}
+			if ( recreateConnectionCommand.getSource().containsTarget(target) ) {
+				return null;
+			}
+			
 			return new ChopboxAnchor(getFigure());
 		}
 		return null;

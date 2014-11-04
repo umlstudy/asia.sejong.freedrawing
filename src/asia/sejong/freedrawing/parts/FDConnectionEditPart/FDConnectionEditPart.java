@@ -19,11 +19,13 @@ import org.eclipse.gef.editparts.AbstractConnectionEditPart;
 import org.eclipse.gef.editpolicies.ConnectionEditPolicy;
 import org.eclipse.gef.editpolicies.ConnectionEndpointEditPolicy;
 import org.eclipse.gef.requests.GroupRequest;
+import org.eclipse.swt.SWT;
 
 import asia.sejong.freedrawing.figures.FDConnectionFigure;
 import asia.sejong.freedrawing.model.FDConnection;
+import asia.sejong.freedrawing.model.FDNode;
 import asia.sejong.freedrawing.parts.FDConnectionEditPart.cmd.DeleteFDConnectionCommand;
-import asia.sejong.freedrawing.parts.FDNodeEditPart.cmd.CreateFDConnectionCommand;
+import asia.sejong.freedrawing.parts.FDNodeEditPart.cmd.RecreateFDConnectionCommand;
 
 public class FDConnectionEditPart extends AbstractConnectionEditPart {
 
@@ -75,11 +77,17 @@ public class FDConnectionEditPart extends AbstractConnectionEditPart {
 		PolylineConnection connection = null;
 		if ( custom ) {
 			connection = new FDConnectionFigure();
+			connection.setLineWidth(3);
+			connection.setAntialias(1);
 		} else {
 			connection = new PolylineConnection();
+//			connection.setLineDash(new float[] {1f,2f});
+			connection.setLineStyle(SWT.LINE_DASH);
+			connection.setAlpha(180);
+			connection.setBackgroundColor(ColorConstants.blue);
+			connection.setLineWidth(4);
+			connection.setAntialias(5);
 		}
-		connection.setLineWidth(3);
-		connection.setAntialias(1);
 
 		connection.setConnectionRouter(new BendpointConnectionRouter());
 
@@ -163,9 +171,14 @@ public class FDConnectionEditPart extends AbstractConnectionEditPart {
 		return (PolylineConnection)getFigure();
 	}
 
-	public CreateFDConnectionCommand recreateCommand() {
-		// TODO Auto-generated method stub
-		return null;
+	public RecreateFDConnectionCommand recreateCommand() {
+		FDNode src = (FDNode)getSource().getModel();
+		List<Point> bendpoints = src.getBendpoints((FDNode)getTarget().getModel());
+		
+		RecreateFDConnectionCommand cmd = new RecreateFDConnectionCommand(bendpoints);
+		cmd.setSource(getSource().getModel());
+		cmd.setTarget(getTarget().getModel());
+		return cmd;
 	}
 	
 	public void deactivate() {

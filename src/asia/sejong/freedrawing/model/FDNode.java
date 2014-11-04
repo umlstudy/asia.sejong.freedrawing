@@ -102,6 +102,13 @@ public class FDNode extends TextObject {
 	public Set<FDNode> getTargets() {
 		return new HashSet<FDNode>(targets);
 	}
+
+	public boolean containsTarget(FDNode target) {
+		if ( targets.contains(target) ) {
+			return true;
+		}
+		return false;
+	}
 	
 	public List<Point> getBendpoints(FDNode target) {
 		return bendpoints.get(target);
