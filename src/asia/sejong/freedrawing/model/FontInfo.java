@@ -2,7 +2,7 @@ package asia.sejong.freedrawing.model;
 
 import org.eclipse.swt.graphics.FontData;
 
-public class FontInfo {
+public class FontInfo implements Cloneable {
 
 	private String name;
 	private int height;
@@ -47,5 +47,14 @@ public class FontInfo {
 		fontInfo.setHeight(fontData.getHeight());
 		fontInfo.setStyle(fontData.getStyle());
 		return fontInfo;
+	}
+	
+	public FontInfo clone() {
+		FontInfo fi = new FontInfo();
+		fi.setHeight(height);
+		fi.setName(name);
+		fi.setStyle(style);
+		
+		return fi;
 	}
 }

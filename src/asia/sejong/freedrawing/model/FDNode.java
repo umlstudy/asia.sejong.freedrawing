@@ -272,4 +272,21 @@ public class FDNode extends TextObject {
 			l.fontChanged(fontInfo);
 		}
 	}
+	
+	public FDNode clone() {
+		
+		FDNode node = (FDNode)super.clone();
+		
+		node.sources = new HashSet<FDNode>();
+		node.targets = new HashSet<FDNode>();
+		node.bendpoints = new HashMap<FDNode, List<Point>>();
+		
+		node.x = x;
+		node.y = y;
+		node.width = width;
+		node.height = height;
+		node.text = text;
+		
+		return node;
+	}
 }

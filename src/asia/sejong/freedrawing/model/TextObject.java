@@ -17,4 +17,12 @@ public abstract class TextObject extends BaseObject {
 	}
 
 	protected abstract void fireFontChanged(FontInfo fontInfo);
+	
+	protected TextObject clone() {
+		TextObject object = (TextObject)super.clone();
+		if ( fontInfo != null ) {
+			object.setFontInfo(fontInfo.clone());
+		}
+		return object;
+	}
 }

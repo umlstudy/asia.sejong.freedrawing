@@ -9,16 +9,17 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.actions.ActionFactory;
 
-import asia.sejong.freedrawing.editor.actions.clickable.AbstractClickableAction;
-import asia.sejong.freedrawing.editor.actions.clickable.ColorPickAction;
-import asia.sejong.freedrawing.editor.actions.clickable.FontPickAction;
-import asia.sejong.freedrawing.editor.actions.selection.PaletteSelectAction;
-import asia.sejong.freedrawing.editor.actions.selection.SelectableActionGroup;
+import asia.sejong.freedrawing.editor.actions.selection.AbstractSelectionAction;
+import asia.sejong.freedrawing.editor.actions.selection.ColorPickAction;
+import asia.sejong.freedrawing.editor.actions.selection.FontPickAction;
+import asia.sejong.freedrawing.editor.actions.selection.MoveLeftAction;
+import asia.sejong.freedrawing.editor.actions.toggle.PaletteToggleAction;
+import asia.sejong.freedrawing.editor.actions.toggle.ToggleActionGroup;
 import asia.sejong.freedrawing.resources.ContextManager;
 
 public abstract class FreedrawingActionFactory extends ActionFactory {
 
-	// 팩토리메소드#1
+	// 팩토리메소드 타입 #1
 	public static final FreedrawingActionFactory EDIT_TEXT = new FreedrawingActionFactory(RENAME.getId()) {
 		public SelectionAction create(IEditorPart part) {
 			
@@ -30,10 +31,32 @@ public abstract class FreedrawingActionFactory extends ActionFactory {
 		}
 	};
 	
-	// 팩토리메소드#2
-	public static final FreedrawingActionFactory SELECT_PANNING = new FreedrawingActionFactory("SELECT_PANNING") {
-		public PaletteSelectAction create(SelectableActionGroup actionGroup, AbstractTool tool) {
-			PaletteSelectAction action = new PaletteSelectAction();
+	public static final FreedrawingActionFactory MOVE_LEFT = new FreedrawingActionFactory("MOVE_LEFT") {
+		public SelectionAction create(IEditorPart part) {
+			
+			MoveLeftAction action = new MoveLeftAction(part, false);
+			action.setId(getId());
+			action.setText("왼쪽으로");
+			
+			return action;
+		}
+	};
+	
+	public static final FreedrawingActionFactory MOVE_LEFT_PRESSED_ = new FreedrawingActionFactory("MOVE_LEFT_PRESSED") {
+		public SelectionAction create(IEditorPart part) {
+			
+			MoveLeftAction action = new MoveLeftAction(part, true);
+			action.setId(getId());
+			action.setText("왼쪽으로");
+			
+			return action;
+		}
+	};
+	
+	// 팩토리메소드 타입 #2
+	public static final FreedrawingActionFactory TOGGLE_PANNING = new FreedrawingActionFactory("TOGGLE_PANNING") {
+		public PaletteToggleAction create(ToggleActionGroup actionGroup, AbstractTool tool) {
+			PaletteToggleAction action = new PaletteToggleAction();
 			action.setId(getId());
 			action.setTool(tool);
 			action.setImageDescriptor(ContextManager.getInstance().getImageManager().getSelectImageDescriptor());
@@ -45,9 +68,9 @@ public abstract class FreedrawingActionFactory extends ActionFactory {
 		}
 	};
 	
-	public static final FreedrawingActionFactory SELECT_RECTANGLE = new FreedrawingActionFactory("SELECT_RECTANGLE") {
-		public PaletteSelectAction create(SelectableActionGroup actionGroup, AbstractTool tool) {
-			PaletteSelectAction action = new PaletteSelectAction();
+	public static final FreedrawingActionFactory TOGGLE_RECTANGLE = new FreedrawingActionFactory("TOGGLE_RECTANGLE") {
+		public PaletteToggleAction create(ToggleActionGroup actionGroup, AbstractTool tool) {
+			PaletteToggleAction action = new PaletteToggleAction();
 			action.setId(getId());
 			action.setTool(tool);
 			action.setImageDescriptor(ContextManager.getInstance().getImageManager().getRectangleImageDescriptor());
@@ -59,9 +82,9 @@ public abstract class FreedrawingActionFactory extends ActionFactory {
 		}
 	};
 
-	public static final FreedrawingActionFactory SELECT_MARQUEE = new FreedrawingActionFactory("SELECT_MARQUEE") {
-		public PaletteSelectAction create(SelectableActionGroup actionGroup, AbstractTool tool) {
-			PaletteSelectAction action = new PaletteSelectAction();
+	public static final FreedrawingActionFactory TOGGLE_MARQUEE = new FreedrawingActionFactory("TOGGLE_MARQUEE") {
+		public PaletteToggleAction create(ToggleActionGroup actionGroup, AbstractTool tool) {
+			PaletteToggleAction action = new PaletteToggleAction();
 			action.setId(getId());
 			action.setTool(tool);
 			action.setImageDescriptor(ContextManager.getInstance().getImageManager().getMarqueeImageDescriptor());
@@ -73,9 +96,9 @@ public abstract class FreedrawingActionFactory extends ActionFactory {
 		}
 	};
 	
-	public static final FreedrawingActionFactory SELECT_CONNECTION = new FreedrawingActionFactory("SELECT_CONNECTION") {
-		public PaletteSelectAction create(SelectableActionGroup actionGroup, AbstractTool tool) {
-			PaletteSelectAction action = new PaletteSelectAction();
+	public static final FreedrawingActionFactory TOGGLE_CONNECTION = new FreedrawingActionFactory("TOGGLE_CONNECTION") {
+		public PaletteToggleAction create(ToggleActionGroup actionGroup, AbstractTool tool) {
+			PaletteToggleAction action = new PaletteToggleAction();
 			action.setId(getId());
 			action.setTool(tool);
 			action.setImageDescriptor(ContextManager.getInstance().getImageManager().getConnectionImageDescriptor());
@@ -87,9 +110,9 @@ public abstract class FreedrawingActionFactory extends ActionFactory {
 		}
 	};
 	
-	// 팩토리메소드#3
+	// 팩토리메소드 타입 #3
 	public static final FreedrawingActionFactory COLOR_PICK = new FreedrawingActionFactory("COLOR_PICK") {
-		public AbstractClickableAction create(IWorkbenchPart part, EditDomain editDomain) {
+		public AbstractSelectionAction create(IWorkbenchPart part, EditDomain editDomain) {
 			
 			ColorPickAction action = new ColorPickAction(part);
 			action.setId(getId());
@@ -102,7 +125,7 @@ public abstract class FreedrawingActionFactory extends ActionFactory {
 	};
 	
 	public static final FreedrawingActionFactory FONT_PICK = new FreedrawingActionFactory("FONT_PICK") {
-		public AbstractClickableAction create(IWorkbenchPart part, EditDomain editDomain) {
+		public AbstractSelectionAction create(IWorkbenchPart part, EditDomain editDomain) {
 			
 			FontPickAction action = new FontPickAction(part);
 			action.setId(getId());
@@ -136,7 +159,7 @@ public abstract class FreedrawingActionFactory extends ActionFactory {
 	 * @param actionGroup
 	 * @return
 	 */
-	public PaletteSelectAction create(SelectableActionGroup actionGroup, AbstractTool tool) {
+	public PaletteToggleAction create(ToggleActionGroup actionGroup, AbstractTool tool) {
 		throw new RuntimeException();
 	}
 	
@@ -147,7 +170,7 @@ public abstract class FreedrawingActionFactory extends ActionFactory {
 	 * @param editDomain
 	 * @return
 	 */
-	public AbstractClickableAction create(IWorkbenchPart part, EditDomain editDomain) {
+	public AbstractSelectionAction create(IWorkbenchPart part, EditDomain editDomain) {
 		throw new RuntimeException();
 	}
 	

@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.draw2d.geometry.Point;
+
 import asia.sejong.freedrawing.model.listener.FDContainerListener;
 import asia.sejong.freedrawing.model.listener.FDNodeRootListener;
 
@@ -15,6 +17,26 @@ public class FDNodeRoot {
 	private final Collection<FDNodeRootListener> listeners = new HashSet<FDNodeRootListener>();
 	
 	public FDNodeRoot() {}
+	
+	public Point getNextLocation(int x, int y) {
+		while ( true ) {
+			boolean alreadyExistInLocation = false;
+			for ( FDNode item : childElements ) {
+				if ( item.getX() == x && item.getY() == y ) {
+					alreadyExistInLocation = true;
+				}
+			}
+			
+			if ( alreadyExistInLocation ) {
+				x+=10;
+				y+=10;
+			} else {
+				break;
+			}
+		}
+		
+		return new Point(x, y);
+	}
 	
 	public void addNode(FDNode target) {
 		childElements.add(target);

@@ -1,4 +1,4 @@
-package asia.sejong.freedrawing.editor.actions.clickable;
+package asia.sejong.freedrawing.editor.actions.selection;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,9 +10,10 @@ import org.eclipse.swt.widgets.ColorDialog;
 import org.eclipse.ui.IWorkbenchPart;
 
 import asia.sejong.freedrawing.model.BaseObject;
+import asia.sejong.freedrawing.parts.FDNodeEditPart.cmd.BorderColorChangeCommand;
 
 
-public class ColorPickAction extends AbstractClickableAction {
+public class ColorPickAction extends AbstractSelectionAction {
 
 	public ColorPickAction(IWorkbenchPart part) {
 		super(part);

@@ -1,4 +1,4 @@
-package asia.sejong.freedrawing.editor.actions.selection;
+package asia.sejong.freedrawing.editor.actions.toggle;
 
 import org.eclipse.gef.DefaultEditDomain;
 import org.eclipse.gef.EditDomain;
@@ -7,13 +7,13 @@ import org.eclipse.gef.tools.AbstractTool;
 import org.eclipse.gef.ui.parts.GraphicalEditor;
 import org.eclipse.jface.action.Action;
 
-public class PaletteSelectAction extends Action {
+public class PaletteToggleAction extends Action {
 	
 	private DefaultEditDomain editDomain;
 	private AbstractTool tool;
-	private SelectableActionGroup actionGroup;
+	private ToggleActionGroup actionGroup;
 	
-	public PaletteSelectAction() {
+	public PaletteToggleAction() {
 		super("", AS_CHECK_BOX);
 	}
 	
@@ -41,11 +41,11 @@ public class PaletteSelectAction extends Action {
 		this.tool = tool;
 	}
 
-	public SelectableActionGroup getActionGroup() {
+	public ToggleActionGroup getActionGroup() {
 		return actionGroup;
 	}
 
-	public void setActionGroup(SelectableActionGroup actionGroup, boolean isDefaultAction) {
+	public void setActionGroup(ToggleActionGroup actionGroup, boolean isDefaultAction) {
 		this.actionGroup = actionGroup;
 		this.actionGroup.addAction(this, isDefaultAction);
 	}

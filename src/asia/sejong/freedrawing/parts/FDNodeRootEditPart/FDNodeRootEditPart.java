@@ -23,8 +23,8 @@ import asia.sejong.freedrawing.model.listener.FDNodeRootListener;
  */
 public class FDNodeRootEditPart extends AbstractGraphicalEditPart implements FDNodeRootListener {
 	
-	public FDNodeRootEditPart(FDNodeRoot freedrawingData) {
-		setModel(freedrawingData);
+	public FDNodeRootEditPart(FDNodeRoot nodeRoot) {
+		setModel(nodeRoot);
 	}
 
 	public FDNodeRoot getModel() {

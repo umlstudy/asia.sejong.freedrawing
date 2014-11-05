@@ -2,7 +2,7 @@ package asia.sejong.freedrawing.model;
 
 import org.eclipse.swt.graphics.RGB;
 
-public abstract class BaseObject {
+public abstract class BaseObject implements Cloneable {
 	
 	private RGB borderColor;
 
@@ -18,4 +18,15 @@ public abstract class BaseObject {
 	}
 
 	protected abstract void fireBorderColorChanged(RGB borderColor);
+	
+	protected BaseObject clone() {
+		BaseObject object = null;;
+		try {
+			object = (BaseObject)this.getClass().newInstance();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		object.setBorderColor(borderColor);
+		return object;
+	}
 }

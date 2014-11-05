@@ -1,14 +1,14 @@
-package asia.sejong.freedrawing.editor.actions.clickable;
+package asia.sejong.freedrawing.editor.actions.selection;
 
 import org.eclipse.gef.EditDomain;
 import org.eclipse.gef.ui.actions.SelectionAction;
 import org.eclipse.ui.IWorkbenchPart;
 
-public abstract class AbstractClickableAction extends SelectionAction {
+public abstract class AbstractSelectionAction extends SelectionAction {
 
 	private EditDomain editDomain;
 	
-	protected AbstractClickableAction(IWorkbenchPart part) {
+	protected AbstractSelectionAction(IWorkbenchPart part) {
 		super(part);
 	}
 

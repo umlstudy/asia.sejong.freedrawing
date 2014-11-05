@@ -1,4 +1,4 @@
-package asia.sejong.freedrawing.editor.actions.clickable;
+package asia.sejong.freedrawing.editor.actions.selection;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,8 +11,9 @@ import org.eclipse.ui.IWorkbenchPart;
 
 import asia.sejong.freedrawing.model.FontInfo;
 import asia.sejong.freedrawing.model.TextObject;
+import asia.sejong.freedrawing.parts.FDNodeEditPart.cmd.FontChangeCommand;
 
-public class FontPickAction extends AbstractClickableAction {
+public class FontPickAction extends AbstractSelectionAction {
 	
 	public FontPickAction(IWorkbenchPart part) {
 		super(part);

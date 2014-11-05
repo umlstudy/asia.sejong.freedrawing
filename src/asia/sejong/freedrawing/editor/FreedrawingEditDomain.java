@@ -6,22 +6,22 @@ import org.eclipse.gef.Tool;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.ui.IEditorPart;
 
-import asia.sejong.freedrawing.editor.actions.selection.SelectableActionGroup;
+import asia.sejong.freedrawing.editor.actions.toggle.ToggleActionGroup;
 
 public class FreedrawingEditDomain extends DefaultEditDomain {
 	
-	private SelectableActionGroup selectableActionGroup;
+	private ToggleActionGroup toggleActionGroup;
 
 	public FreedrawingEditDomain(IEditorPart editorPart) {
 		super(editorPart);
 	}
 
-	public SelectableActionGroup getPaletteActionGroup() {
-		return selectableActionGroup;
+	public ToggleActionGroup getToggleActionGroup() {
+		return toggleActionGroup;
 	}
 
-	void setSelectableActionGroup(SelectableActionGroup selectableActionGroup) {
-		this.selectableActionGroup = selectableActionGroup;
+	void setToggleActionGroup(ToggleActionGroup toggleActionGroup) {
+		this.toggleActionGroup = toggleActionGroup;
 	}
 	
 	public void focusGained(FocusEvent event, EditPartViewer viewer) {
@@ -31,8 +31,8 @@ public class FreedrawingEditDomain extends DefaultEditDomain {
 	
 	public void setActiveTool(Tool tool) {
 		super.setActiveTool(tool);
-		if ( selectableActionGroup != null ) {
-			selectableActionGroup.switchActiveTool(tool);
+		if ( toggleActionGroup != null ) {
+			toggleActionGroup.switchActiveTool(tool);
 		}
 	}
 }

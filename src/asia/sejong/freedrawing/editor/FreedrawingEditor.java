@@ -3,6 +3,8 @@ package asia.sejong.freedrawing.editor;
 import java.io.ByteArrayInputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -13,10 +15,12 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.GraphicalViewer;
+import org.eclipse.gef.KeyStroke;
 import org.eclipse.gef.editparts.ScalableFreeformRootEditPart;
 import org.eclipse.gef.tools.AbstractTool;
 import org.eclipse.gef.ui.actions.ActionRegistry;
 import org.eclipse.gef.ui.parts.GraphicalEditor;
+import org.eclipse.gef.ui.parts.GraphicalViewerKeyHandler;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -36,7 +40,9 @@ import org.eclipse.ui.dialogs.SaveAsDialog;
 import org.eclipse.ui.part.FileEditorInput;
 
 import asia.sejong.freedrawing.editor.actions.FreedrawingActionFactory;
-import asia.sejong.freedrawing.editor.actions.selection.SelectableActionGroup;
+import asia.sejong.freedrawing.editor.actions.selection.CopyToClipboardAction;
+import asia.sejong.freedrawing.editor.actions.selection.PasteFromClipboardAction;
+import asia.sejong.freedrawing.editor.actions.toggle.ToggleActionGroup;
 import asia.sejong.freedrawing.editor.tools.FDPanningSelectionTool;
 import asia.sejong.freedrawing.editor.tools.FreedrawingToolFactory;
 import asia.sejong.freedrawing.model.FDNodeRoot;
@@ -47,11 +53,11 @@ import asia.sejong.freedrawing.resources.ContextManager;
 
 public class FreedrawingEditor extends GraphicalEditor {
 
-	private final FDNodeRoot freedrawingData = new FDNodeRoot();
+	private final FDNodeRoot nodeRoot = new FDNodeRoot();
 	
 	private ToolBarManager toolbarManager;
 	private ContextManager contextManager;
-	private SelectableActionGroup actionGroup;
+	private ToggleActionGroup actionGroup;
 	private MenuManager contextMenuManger;
 	
 	private EditPart targetEditPart;
@@ -66,8 +72,8 @@ public class FreedrawingEditor extends GraphicalEditor {
 		
 		// Create ToolBar Actions
 		FreedrawingEditDomain editDomain = (FreedrawingEditDomain)getEditDomain();
-		actionGroup = new SelectableActionGroup(editDomain);
-		editDomain.setSelectableActionGroup(actionGroup);
+		actionGroup = new ToggleActionGroup(editDomain);
+		editDomain.setToggleActionGroup(actionGroup);
 		
 		// EDIT_TEXT
 		action = FreedrawingActionFactory.EDIT_TEXT.create(this);
@@ -78,24 +84,24 @@ public class FreedrawingEditor extends GraphicalEditor {
 		AbstractTool tool;
 		// PANNING_SELECTION
 		tool = FreedrawingToolFactory.PANNING_SELECTION_TOOL.createTool(this);
-		action = FreedrawingActionFactory.SELECT_PANNING.create(actionGroup, tool);
+		action = FreedrawingActionFactory.TOGGLE_PANNING.create(actionGroup, tool);
 		registry.registerAction(action);
 		// set default tool
 		editDomain.setDefaultTool(tool);
 		
 		// MARQUEE_SELECTION
 		tool = FreedrawingToolFactory.MARQUEE_SELECTION_TOOL.createTool(this);
-		action = FreedrawingActionFactory.SELECT_MARQUEE.create(actionGroup, tool);
+		action = FreedrawingActionFactory.TOGGLE_MARQUEE.create(actionGroup, tool);
 		registry.registerAction(action);
 		
 		// RECTANGLE_SELECTION
 		tool = FreedrawingToolFactory.NODE_CREATION_TOOL.createTool(this);
-		action = FreedrawingActionFactory.SELECT_RECTANGLE.create(actionGroup, tool);
+		action = FreedrawingActionFactory.TOGGLE_RECTANGLE.create(actionGroup, tool);
 		registry.registerAction(action);
 		
 		// CONNECTION_SELECTION
 		tool = FreedrawingToolFactory.CONNECTION_CREATION_TOOL.createTool(this);
-		action = FreedrawingActionFactory.SELECT_CONNECTION.create(actionGroup, tool);
+		action = FreedrawingActionFactory.TOGGLE_CONNECTION.create(actionGroup, tool);
 		registry.registerAction(action);
 		
 		// FONT_PICK
@@ -108,6 +114,25 @@ public class FreedrawingEditor extends GraphicalEditor {
 		registry.registerAction(action);
 		getSelectionActions().add(action.getId());
 		
+		// COPY
+		action = new CopyToClipboardAction(this);
+		registry.registerAction(action);
+		getSelectionActions().add(action.getId());
+
+		// PASTE
+		action = new PasteFromClipboardAction(this);
+		registry.registerAction(action);
+		getSelectionActions().add(action.getId());
+		
+		// MOVE_LEFT
+		action = FreedrawingActionFactory.MOVE_LEFT.create(this);
+		registry.registerAction(action);
+		getSelectionActions().add(action.getId());
+		
+//		// MOVE_LEFT_PRESSED
+//		action = FreedrawingActionFactory.MOVE_LEFT_PRESSED.create(this);
+//		registry.registerAction(action);
+//		getSelectionActions().add(action.getId());
 	}
 
 	public void createPartControl(Composite parent) {
@@ -125,6 +150,7 @@ public class FreedrawingEditor extends GraphicalEditor {
 				control.setLayoutData(GridDataFactory.swtDefaults().grab(true, true).align(SWT.FILL, SWT.FILL).create());
 			}
 		}
+		
 	}
 
 	private void createToolBar(Composite parent) {
@@ -133,11 +159,11 @@ public class FreedrawingEditor extends GraphicalEditor {
 		
 		// add actions to ToolBar
 		toolbarManager = new ToolBarManager(toolbar);
-		toolbarManager.add(getActionRegistry().getAction(FreedrawingActionFactory.SELECT_PANNING.getId()));
-		toolbarManager.add(getActionRegistry().getAction(FreedrawingActionFactory.SELECT_MARQUEE.getId()));
+		toolbarManager.add(getActionRegistry().getAction(FreedrawingActionFactory.TOGGLE_PANNING.getId()));
+		toolbarManager.add(getActionRegistry().getAction(FreedrawingActionFactory.TOGGLE_MARQUEE.getId()));
 		toolbarManager.add(new Separator());
-		toolbarManager.add(getActionRegistry().getAction(FreedrawingActionFactory.SELECT_RECTANGLE.getId()));
-		toolbarManager.add(getActionRegistry().getAction(FreedrawingActionFactory.SELECT_CONNECTION.getId()));
+		toolbarManager.add(getActionRegistry().getAction(FreedrawingActionFactory.TOGGLE_RECTANGLE.getId()));
+		toolbarManager.add(getActionRegistry().getAction(FreedrawingActionFactory.TOGGLE_CONNECTION.getId()));
 		toolbarManager.add(new Separator());
 		toolbarManager.add(getActionRegistry().getAction(FreedrawingActionFactory.FONT_PICK.getId()));
 		toolbarManager.add(getActionRegistry().getAction(FreedrawingActionFactory.COLOR_PICK.getId()));
@@ -173,7 +199,7 @@ public class FreedrawingEditor extends GraphicalEditor {
 			if ( targetEditPart instanceof FDNodeEditPart ) {
 				contextMenuManger.add(getActionRegistry().getAction(FreedrawingActionFactory.FONT_PICK.getId()));
 			} else {
-				contextMenuManger.add(getActionRegistry().getAction(FreedrawingActionFactory.SELECT_RECTANGLE.getId()));
+				contextMenuManger.add(getActionRegistry().getAction(FreedrawingActionFactory.TOGGLE_RECTANGLE.getId()));
 			}
 		}
 	}
@@ -183,7 +209,25 @@ public class FreedrawingEditor extends GraphicalEditor {
 	 */
 	protected void initializeGraphicalViewer() {
 //		super.initializeGraphicalViewer();
-		getGraphicalViewer().setContents(freedrawingData);
+		getGraphicalViewer().setContents(nodeRoot);
+		
+		initializeKeyHandler();
+	}
+
+	private void initializeKeyHandler() {
+		
+		GraphicalViewerKeyHandler keyHandler = new GraphicalViewerKeyHandler(getGraphicalViewer()) {
+			protected List<?> getNavigationSiblings() {
+				// disable default key arrow action
+				return new ArrayList<Object>();
+			}
+		};
+		getGraphicalViewer().setKeyHandler(keyHandler);
+		
+		ActionRegistry registry = getActionRegistry();
+//		keyHandler.put(KeyStroke.getReleased(SWT.ARROW_LEFT, 0), registry.getAction(FreedrawingActionFactory.MOVE_LEFT.getId()));
+		keyHandler.put(KeyStroke.getPressed(SWT.ARROW_LEFT, 0), registry.getAction(FreedrawingActionFactory.MOVE_LEFT.getId()));
+//		keyHandler.put(KeyStroke.getPressed(SWT.ARROW_LEFT, SWT.BUTTON_MASK), registry.getAction(FreedrawingActionFactory.MOVE_LEFT_PRESSED.getId()));
 	}
 
 	public void dispose() {
@@ -236,7 +280,7 @@ public class FreedrawingEditor extends GraphicalEditor {
 
 		// 모델 직렬화
 		StringWriter writer = new StringWriter(5000);
-		FreedrawingModelWriter freedrawingDataWriter = FreedrawingModelWriter.newInstance(freedrawingData);
+		FreedrawingModelWriter freedrawingDataWriter = FreedrawingModelWriter.newInstance(nodeRoot);
 		freedrawingDataWriter.write(new PrintWriter(writer));
 		ByteArrayInputStream stream = new ByteArrayInputStream(writer.toString().getBytes());
 
@@ -342,7 +386,7 @@ public class FreedrawingEditor extends GraphicalEditor {
 //	}
 	
 	public void setActiveTool() {
-		getActionRegistry().getAction(FreedrawingActionFactory.SELECT_PANNING.getId()).run();
+		getActionRegistry().getAction(FreedrawingActionFactory.TOGGLE_PANNING.getId()).run();
 	}
 	
 	public void setTargetEditPart(EditPart targetEditPart) {

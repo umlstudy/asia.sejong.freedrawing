@@ -1,4 +1,4 @@
-package asia.sejong.freedrawing.editor.actions.clickable;
+package asia.sejong.freedrawing.parts.FDNodeEditPart.cmd;
 
 import java.util.HashMap;
 import java.util.List;

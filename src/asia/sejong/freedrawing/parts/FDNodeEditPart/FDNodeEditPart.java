@@ -248,7 +248,7 @@ public class FDNodeEditPart extends AbstractNodeEditPart implements NodeEditPart
 		
 		installEditPolicy(EditPolicy.LAYOUT_ROLE, new OrderedLayoutFDNodeEditPolicy());
 		
-		// Handles deleting the selected person
+		// Handles deleting the selected node
 		installEditPolicy(EditPolicy.COMPONENT_ROLE, new ComponentEditPolicy() {
 			protected Command createDeleteCommand(GroupRequest request) {
 				return new DeleteFDNodeCommand(getNodeRoot(), getModel());

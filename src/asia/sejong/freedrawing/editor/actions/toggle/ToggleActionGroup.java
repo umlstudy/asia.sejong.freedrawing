@@ -1,4 +1,4 @@
-package asia.sejong.freedrawing.editor.actions.selection;
+package asia.sejong.freedrawing.editor.actions.toggle;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -7,18 +7,18 @@ import java.util.List;
 import org.eclipse.gef.EditDomain;
 import org.eclipse.gef.Tool;
 
-public class SelectableActionGroup {
+public class ToggleActionGroup {
 	
-	private List<PaletteSelectAction> actions;
-	private PaletteSelectAction defaultAction;
+	private List<PaletteToggleAction> actions;
+	private PaletteToggleAction defaultAction;
 	private EditDomain editDomain;
 	
-	public SelectableActionGroup(EditDomain editDomain) {
-		this.setActions(new ArrayList<PaletteSelectAction>());
+	public ToggleActionGroup(EditDomain editDomain) {
+		this.setActions(new ArrayList<PaletteToggleAction>());
 		this.setEditDomain(editDomain);
 	}
 
-	public void addAction(PaletteSelectAction action, boolean isDefaultAction) {
+	public void addAction(PaletteToggleAction action, boolean isDefaultAction) {
 		if ( isDefaultAction ) {
 			this.defaultAction = action;
 		}
@@ -29,15 +29,15 @@ public class SelectableActionGroup {
 		defaultAction.run();
 	}
 
-	public void setDefaultAction(PaletteSelectAction defaultAction) {
+	public void setDefaultAction(PaletteToggleAction defaultAction) {
 		this.defaultAction = defaultAction;
 	}
 
-	public List<PaletteSelectAction> getActions() {
+	public List<PaletteToggleAction> getActions() {
 		return Collections.unmodifiableList(actions);
 	}
 
-	private void setActions(List<PaletteSelectAction> actions) {
+	private void setActions(List<PaletteToggleAction> actions) {
 		this.actions = actions;
 	}
 
@@ -50,7 +50,7 @@ public class SelectableActionGroup {
 	}
 
 	public void switchActiveTool(Tool tool) {
-		for ( PaletteSelectAction action : actions ) {
+		for ( PaletteToggleAction action : actions ) {
 			if ( action.getTool() == tool ) {
 				action.setChecked(true);
 			} else {
