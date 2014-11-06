@@ -13,7 +13,6 @@ public class FDConnectionCreationTool extends ConnectionCreationTool {
 	}
 
 	protected boolean handleButtonDown(int button) {
-		System.out.println("llllllllllllllllll");
 		
 		if ( button == 3 ) {
 			

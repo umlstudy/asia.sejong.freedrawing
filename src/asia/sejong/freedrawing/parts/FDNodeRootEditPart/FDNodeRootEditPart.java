@@ -1,5 +1,7 @@
 package asia.sejong.freedrawing.parts.FDNodeRootEditPart;
 
+import java.util.List;
+
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.FreeformLayer;
 import org.eclipse.draw2d.FreeformLayout;
@@ -7,8 +9,7 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.MarginBorder;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
-import org.eclipse.gef.Request;
-import org.eclipse.gef.commands.Command;
+import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.gef.editpolicies.RootComponentEditPolicy;
 
@@ -59,17 +60,18 @@ public class FDNodeRootEditPart extends AbstractGraphicalEditPart implements FDN
 		installEditPolicy(EditPolicy.LAYOUT_ROLE, new XYLayoutFDNodeRootEditPolicy());
 	}
 	
-	public Command getCommand(Request request) {
-		System.out.println("Request ? " + request);
-		return super.getCommand(request);
-	}
+//	public Command getCommand(Request request) {
+//		System.out.println("Request ? " + request);
+//		return super.getCommand(request);
+//	}
 	
 	// ===============================================================
 	// FDRootNodeListener
 
 	@Override
 	public void childNodeAdded(FDNode child) {
-		addChild(createChild(child), 0);
+		//addChild(createChild(child), 0);
+		addChild(createChild(child), -1);
 	}
 	
 	@Override
@@ -77,6 +79,19 @@ public class FDNodeRootEditPart extends AbstractGraphicalEditPart implements FDN
 		Object part = getViewer().getEditPartRegistry().get(child);
 		if (part instanceof EditPart) {
 			removeChild((EditPart) part);
+		}
+	}
+	
+	@Override
+	public void positionChanged(int newPosition, FDNode child) {
+		Object childPart = getViewer().getEditPartRegistry().get(child);
+		if (childPart instanceof GraphicalEditPart ) {
+			IFigure childFigure = ((GraphicalEditPart) childPart).getFigure();
+			@SuppressWarnings("unchecked")
+			List<Object> children = (List<Object> )childFigure.getParent().getChildren();
+			children.remove( childFigure );
+			children.add(newPosition, childFigure );
+			childFigure.repaint();
 		}
 	}
 

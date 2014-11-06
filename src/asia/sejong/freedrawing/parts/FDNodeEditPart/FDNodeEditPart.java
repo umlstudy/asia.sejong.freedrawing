@@ -48,7 +48,6 @@ import asia.sejong.freedrawing.parts.FDNodeEditPart.cmd.RecreateFDConnectionComm
 import asia.sejong.freedrawing.parts.FDNodeEditPart.cmd.TextChangeCommand;
 import asia.sejong.freedrawing.parts.common.AbstractNodeEditPart;
 import asia.sejong.freedrawing.resources.ContextManager;
-import asia.sejong.freedrawing.util.DebugUtil;
 
 public class FDNodeEditPart extends AbstractNodeEditPart implements NodeEditPart, FDNodeListener {
 	
@@ -184,10 +183,10 @@ public class FDNodeEditPart extends AbstractNodeEditPart implements NodeEditPart
 		return null;
 	}
 	
-	public Command getCommand(Request request) {
-		DebugUtil.printLogStart();
-		return super.getCommand(request);
-	}
+//	public Command getCommand(Request request) {
+//		DebugUtil.printLogStart();
+//		return super.getCommand(request);
+//	}
 	
 	/**
 	 * Override the superclass implementation so that the receiver
@@ -423,7 +422,7 @@ public class FDNodeEditPart extends AbstractNodeEditPart implements NodeEditPart
 	 */
 	public EditPart getTargetEditPart(Request request) {
 		EditPart targetEditPart = super.getTargetEditPart(request);
-		System.out.println("TARGET EDITPART ? " + request + "," + targetEditPart);
+//		System.out.println("TARGET EDITPART ? " + request + "," + targetEditPart);
 		if ( request instanceof ChangeBoundsRequest && targetEditPart instanceof FDNodeEditPart ) {
 			return targetEditPart.getParent();
 		}

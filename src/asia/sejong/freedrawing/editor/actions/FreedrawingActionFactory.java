@@ -10,6 +10,8 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.actions.ActionFactory;
 
 import asia.sejong.freedrawing.editor.actions.selection.AbstractSelectionAction;
+import asia.sejong.freedrawing.editor.actions.selection.ChangeZOrderAction;
+import asia.sejong.freedrawing.editor.actions.selection.ChangeZOrderAction.ZOrderDirection;
 import asia.sejong.freedrawing.editor.actions.selection.ColorPickAction;
 import asia.sejong.freedrawing.editor.actions.selection.FontPickAction;
 import asia.sejong.freedrawing.editor.actions.selection.MoveAction;
@@ -71,6 +73,28 @@ public abstract class FreedrawingActionFactory extends ActionFactory {
 			MoveAction action = new MoveAction(part, Direction.North);
 			action.setId(getId());
 			action.setText("위로");
+			
+			return action;
+		}
+	};
+	
+	public static final FreedrawingActionFactory ZORDER_TO_FRONT = new FreedrawingActionFactory("ZORDER_TO_FRONT") {
+		public SelectionAction create(IEditorPart part) {
+			
+			ChangeZOrderAction action = new ChangeZOrderAction(part, ZOrderDirection.TO_FRONT);
+			action.setId(getId());
+			action.setText("맨위로");
+			
+			return action;
+		}
+	};
+	
+	public static final FreedrawingActionFactory ZORDER_TO_BACK = new FreedrawingActionFactory("ZORDER_TO_BACK") {
+		public SelectionAction create(IEditorPart part) {
+			
+			ChangeZOrderAction action = new ChangeZOrderAction(part, ZOrderDirection.TO_BACK);
+			action.setId(getId());
+			action.setText("맨뒤로");
 			
 			return action;
 		}

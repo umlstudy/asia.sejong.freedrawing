@@ -18,7 +18,7 @@ public class DebugUtil {
 		return methodLog(getSte(), "END");
 	}
 
-	public static String methodLog(StackTraceElement ste, String msg) {
+	private static String methodLog(StackTraceElement ste, String msg) {
 		  String methodName = ste.getMethodName();
 		  String className = ste.getFileName();
 		  int lineNumber = ste.getLineNumber();
@@ -26,7 +26,7 @@ public class DebugUtil {
 		  return String.format("%s.%s[%d] %s", className, methodName, lineNumber, msg);
 	}
 	
-	public static StackTraceElement getSte() {
+	private static StackTraceElement getSte() {
 		final StackTraceElement[] ste = Thread.currentThread().getStackTrace();
 		return ste[3];
 	}

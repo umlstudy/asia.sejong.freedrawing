@@ -26,6 +26,7 @@ public class PasteFromClipboardAction extends SelectionAction {
 	}
 	
 	protected Command createPasteCommand() {
+		
 		Command result = null;
 		List<?> selection = getSelectedObjects();
 		if (selection != null && selection.size() > 0) {
@@ -45,10 +46,6 @@ public class PasteFromClipboardAction extends SelectionAction {
 							nextLocation = getNextLocation(copiedNodes, nextLocation.x, nextLocation.y);
 							copiedNode.setLocation(nextLocation.x, nextLocation.y);
 							copiedNodes.add(copiedNode);
-//							CreateRequest request = new CreateRequest();
-//							request.setFactory(factory);
-//							request.setLocation(getPasteLocation(gep));
-//							result = gep.getCommand(request);
 						}
 					}
 					

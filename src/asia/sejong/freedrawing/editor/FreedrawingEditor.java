@@ -144,6 +144,16 @@ public class FreedrawingEditor extends GraphicalEditor {
 		registry.registerAction(action);
 		getSelectionActions().add(action.getId());
 		
+		// ZORDER_TO_FRONT
+		action = FreedrawingActionFactory.ZORDER_TO_FRONT.create(this);
+		registry.registerAction(action);
+		getSelectionActions().add(action.getId());
+		
+		// ZORDER_TO_BACK
+		action = FreedrawingActionFactory.ZORDER_TO_BACK.create(this);
+		registry.registerAction(action);
+		getSelectionActions().add(action.getId());
+		
 //		// MOVE_LEFT_PRESSED
 //		action = FreedrawingActionFactory.MOVE_LEFT_PRESSED.create(this);
 //		registry.registerAction(action);
@@ -213,6 +223,8 @@ public class FreedrawingEditor extends GraphicalEditor {
 		if ( getEditDomain().getActiveTool() instanceof FDPanningSelectionTool ) {
 			if ( targetEditPart instanceof FDNodeEditPart ) {
 				contextMenuManger.add(getActionRegistry().getAction(FreedrawingActionFactory.FONT_PICK.getId()));
+				contextMenuManger.add(getActionRegistry().getAction(FreedrawingActionFactory.ZORDER_TO_FRONT.getId()));
+				contextMenuManger.add(getActionRegistry().getAction(FreedrawingActionFactory.ZORDER_TO_BACK.getId()));
 			} else {
 				contextMenuManger.add(getActionRegistry().getAction(FreedrawingActionFactory.TOGGLE_RECTANGLE.getId()));
 			}
@@ -362,23 +374,23 @@ public class FreedrawingEditor extends GraphicalEditor {
 //		firePropertyChange(IEditorPart.PROP_DIRTY);
 //		super.commandStackChanged(event);
 //	}
-
-	/**
-	 * 아뎁터 취득
-	 */
-	@SuppressWarnings("rawtypes")
-	public Object getAdapter(Class type) {
-		
-		Object value = super.getAdapter(type);
-
-		System.out.println("getAdapter(" + type.getSimpleName() + ") -> " + (value != null ? value.getClass().getSimpleName() : "null"));
-
-		if (value == null) {
-			return null;
-		}
-
-		return value;
-	}
+//
+//	/**
+//	 * 아뎁터 취득
+//	 */
+//	@SuppressWarnings("rawtypes")
+//	public Object getAdapter(Class type) {
+//		
+//		Object value = super.getAdapter(type);
+//
+//		System.out.println("getAdapter(" + type.getSimpleName() + ") -> " + (value != null ? value.getClass().getSimpleName() : "null"));
+//
+//		if (value == null) {
+//			return null;
+//		}
+//
+//		return value;
+//	}
 
 //	/**
 //	 * 팔레트 팩토리

@@ -70,7 +70,6 @@ public class MoveAction extends SelectionAction {
 	}
 	
 	public void run() {
-		System.out.println(getId());
 		execute(createMoveCommand(getSelectedObjects()));
 	}
 

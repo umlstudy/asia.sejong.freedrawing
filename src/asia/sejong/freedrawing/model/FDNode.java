@@ -24,10 +24,20 @@ public class FDNode extends TextObject {
 
 	private Set<FDNodeListener> listeners = new HashSet<FDNodeListener>();
 	
+	private FDContainer parent;
+	
 	public FDNode() {
 		sources = new HashSet<FDNode>();
 		targets = new HashSet<FDNode>();
 		bendpoints = new HashMap<FDNode, List<Point>>();
+	}
+	
+	public FDContainer getParent() {
+		return parent;
+	}
+
+	void setParent(FDContainer parent) {
+		this.parent = parent;
 	}
 	
 	public int getX() {

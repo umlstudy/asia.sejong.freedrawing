@@ -24,10 +24,9 @@ public class FreedrawingEditDomain extends DefaultEditDomain {
 		this.toggleActionGroup = toggleActionGroup;
 	}
 	
-	public void focusGained(FocusEvent event, EditPartViewer viewer) {
-		super.focusGained(event, viewer);
-		System.out.println("FOCUS GAINED !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-	}
+//	public void focusGained(FocusEvent event, EditPartViewer viewer) {
+//		super.focusGained(event, viewer);
+//	}
 	
 	public void setActiveTool(Tool tool) {
 		super.setActiveTool(tool);

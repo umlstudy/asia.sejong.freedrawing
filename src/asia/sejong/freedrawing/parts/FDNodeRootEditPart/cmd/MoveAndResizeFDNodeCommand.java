@@ -29,9 +29,9 @@ public class MoveAndResizeFDNodeCommand extends Command
 	 */
 	public void execute() {
 		oldRect = new Rectangle(node.getX(), node.getY(), node.getWidth(), node.getHeight());
-		System.out.println("oldRect ? " + oldRect);
+//		System.out.println("oldRect ? " + oldRect);
 		node.setLocation(rect.x, rect.y);
-		System.out.println("newRect ? " + rect);
+//		System.out.println("newRect ? " + rect);
 		node.setSize(rect.width, rect.height);
 	}
 	
