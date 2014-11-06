@@ -129,6 +129,21 @@ public class FreedrawingEditor extends GraphicalEditor {
 		registry.registerAction(action);
 		getSelectionActions().add(action.getId());
 		
+		// MOVE_RIGHT
+		action = FreedrawingActionFactory.MOVE_RIGHT.create(this);
+		registry.registerAction(action);
+		getSelectionActions().add(action.getId());
+		
+		// MOVE_DOWN
+		action = FreedrawingActionFactory.MOVE_DOWN.create(this);
+		registry.registerAction(action);
+		getSelectionActions().add(action.getId());
+		
+		// MOVE_UP
+		action = FreedrawingActionFactory.MOVE_UP.create(this);
+		registry.registerAction(action);
+		getSelectionActions().add(action.getId());
+		
 //		// MOVE_LEFT_PRESSED
 //		action = FreedrawingActionFactory.MOVE_LEFT_PRESSED.create(this);
 //		registry.registerAction(action);
@@ -225,9 +240,10 @@ public class FreedrawingEditor extends GraphicalEditor {
 		getGraphicalViewer().setKeyHandler(keyHandler);
 		
 		ActionRegistry registry = getActionRegistry();
-//		keyHandler.put(KeyStroke.getReleased(SWT.ARROW_LEFT, 0), registry.getAction(FreedrawingActionFactory.MOVE_LEFT.getId()));
 		keyHandler.put(KeyStroke.getPressed(SWT.ARROW_LEFT, 0), registry.getAction(FreedrawingActionFactory.MOVE_LEFT.getId()));
-//		keyHandler.put(KeyStroke.getPressed(SWT.ARROW_LEFT, SWT.BUTTON_MASK), registry.getAction(FreedrawingActionFactory.MOVE_LEFT_PRESSED.getId()));
+		keyHandler.put(KeyStroke.getPressed(SWT.ARROW_RIGHT, 0), registry.getAction(FreedrawingActionFactory.MOVE_RIGHT.getId()));
+		keyHandler.put(KeyStroke.getPressed(SWT.ARROW_DOWN, 0), registry.getAction(FreedrawingActionFactory.MOVE_DOWN.getId()));
+		keyHandler.put(KeyStroke.getPressed(SWT.ARROW_UP, 0), registry.getAction(FreedrawingActionFactory.MOVE_UP.getId()));
 	}
 
 	public void dispose() {

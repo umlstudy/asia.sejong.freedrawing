@@ -11,13 +11,17 @@ import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.ui.actions.SelectionAction;
 import org.eclipse.ui.IWorkbenchPart;
 
-public class MoveLeftAction extends SelectionAction {
+public class MoveAction extends SelectionAction {
 
-	private boolean pressed = false;
+	private Direction direction;
 	
-	public MoveLeftAction(IWorkbenchPart part, boolean pressed) {
+	public static enum Direction {
+		East, West, South, North;
+	}
+	
+	public MoveAction(IWorkbenchPart part, Direction direction) {
 		super(part);
-		this.pressed = pressed;
+		this.direction = direction;
 		setLazyEnablementCalculation(false);
 	}
 	
@@ -28,14 +32,32 @@ public class MoveLeftAction extends SelectionAction {
 			return null;
 
 		ChangeBoundsRequest moveReq = new ChangeBoundsRequest(RequestConstants.REQ_MOVE);
-		int movePoint = -1;
-		if ( pressed ) {
-			movePoint = -5;
+
+		Point point = new Point(0,0);
+		String actionName = null;
+		switch ( direction ) {
+		case East : 
+			actionName = "Move Left";
+			point.setX(-1);
+			break;
+		case West :
+			actionName = "Move Right";
+			point.setX(1);
+			break;
+		case South :
+			actionName = "Move Down";
+			point.setY(1);
+			break;
+		case North :
+			actionName = "Move Up";
+			point.setY(-1);
+			break;
 		}
-		moveReq.setMoveDelta(new Point(movePoint, 0));
+			
+		moveReq.setMoveDelta(point);
 		moveReq.setEditParts(objects);
 
-		CompoundCommand compoundCmd = new CompoundCommand("Move Left");
+		CompoundCommand compoundCmd = new CompoundCommand(actionName);
 		for (int i = 0; i < objects.size(); i++) {
 			EditPart object = (EditPart) objects.get(i);
 			Command cmd = object.getCommand(moveReq);

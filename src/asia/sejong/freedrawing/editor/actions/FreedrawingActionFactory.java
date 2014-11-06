@@ -12,7 +12,8 @@ import org.eclipse.ui.actions.ActionFactory;
 import asia.sejong.freedrawing.editor.actions.selection.AbstractSelectionAction;
 import asia.sejong.freedrawing.editor.actions.selection.ColorPickAction;
 import asia.sejong.freedrawing.editor.actions.selection.FontPickAction;
-import asia.sejong.freedrawing.editor.actions.selection.MoveLeftAction;
+import asia.sejong.freedrawing.editor.actions.selection.MoveAction;
+import asia.sejong.freedrawing.editor.actions.selection.MoveAction.Direction;
 import asia.sejong.freedrawing.editor.actions.toggle.PaletteToggleAction;
 import asia.sejong.freedrawing.editor.actions.toggle.ToggleActionGroup;
 import asia.sejong.freedrawing.resources.ContextManager;
@@ -34,7 +35,7 @@ public abstract class FreedrawingActionFactory extends ActionFactory {
 	public static final FreedrawingActionFactory MOVE_LEFT = new FreedrawingActionFactory("MOVE_LEFT") {
 		public SelectionAction create(IEditorPart part) {
 			
-			MoveLeftAction action = new MoveLeftAction(part, false);
+			MoveAction action = new MoveAction(part, Direction.East);
 			action.setId(getId());
 			action.setText("왼쪽으로");
 			
@@ -42,12 +43,34 @@ public abstract class FreedrawingActionFactory extends ActionFactory {
 		}
 	};
 	
-	public static final FreedrawingActionFactory MOVE_LEFT_PRESSED_ = new FreedrawingActionFactory("MOVE_LEFT_PRESSED") {
+	public static final FreedrawingActionFactory MOVE_RIGHT = new FreedrawingActionFactory("MOVE_RIGHT") {
 		public SelectionAction create(IEditorPart part) {
 			
-			MoveLeftAction action = new MoveLeftAction(part, true);
+			MoveAction action = new MoveAction(part, Direction.West);
 			action.setId(getId());
-			action.setText("왼쪽으로");
+			action.setText("오른쪽으로");
+			
+			return action;
+		}
+	};
+	
+	public static final FreedrawingActionFactory MOVE_DOWN = new FreedrawingActionFactory("MOVE_DOWN") {
+		public SelectionAction create(IEditorPart part) {
+			
+			MoveAction action = new MoveAction(part, Direction.South);
+			action.setId(getId());
+			action.setText("아래로");
+			
+			return action;
+		}
+	};
+	
+	public static final FreedrawingActionFactory MOVE_UP = new FreedrawingActionFactory("MOVE_UP") {
+		public SelectionAction create(IEditorPart part) {
+			
+			MoveAction action = new MoveAction(part, Direction.North);
+			action.setId(getId());
+			action.setText("위로");
 			
 			return action;
 		}
