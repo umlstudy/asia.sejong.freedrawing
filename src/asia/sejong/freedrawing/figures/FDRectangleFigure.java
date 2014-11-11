@@ -32,10 +32,20 @@ public class FDRectangleFigure extends Label {
 //		graphics.setBackgroundPattern(new Pattern(Display.getCurrent(), r.x,
 //				r.y, r.x + r.width, r.y + r.height, ColorConstants.white,
 //				ColorConstants.lightGray));
+		
+//		Transform tr = new Transform();
+//		tr.setRotation(39f);
 		graphics.setBackgroundColor(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_CYAN));
 		graphics.fillRectangle(r);
-		
+		graphics.setAntialias(SWT.ON);
+//		graphics.rotate(3);
+
 		super.paintFigure(graphics);
+	}
+	
+	protected void paintClientArea(Graphics graphics) {
+//		graphics.rotate(90f);
+		super.paintClientArea(graphics);
 	}
 	
 //	public Rectangle getBounds() {
