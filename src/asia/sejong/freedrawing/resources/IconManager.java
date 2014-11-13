@@ -6,6 +6,7 @@ import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Canvas;
@@ -60,12 +61,17 @@ public class IconManager {
 	}
 	
 	private void createImages(Image[] images, Image targetImage, Image selectedImageBg, Image mouseOverImageBg, Point point) {
-		images[IconType.NORMAL.ordinal()] = targetImage;
+		
+		if ( targetImage.getBounds().width != point.x ) {
+			ImageData imageData = targetImage.getImageData();
+			ImageData scaled = imageData.scaledTo(point.x, point.y);
+			targetImage.dispose();
+			targetImage = new Image(Display.getCurrent(), scaled);
+			images[IconType.NORMAL.ordinal()] = new Image(Display.getCurrent(), scaled);
+		} else {
+			images[IconType.NORMAL.ordinal()] = targetImage;
+		}
 
-//		images[IconType.SELECTED.ordinal()] = merge(selectedImageBg.getImageData(), targetImage.getImageData());
-//		images[IconType.MOUSE_OVER.ordinal()] = merge(mouseOverImageBg.getImageData(), targetImage.getImageData()); 
-				
-//		Image a = merge(selectedImageBg.getImageData(), targetImage.getImageData());
 		ImageDescriptor tiDescriptor = ImageDescriptor.createFromImage(targetImage);
 		OverlayIcon selectedBgImageIcon = new OverlayIcon(
 				ImageDescriptor.createFromImage(selectedImageBg)
