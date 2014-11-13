@@ -3,19 +3,25 @@ package asia.sejong.freedrawing.editor.actions.palette;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.gef.Tool;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuCreator;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 
-public class PaletteDropDownAction extends Action implements IMenuCreator, PaletteActionChangeListener {
+import asia.sejong.freedrawing.resources.IconManager.IconType;
+
+public class PaletteDropDownAction extends Action implements IMenuCreator, PaletteActionChangeListener, PaletteIconChangable {
 	
 	private Menu subMenu;
 	
 	private List<PaletteAction> actions = new ArrayList<PaletteAction>();
 	private PaletteAction selectedAction;
+	
+	private IconType type;
 	
 	public PaletteDropDownAction() {
 		super("", AS_DROP_DOWN_MENU);
@@ -99,5 +105,23 @@ public class PaletteDropDownAction extends Action implements IMenuCreator, Palet
 		this.selectedAction = action;
 		setImageDescriptor(action.getImageDescriptor());
 		setText(action.getText());
+	}
+
+	@Override
+	public void iconChange(Tool tool, IconType newType) {
+		if ( selectedAction != null ) {
+			if ( type != newType || tool != selectedAction.getTool() ) {
+				type = newType;
+				setImageDescriptor(ImageDescriptor.createFromImage(selectedAction.getIcon(type)));
+			}
+		}
+	}
+
+	@Override
+	public Tool getTool() {
+		if ( selectedAction != null ) {
+			return selectedAction.getTool();
+		}
+		return null;
 	}
 }

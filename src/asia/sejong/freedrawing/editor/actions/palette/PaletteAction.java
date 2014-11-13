@@ -2,6 +2,7 @@ package asia.sejong.freedrawing.editor.actions.palette;
 
 import org.eclipse.gef.EditDomain;
 import org.eclipse.gef.GraphicalViewer;
+import org.eclipse.gef.Tool;
 import org.eclipse.gef.tools.AbstractTool;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -10,7 +11,7 @@ import org.eclipse.swt.graphics.Image;
 import asia.sejong.freedrawing.editor.FreedrawingEditor;
 import asia.sejong.freedrawing.resources.IconManager.IconType;
 
-public class PaletteAction extends Action {
+public class PaletteAction extends Action implements PaletteIconChangable {
 	
 	private AbstractTool tool;
 	
@@ -19,6 +20,7 @@ public class PaletteAction extends Action {
 	private FreedrawingEditor editor;
 	
 	private Image[] icons;
+	private IconType type;
 	
 	public PaletteAction(FreedrawingEditor editor, Image[] icons) {
 		super("", AS_PUSH_BUTTON);
@@ -39,15 +41,6 @@ public class PaletteAction extends Action {
 		}
 	}
 	
-	public void setChecked(boolean checked) {
-		super.setChecked(checked);
-		if ( checked ) {
-			setImageDescriptor(ImageDescriptor.createFromImage(icons[IconType.SELECTED.ordinal()]));
-		} else {
-			setImageDescriptor(ImageDescriptor.createFromImage(icons[IconType.NORMAL.ordinal()]));
-		}
-	}
-
 	public AbstractTool getTool() {
 		return tool;
 	}
@@ -62,5 +55,17 @@ public class PaletteAction extends Action {
 
 	public void setPaletteActionChangeListener(PaletteActionChangeListener paletteActionChangeListener) {
 		this.paletteActionChangeListener = paletteActionChangeListener;
+	}
+
+	@Override
+	public void iconChange(Tool tool, IconType newType) {
+		if ( type != newType ) {
+			type = newType;
+			setImageDescriptor(ImageDescriptor.createFromImage(getIcon(type)));
+		}
+	}
+
+	Image getIcon(IconType type) {
+		return icons[type.ordinal()];
 	}
 }

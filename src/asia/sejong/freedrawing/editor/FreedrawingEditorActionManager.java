@@ -26,17 +26,19 @@ import asia.sejong.freedrawing.editor.actions.PaletteDropDownActionFactory;
 import asia.sejong.freedrawing.editor.actions.SelectionActionFactory;
 import asia.sejong.freedrawing.editor.actions.palette.PaletteAction;
 import asia.sejong.freedrawing.editor.actions.palette.PaletteDropDownAction;
+import asia.sejong.freedrawing.editor.actions.palette.PaletteIconChangable;
 import asia.sejong.freedrawing.editor.actions.selection.CopyToClipboardAction;
 import asia.sejong.freedrawing.editor.actions.selection.PasteFromClipboardAction;
 import asia.sejong.freedrawing.editor.tools.FDPanningSelectionTool;
 import asia.sejong.freedrawing.parts.FDNodeEditPart.FDNodeEditPart;
+import asia.sejong.freedrawing.resources.IconManager.IconType;
 
 public class FreedrawingEditorActionManager implements FreedrawingEditDomainListener {
 
 	private FreedrawingEditor editor;
 	
 	// ActionManager Properties
-	private List<PaletteAction> paletteActions;
+	private List<PaletteIconChangable> paletteIconChangables;
 	private ToolBarManager toolbarManager;
 	private MenuManager contextMenuManger;
 	
@@ -44,7 +46,7 @@ public class FreedrawingEditorActionManager implements FreedrawingEditDomainList
 	
 	private FreedrawingEditorActionManager(FreedrawingEditor editor, List<Object> selectionActions) {
 		this.editor = editor;
-		this.paletteActions = new ArrayList<PaletteAction>();
+		this.paletteIconChangables = new ArrayList<PaletteIconChangable>();
 		createPaletteActions();
 		createSelectionActions(selectionActions);
 	}
@@ -67,22 +69,22 @@ public class FreedrawingEditorActionManager implements FreedrawingEditDomainList
 		registry.registerAction(action);
 		// set default tool
 		editDomain.setDefaultTool(action.getTool());
-		paletteActions.add(action);
+		paletteIconChangables.add(action);
 		
 		// MARQUEE_SELECTION
 		action = PaletteActionFactory.TOGGLE_MARQUEE.create(editor);
 		registry.registerAction(action);
-		paletteActions.add(action);
+		paletteIconChangables.add(action);
 
 		// RECTANGLE_SELECTION
 		action = PaletteActionFactory.TOGGLE_RECTANGLE.create(editor);
 		registry.registerAction(action);
-		paletteActions.add(action);
+		paletteIconChangables.add(action);
 
 		// CONNECTION_SELECTION
 		action = PaletteActionFactory.TOGGLE_CONNECTION.create(editor);
 		registry.registerAction(action);
-		paletteActions.add(action);
+		paletteIconChangables.add(action);
 	}
 	
 	private void createSelectionActions(List<Object> selectionActions) {
@@ -169,6 +171,7 @@ public class FreedrawingEditorActionManager implements FreedrawingEditDomainList
 		// TODO TEST
 		{
 			PaletteDropDownAction paletteDropDownAction = PaletteDropDownActionFactory.PALETTE_DROP_DOWN.create();
+			paletteIconChangables.add(paletteDropDownAction);
 			
 			PaletteAction action = (PaletteAction)registry.getAction(PaletteActionFactory.TOGGLE_RECTANGLE.getId());
 			paletteDropDownAction.addAction(action, true);
@@ -249,16 +252,18 @@ public class FreedrawingEditorActionManager implements FreedrawingEditDomainList
 	
 	@Override
 	public void activeToolChanged(Tool tool) {
-		for ( PaletteAction action : paletteActions ) {
-			if ( action.getTool() == tool ) {
-				action.setChecked(true);
+		for ( PaletteIconChangable changable : paletteIconChangables ) {
+			if ( changable.getTool() == tool ) {
+				changable.iconChange(tool, IconType.SELECTED);
 			} else {
-				action.setChecked(false);
+				changable.iconChange(tool, IconType.NORMAL);
 			}
 		}
 		
 		// 툴에 뷰어 설정
 		GraphicalViewer viewer = (GraphicalViewer)editor.getAdapter(GraphicalViewer.class);
-		tool.setViewer(viewer);
+		if ( tool != null ) {
+			tool.setViewer(viewer);
+		}
 	}
 }
