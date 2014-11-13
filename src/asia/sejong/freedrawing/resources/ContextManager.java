@@ -7,14 +7,14 @@ public class ContextManager {
 	private static ContextManager instance;
 	
 	private ColorManager colorManager;
-	private ImageManager imageManager;
+	private IconManager imageManager;
 	private FontManager fontManager;
 	
 	private static Integer refCount = 0;
 	
 	private ContextManager(Device device) {
 		setColorManager(new ColorManager(device));
-		setImageManager(new ImageManager());
+		setImageManager(new IconManager());
 		setFontManager(new FontManager(device));
 		
 		refCount++;
@@ -73,11 +73,11 @@ public class ContextManager {
 		this.colorManager = colorManager;
 	}
 
-	public ImageManager getImageManager() {
+	public IconManager getImageManager() {
 		return imageManager;
 	}
 
-	public void setImageManager(ImageManager imageManager) {
+	public void setImageManager(IconManager imageManager) {
 		this.imageManager = imageManager;
 	}
 

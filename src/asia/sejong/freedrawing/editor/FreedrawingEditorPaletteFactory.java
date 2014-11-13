@@ -14,11 +14,12 @@ import org.eclipse.gef.requests.SimpleFactory;
 import asia.sejong.freedrawing.editor.tools.FDConnectionCreationTool;
 import asia.sejong.freedrawing.editor.tools.FDPanningSelectionTool;
 import asia.sejong.freedrawing.model.FDNode;
-import asia.sejong.freedrawing.resources.ImageManager;
+import asia.sejong.freedrawing.resources.IconManager;
+import asia.sejong.freedrawing.resources.IconManager.IconType;
 
 public class FreedrawingEditorPaletteFactory {
 
-	public static PaletteRoot createPalette(ImageManager imageManager) {
+	public static PaletteRoot createPalette(IconManager imageManager) {
 		PaletteRoot palette = new PaletteRoot();
 		palette.add(createToolsGroup(palette));
 		palette.add(createElementsDrawer(imageManager));
@@ -47,7 +48,7 @@ public class FreedrawingEditorPaletteFactory {
 	/**
 	 * Create a drawer containing tools to add the various genealogy model elements
 	 */
-	private static PaletteEntry createElementsDrawer(ImageManager imageManager) {
+	private static PaletteEntry createElementsDrawer(IconManager imageManager) {
 		PaletteDrawer componentsDrawer = new PaletteDrawer("Elements");
 		
 		// 사각형 생성을 위한 팩토리 및 툴 생성
@@ -62,8 +63,8 @@ public class FreedrawingEditorPaletteFactory {
 				"사각형",
 				"사각형 추가",
 				factory, 
-				imageManager.getRectangleImageDescriptor(), 
-				imageManager.getRectangleImageDescriptor());
+				imageManager.getRectangleImageDescriptor(IconType.NORMAL), 
+				imageManager.getRectangleImageDescriptor(IconType.NORMAL));
 			componentsDrawer.add(component);
 		}
 
@@ -73,8 +74,8 @@ public class FreedrawingEditorPaletteFactory {
 					"Connection",
 					"Create a connection", 
 					null,
-					imageManager.getConnectionImageDescriptor(),
-					imageManager.getConnectionImageDescriptor());
+					imageManager.getConnectionImageDescriptor(IconType.NORMAL),
+					imageManager.getConnectionImageDescriptor(IconType.NORMAL));
 			connection.setToolClass(FDConnectionCreationTool.class);
 			componentsDrawer.add(connection);
 		}

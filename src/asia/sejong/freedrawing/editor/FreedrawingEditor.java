@@ -27,7 +27,7 @@ import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.dialogs.SaveAsDialog;
 import org.eclipse.ui.part.FileEditorInput;
 
-import asia.sejong.freedrawing.editor.actions.FreedrawingActionFactory;
+import asia.sejong.freedrawing.editor.actions.PaletteActionFactory;
 import asia.sejong.freedrawing.model.FDNodeRoot;
 import asia.sejong.freedrawing.model.io.FreedrawingModelWriter;
 import asia.sejong.freedrawing.parts.common.FreedrawingEditPartFactory;
@@ -41,13 +41,20 @@ public class FreedrawingEditor extends GraphicalEditor {
 	
 	private FreedrawingEditorActionManager actionManager;
 	
+	/* 
+	 * protected -> public
+	 * @see org.eclipse.gef.ui.parts.GraphicalEditor#getEditDomain()
+	 */
+	public FreedrawingEditDomain getEditDomain() {
+		return (FreedrawingEditDomain)super.getEditDomain();
+	}
+	
 	@SuppressWarnings("unchecked")
 	protected void createActions() {
 		
 		super.createActions();
 		
-		actionManager = FreedrawingEditorActionManager.newInstance(getActionRegistry(), (FreedrawingEditDomain)getEditDomain());
-		actionManager.createActions(this, (List<Object>)getSelectionActions());
+		actionManager = FreedrawingEditorActionManager.newInstance(this, (List<Object>)getSelectionActions());
 	}
 
 	public void createPartControl(Composite parent) {
@@ -244,7 +251,7 @@ public class FreedrawingEditor extends GraphicalEditor {
 //	}
 	
 	public void setActiveTool() {
-		getActionRegistry().getAction(FreedrawingActionFactory.TOGGLE_PANNING.getId()).run();
+		getActionRegistry().getAction(PaletteActionFactory.TOGGLE_PANNING.getId()).run();
 	}
 	
 	public void setTargetEditPart(EditPart targetEditPart) {

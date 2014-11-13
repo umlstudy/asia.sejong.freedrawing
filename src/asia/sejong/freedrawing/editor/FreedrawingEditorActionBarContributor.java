@@ -9,7 +9,7 @@ import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.LabelRetargetAction;
 import org.eclipse.ui.actions.RetargetAction;
 
-import asia.sejong.freedrawing.editor.actions.FreedrawingActionFactory;
+import asia.sejong.freedrawing.editor.actions.SelectionActionFactory;
 
 public class FreedrawingEditorActionBarContributor extends ActionBarContributor {
 
@@ -18,7 +18,7 @@ public class FreedrawingEditorActionBarContributor extends ActionBarContributor 
 		addRetargetAction(new RedoRetargetAction());
 		addRetargetAction(new DeleteRetargetAction());
 		addRetargetAction(new LabelRetargetAction(ActionFactory.SELECT_ALL.getId(), "Select All"));
-		addRetargetAction(new LabelRetargetAction(FreedrawingActionFactory.EDIT_TEXT.getId(), "Edit text"));
+		addRetargetAction(new LabelRetargetAction(SelectionActionFactory.EDIT_TEXT.getId(), "Edit text"));
 		addRetargetAction((RetargetAction)ActionFactory.COPY.create(getPage().getWorkbenchWindow()));
 		addRetargetAction((RetargetAction)ActionFactory.PASTE.create(getPage().getWorkbenchWindow()));
 	}

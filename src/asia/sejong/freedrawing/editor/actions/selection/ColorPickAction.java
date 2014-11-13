@@ -5,17 +5,18 @@ import java.util.List;
 
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.commands.CommandStack;
+import org.eclipse.gef.ui.actions.SelectionAction;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.ColorDialog;
-import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IEditorPart;
 
 import asia.sejong.freedrawing.model.BaseObject;
 import asia.sejong.freedrawing.parts.FDNodeEditPart.cmd.BorderColorChangeCommand;
 
 
-public class ColorPickAction extends AbstractSelectionAction {
+public class ColorPickAction extends SelectionAction {
 
-	public ColorPickAction(IWorkbenchPart part) {
+	public ColorPickAction(IEditorPart part) {
 		super(part);
 	}
 	
@@ -35,8 +36,9 @@ public class ColorPickAction extends AbstractSelectionAction {
 				}
 			}
 			
+			
 			if (lists.size()>0) {
-				CommandStack stack = getEditDomain().getCommandStack();
+				CommandStack stack = (CommandStack)getWorkbenchPart().getAdapter(CommandStack.class);
 				stack.execute(new BorderColorChangeCommand(lists, selectedColor));
 			} else {
 				// TODO change color

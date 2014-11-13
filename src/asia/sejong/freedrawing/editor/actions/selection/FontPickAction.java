@@ -5,17 +5,18 @@ import java.util.List;
 
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.commands.CommandStack;
+import org.eclipse.gef.ui.actions.SelectionAction;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.widgets.FontDialog;
-import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IEditorPart;
 
 import asia.sejong.freedrawing.model.FontInfo;
 import asia.sejong.freedrawing.model.TextObject;
 import asia.sejong.freedrawing.parts.FDNodeEditPart.cmd.FontChangeCommand;
 
-public class FontPickAction extends AbstractSelectionAction {
+public class FontPickAction extends SelectionAction {
 	
-	public FontPickAction(IWorkbenchPart part) {
+	public FontPickAction(IEditorPart part) {
 		super(part);
 	}
 	
@@ -37,7 +38,7 @@ public class FontPickAction extends AbstractSelectionAction {
 			}
 			
 			if (lists.size()>0) {
-				CommandStack stack = getEditDomain().getCommandStack();
+				CommandStack stack = (CommandStack)getWorkbenchPart().getAdapter(CommandStack.class);
 				stack.execute(new FontChangeCommand(lists, FontInfo.create(fontData)));
 			} else {
 				// TODO change color
