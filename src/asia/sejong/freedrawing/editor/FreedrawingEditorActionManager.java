@@ -8,7 +8,6 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.KeyStroke;
 import org.eclipse.gef.Tool;
-import org.eclipse.gef.editparts.ScalableFreeformRootEditPart;
 import org.eclipse.gef.editparts.ZoomManager;
 import org.eclipse.gef.ui.actions.ActionRegistry;
 import org.eclipse.gef.ui.parts.GraphicalViewerKeyHandler;
@@ -247,7 +246,7 @@ public class FreedrawingEditorActionManager implements FreedrawingEditDomainList
 				scale.addSelectionListener(new SelectionAdapter() {
 					@Override
 					public void widgetSelected(SelectionEvent e) {
-						scaleChanged();
+						editor.scaleChanged(scale.getSelection());
 					}
 				});
 				return scale;
@@ -257,12 +256,7 @@ public class FreedrawingEditorActionManager implements FreedrawingEditDomainList
 		toolbarManager.update(true);
 	}
 	
-	void doAfterGraphicalViewerCreated() {
-		// scale initialize
-		GraphicalViewer viewer = (GraphicalViewer)editor.getAdapter(GraphicalViewer.class);
-		ScalableFreeformRootEditPart rootEditPart = (ScalableFreeformRootEditPart)viewer.getRootEditPart();
-		ZoomManager zoomManager = rootEditPart.getZoomManager();
-
+	void initializeScale(ZoomManager zoomManager) {
 		scale.setMaximum (zoomManager.getZoomLevels().length-1);
 		scale.setPageIncrement (1);
 		int currentLocation = 0;
@@ -271,15 +265,7 @@ public class FreedrawingEditorActionManager implements FreedrawingEditDomainList
 				currentLocation = index;
 			}
 		}
-		scale.setSelection(currentLocation);
-	}
-	
-	private void scaleChanged() {
-		GraphicalViewer viewer = (GraphicalViewer)editor.getAdapter(GraphicalViewer.class);
-		ScalableFreeformRootEditPart rootEditPart = (ScalableFreeformRootEditPart)viewer.getRootEditPart();
-		final ZoomManager zoomManager = rootEditPart.getZoomManager();
-
-		zoomManager.setZoom(zoomManager.getZoomLevels()[scale.getSelection()]);
+		setScaleSelection(currentLocation);
 	}
 	
 	void dispose() {
@@ -362,6 +348,27 @@ public class FreedrawingEditorActionManager implements FreedrawingEditDomainList
 		GraphicalViewer viewer = (GraphicalViewer)editor.getAdapter(GraphicalViewer.class);
 		if ( tool != null ) {
 			tool.setViewer(viewer);
+		}
+	}
+
+	private void setScaleSelection(int currentLocation) {
+		if ( currentLocation != scale.getSelection() ) {
+			scale.setSelection(currentLocation);
+			editor.scaleChanged(scale.getSelection());
+		}
+	}
+	
+	void setScaleNext() {
+		int next = scale.getSelection() + 1;
+		if ( next <= scale.getMaximum() ) {
+			setScaleSelection(next);
+		}
+	}
+	
+	void setScalePrevious() {
+		int prev = scale.getSelection() -1;
+		if ( prev <= scale.getMaximum() ) {
+			setScaleSelection(prev);
 		}
 	}
 }

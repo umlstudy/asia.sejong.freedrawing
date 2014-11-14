@@ -13,9 +13,13 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.gef.EditPart;
+import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.GraphicalViewer;
+import org.eclipse.gef.MouseWheelHandler;
+import org.eclipse.gef.MouseWheelHelper;
 import org.eclipse.gef.SnapToGrid;
 import org.eclipse.gef.editparts.ScalableFreeformRootEditPart;
+import org.eclipse.gef.editparts.ZoomManager;
 import org.eclipse.gef.ui.parts.GraphicalEditor;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -23,6 +27,7 @@ import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.dialogs.SaveAsDialog;
@@ -34,7 +39,7 @@ import asia.sejong.freedrawing.model.io.FreedrawingModelWriter;
 import asia.sejong.freedrawing.parts.common.FreedrawingEditPartFactory;
 import asia.sejong.freedrawing.resources.ContextManager;
 
-public class FreedrawingEditor extends GraphicalEditor {
+public class FreedrawingEditor extends GraphicalEditor implements MouseWheelHandler {
 
 	private final FDNodeRoot nodeRoot = new FDNodeRoot();
 	
@@ -69,7 +74,8 @@ public class FreedrawingEditor extends GraphicalEditor {
 		// 에디터에 그리기 영역 생성 ( GraphicalViewer 생성 ) 
 		super.createPartControl(parent);
 		
-		actionManager.doAfterGraphicalViewerCreated();
+		ScalableFreeformRootEditPart rootEditPart = (ScalableFreeformRootEditPart)getGraphicalViewer().getRootEditPart();
+		actionManager.initializeScale(rootEditPart.getZoomManager());
 
 		// 생성된 툴바와 그리기영역의 레이아웃을 잡는다.
 		for ( Control control : parent.getChildren() ) {
@@ -88,11 +94,22 @@ public class FreedrawingEditor extends GraphicalEditor {
 		viewer.setEditPartFactory(new FreedrawingEditPartFactory());
 		
 		ScalableFreeformRootEditPart rootEditPart = new ScalableFreeformRootEditPart();
+//		ScalableFreeformRootEditPart rootEditPart = new ScalableFreeformRootEditPart() {
+//			public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
+//				if (adapter == MouseWheelHelper.class) {
+//					return this;
+//				}
+//				return super.getAdapter(adapter);
+//			}
+//		};
 		viewer.setRootEditPart(rootEditPart);
 		// 그리드 표시
 		viewer.setProperty(SnapToGrid.PROPERTY_GRID_VISIBLE, true);
 		
-		rootEditPart.getZoomManager().setZoomAnimationStyle(1);
+		// 마우스 CTRL + 스크롤 이벤트 캐치용
+		viewer.setProperty(MouseWheelHandler.KeyGenerator.getKey(SWT.CTRL), this);
+		
+//		rootEditPart.getZoomManager().setZoomAnimationStyle(1);
 //		
 		
 //		viewer.setRootEditPart(new ScalableFreeformRootEditPart() {
@@ -274,5 +291,25 @@ public class FreedrawingEditor extends GraphicalEditor {
 	
 	public void setTargetEditPart(EditPart targetEditPart) {
 		actionManager.setTargetEditPart(targetEditPart);
+	}
+
+	public void scaleChanged(int scale) {
+		ScalableFreeformRootEditPart rootEditPart = (ScalableFreeformRootEditPart)getGraphicalViewer().getRootEditPart();
+		ZoomManager zoomManager = rootEditPart.getZoomManager();
+
+		if ( scale >=0 && zoomManager.getZoomLevels().length > scale ) {
+			zoomManager.setZoom(zoomManager.getZoomLevels()[scale]);
+		}
+	}
+
+	@Override
+	public void handleMouseWheel(Event event, EditPartViewer viewer) {
+		if ( event.stateMask == SWT.CTRL ) {
+			if ( event.count > 0 ) {
+				actionManager.setScaleNext();
+			} else if ( event.count < 0 ) {
+				actionManager.setScalePrevious();
+			}
+		}
 	}
 }
