@@ -140,6 +140,26 @@ public class FreedrawingEditorActionManager implements FreedrawingEditDomainList
 		registry.registerAction(action);
 		selectionActions.add(action.getId());
 		
+		// MOVE_LEFT_FAST
+		action = SelectionActionFactory.MOVE_LEFT_FAST.create(editor);
+		registry.registerAction(action);
+		selectionActions.add(action.getId());
+		
+		// MOVE_RIGHT_FAST
+		action = SelectionActionFactory.MOVE_RIGHT_FAST.create(editor);
+		registry.registerAction(action);
+		selectionActions.add(action.getId());
+		
+		// MOVE_DOWN_FAST
+		action = SelectionActionFactory.MOVE_DOWN_FAST.create(editor);
+		registry.registerAction(action);
+		selectionActions.add(action.getId());
+		
+		// MOVE_UP_FAST
+		action = SelectionActionFactory.MOVE_UP_FAST.create(editor);
+		registry.registerAction(action);
+		selectionActions.add(action.getId());
+		
 		// ZORDER_TO_FRONT
 		action = SelectionActionFactory.ZORDER_TO_FRONT.create(editor);
 		registry.registerAction(action);
@@ -248,6 +268,11 @@ public class FreedrawingEditorActionManager implements FreedrawingEditDomainList
 		keyHandler.put(KeyStroke.getPressed(SWT.ARROW_RIGHT, 0), registry.getAction(SelectionActionFactory.MOVE_RIGHT.getId()));
 		keyHandler.put(KeyStroke.getPressed(SWT.ARROW_DOWN, 0), registry.getAction(SelectionActionFactory.MOVE_DOWN.getId()));
 		keyHandler.put(KeyStroke.getPressed(SWT.ARROW_UP, 0), registry.getAction(SelectionActionFactory.MOVE_UP.getId()));
+		
+		keyHandler.put(KeyStroke.getPressed(SWT.ARROW_LEFT, SWT.CTRL), registry.getAction(SelectionActionFactory.MOVE_LEFT_FAST.getId()));
+		keyHandler.put(KeyStroke.getPressed(SWT.ARROW_RIGHT, SWT.CTRL), registry.getAction(SelectionActionFactory.MOVE_RIGHT_FAST.getId()));
+		keyHandler.put(KeyStroke.getPressed(SWT.ARROW_DOWN, SWT.CTRL), registry.getAction(SelectionActionFactory.MOVE_DOWN_FAST.getId()));
+		keyHandler.put(KeyStroke.getPressed(SWT.ARROW_UP, SWT.CTRL), registry.getAction(SelectionActionFactory.MOVE_UP_FAST.getId()));
 	}
 	
 	@Override

@@ -36,6 +36,7 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
+import asia.sejong.freedrawing.debug.ForEditPart;
 import asia.sejong.freedrawing.figures.FDRectangleFigure;
 import asia.sejong.freedrawing.model.FDConnection;
 import asia.sejong.freedrawing.model.FDNode;
@@ -68,6 +69,13 @@ public class FDNodeEditPart extends AbstractNodeEditPart implements NodeEditPart
 		setBorderColor(m.getBorderColor());
 		
 		super.refreshVisuals();
+	}
+	
+	// TODO FOR DEBUG
+	public Command getCommand(Request request) {
+		Command command = super.getCommand(request);
+		ForEditPart.traceRequest(this, request, command);
+		return command;
 	}
 	
 	private void setFont(FontInfo fontInfo) {

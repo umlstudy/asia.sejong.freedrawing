@@ -1,13 +1,19 @@
 package asia.sejong.freedrawing.parts.FDNodeRootEditPart;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.commands.Command;
+import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gef.editpolicies.XYLayoutEditPolicy;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.requests.CreateRequest;
 
+import asia.sejong.freedrawing.model.FDContainer;
 import asia.sejong.freedrawing.model.FDNode;
 import asia.sejong.freedrawing.model.FDNodeRoot;
 import asia.sejong.freedrawing.parts.FDNodeRootEditPart.cmd.CreateFDNodeCommand;
@@ -57,6 +63,33 @@ public class XYLayoutFDNodeRootEditPolicy extends XYLayoutEditPolicy {
 //		if (child instanceof MarriageEditPart)
 //			return new NonResizableMarriageEditPolicy();
 		return super.createChildEditPolicy(child);
+	}
+	
+	protected Command getCloneCommand(ChangeBoundsRequest request) {
+		FDContainer container = (FDContainer)getHost().getModel();
+		ArrayList<?> editParts = (ArrayList<?>)request.getEditParts();
+		if (editParts != null && editParts.size()>0 ) {
+			List<FDNode> copiedNodes = new ArrayList<FDNode>();
+			for ( Object selected : editParts ) {
+				EditPart selectedEditPart = (EditPart)selected;
+				if ( selectedEditPart.getModel() instanceof FDNode ) {
+					FDNode copiedNode = ((FDNode) selectedEditPart.getModel()).clone();
+					Point delta = request.getMoveDelta();
+					copiedNode.setLocation(copiedNode.getX() + delta.x, copiedNode.getY()+delta.y);
+					copiedNodes.add(copiedNode);
+				}
+			}
+			
+			if ( copiedNodes.size() > 0 ) {
+				CompoundCommand compoundCommand = new CompoundCommand();
+				for ( FDNode node : copiedNodes ) {
+					compoundCommand.add(new CreateFDNodeCommand(container, node));
+				}
+				return compoundCommand;
+			}
+		}
+		
+		return null;
 	}
 	
 //	/**

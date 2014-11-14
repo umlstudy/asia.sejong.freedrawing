@@ -13,15 +13,20 @@ import org.eclipse.ui.IWorkbenchPart;
 
 public class MoveAction extends SelectionAction {
 
+	private static final int NORMAL_MOVE_POINT = 1;
+	private static final int FAST_MOVE_POINT = 10;
+	
 	private Direction direction;
+	private boolean fastMove;
 	
 	public static enum Direction {
 		East, West, South, North;
 	}
 	
-	public MoveAction(IWorkbenchPart part, Direction direction) {
+	public MoveAction(IWorkbenchPart part, Direction direction, boolean fastMove) {
 		super(part);
 		this.direction = direction;
+		this.fastMove = fastMove;
 		setLazyEnablementCalculation(false);
 	}
 	
@@ -33,24 +38,26 @@ public class MoveAction extends SelectionAction {
 
 		ChangeBoundsRequest moveReq = new ChangeBoundsRequest(RequestConstants.REQ_MOVE);
 
+		int movePoint = fastMove ? FAST_MOVE_POINT : NORMAL_MOVE_POINT;
+		
 		Point point = new Point(0,0);
 		String actionName = null;
 		switch ( direction ) {
 		case East : 
 			actionName = "Move Left";
-			point.setX(-1);
+			point.setX(-movePoint);
 			break;
 		case West :
 			actionName = "Move Right";
-			point.setX(1);
+			point.setX(movePoint);
 			break;
 		case South :
 			actionName = "Move Down";
-			point.setY(1);
+			point.setY(movePoint);
 			break;
 		case North :
 			actionName = "Move Up";
-			point.setY(-1);
+			point.setY(-movePoint);
 			break;
 		}
 			

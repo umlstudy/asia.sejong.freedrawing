@@ -10,9 +10,12 @@ import org.eclipse.draw2d.MarginBorder;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
+import org.eclipse.gef.Request;
+import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.gef.editpolicies.RootComponentEditPolicy;
 
+import asia.sejong.freedrawing.debug.ForEditPart;
 import asia.sejong.freedrawing.model.FDNode;
 import asia.sejong.freedrawing.model.FDNodeRoot;
 import asia.sejong.freedrawing.model.listener.FDNodeRootListener;
@@ -60,10 +63,12 @@ public class FDNodeRootEditPart extends AbstractGraphicalEditPart implements FDN
 		installEditPolicy(EditPolicy.LAYOUT_ROLE, new XYLayoutFDNodeRootEditPolicy());
 	}
 	
-//	public Command getCommand(Request request) {
-//		System.out.println("Request ? " + request);
-//		return super.getCommand(request);
-//	}
+	// TODO FOR DEBUG
+	public Command getCommand(Request request) {
+		Command command = super.getCommand(request);
+		ForEditPart.traceRequest(this, request, command);
+		return command;
+	}
 	
 	// ===============================================================
 	// FDRootNodeListener

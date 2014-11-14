@@ -14,6 +14,7 @@ import org.eclipse.draw2d.PolylineConnection;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.gef.EditPolicy;
+import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editparts.AbstractConnectionEditPart;
 import org.eclipse.gef.editpolicies.ConnectionEditPolicy;
@@ -21,6 +22,7 @@ import org.eclipse.gef.editpolicies.ConnectionEndpointEditPolicy;
 import org.eclipse.gef.requests.GroupRequest;
 import org.eclipse.swt.SWT;
 
+import asia.sejong.freedrawing.debug.ForEditPart;
 import asia.sejong.freedrawing.figures.FDConnectionFigure;
 import asia.sejong.freedrawing.model.FDConnection;
 import asia.sejong.freedrawing.model.FDNode;
@@ -39,6 +41,13 @@ public class FDConnectionEditPart extends AbstractConnectionEditPart {
 
 	public FDConnection getModel() {
 		return (FDConnection) super.getModel();
+	}
+	
+	// TODO FOR DEBUG
+	public Command getCommand(Request request) {
+		Command command = super.getCommand(request);
+		ForEditPart.traceRequest(this, request, command);
+		return command;
 	}
 	
 //	@Override

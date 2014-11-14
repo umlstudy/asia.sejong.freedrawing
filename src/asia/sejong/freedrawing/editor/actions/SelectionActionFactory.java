@@ -27,10 +27,11 @@ public abstract class SelectionActionFactory extends LocalActionFactory {
 		}
 	};
 	
+	// 1Pixel Move
 	public static final SelectionActionFactory MOVE_LEFT = new SelectionActionFactory("MOVE_LEFT") {
 		public SelectionAction create(IEditorPart part) {
 			
-			MoveAction action = new MoveAction(part, Direction.East);
+			MoveAction action = new MoveAction(part, Direction.East, false);
 			action.setId(getId());
 			action.setText("왼쪽으로");
 			
@@ -41,7 +42,7 @@ public abstract class SelectionActionFactory extends LocalActionFactory {
 	public static final SelectionActionFactory MOVE_RIGHT = new SelectionActionFactory("MOVE_RIGHT") {
 		public SelectionAction create(IEditorPart part) {
 			
-			MoveAction action = new MoveAction(part, Direction.West);
+			MoveAction action = new MoveAction(part, Direction.West, false);
 			action.setId(getId());
 			action.setText("오른쪽으로");
 			
@@ -52,7 +53,7 @@ public abstract class SelectionActionFactory extends LocalActionFactory {
 	public static final SelectionActionFactory MOVE_DOWN = new SelectionActionFactory("MOVE_DOWN") {
 		public SelectionAction create(IEditorPart part) {
 			
-			MoveAction action = new MoveAction(part, Direction.South);
+			MoveAction action = new MoveAction(part, Direction.South, false);
 			action.setId(getId());
 			action.setText("아래로");
 			
@@ -63,7 +64,52 @@ public abstract class SelectionActionFactory extends LocalActionFactory {
 	public static final SelectionActionFactory MOVE_UP = new SelectionActionFactory("MOVE_UP") {
 		public SelectionAction create(IEditorPart part) {
 			
-			MoveAction action = new MoveAction(part, Direction.North);
+			MoveAction action = new MoveAction(part, Direction.North, false);
+			action.setId(getId());
+			action.setText("위로");
+			
+			return action;
+		}
+	};
+	
+	// XFixel Move
+	public static final SelectionActionFactory MOVE_LEFT_FAST = new SelectionActionFactory("MOVE_LEFT_FAST") {
+		public SelectionAction create(IEditorPart part) {
+			
+			MoveAction action = new MoveAction(part, Direction.East, true);
+			action.setId(getId());
+			action.setText("왼쪽으로");
+			
+			return action;
+		}
+	};
+	
+	public static final SelectionActionFactory MOVE_RIGHT_FAST = new SelectionActionFactory("MOVE_RIGHT_FAST") {
+		public SelectionAction create(IEditorPart part) {
+			
+			MoveAction action = new MoveAction(part, Direction.West, true);
+			action.setId(getId());
+			action.setText("오른쪽으로");
+			
+			return action;
+		}
+	};
+	
+	public static final SelectionActionFactory MOVE_DOWN_FAST = new SelectionActionFactory("MOVE_DOWN_FAST") {
+		public SelectionAction create(IEditorPart part) {
+			
+			MoveAction action = new MoveAction(part, Direction.South, true);
+			action.setId(getId());
+			action.setText("아래로");
+			
+			return action;
+		}
+	};
+	
+	public static final SelectionActionFactory MOVE_UP_FAST = new SelectionActionFactory("MOVE_UP_FAST") {
+		public SelectionAction create(IEditorPart part) {
+			
+			MoveAction action = new MoveAction(part, Direction.North, true);
 			action.setId(getId());
 			action.setText("위로");
 			
