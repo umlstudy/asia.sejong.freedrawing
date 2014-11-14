@@ -66,8 +66,10 @@ public class FreedrawingEditor extends GraphicalEditor {
 		// 에디터에 툴바 생성
 		actionManager.createToolBar(parent);
 		
-		// 에디터에 그리기 영역 생성
+		// 에디터에 그리기 영역 생성 ( GraphicalViewer 생성 ) 
 		super.createPartControl(parent);
+		
+		actionManager.doAfterGraphicalViewerCreated();
 
 		// 생성된 툴바와 그리기영역의 레이아웃을 잡는다.
 		for ( Control control : parent.getChildren() ) {
@@ -84,9 +86,15 @@ public class FreedrawingEditor extends GraphicalEditor {
 		super.configureGraphicalViewer();
 		final GraphicalViewer viewer = getGraphicalViewer();
 		viewer.setEditPartFactory(new FreedrawingEditPartFactory());
-		viewer.setRootEditPart(new ScalableFreeformRootEditPart());
+		
+		ScalableFreeformRootEditPart rootEditPart = new ScalableFreeformRootEditPart();
+		viewer.setRootEditPart(rootEditPart);
 		// 그리드 표시
 		viewer.setProperty(SnapToGrid.PROPERTY_GRID_VISIBLE, true);
+		
+		rootEditPart.getZoomManager().setZoomAnimationStyle(1);
+//		
+		
 //		viewer.setRootEditPart(new ScalableFreeformRootEditPart() {
 //			protected GridLayer createGridLayer() {
 //				return new GridLayer() {

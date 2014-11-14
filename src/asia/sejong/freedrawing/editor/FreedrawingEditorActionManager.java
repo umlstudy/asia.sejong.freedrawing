@@ -8,8 +8,11 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.KeyStroke;
 import org.eclipse.gef.Tool;
+import org.eclipse.gef.editparts.ScalableFreeformRootEditPart;
+import org.eclipse.gef.editparts.ZoomManager;
 import org.eclipse.gef.ui.actions.ActionRegistry;
 import org.eclipse.gef.ui.parts.GraphicalViewerKeyHandler;
+import org.eclipse.jface.action.ControlContribution;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -18,7 +21,11 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Scale;
 import org.eclipse.swt.widgets.ToolBar;
 
 import asia.sejong.freedrawing.editor.actions.PaletteActionFactory;
@@ -43,6 +50,8 @@ public class FreedrawingEditorActionManager implements FreedrawingEditDomainList
 	private MenuManager contextMenuManger;
 	
 	private EditPart targetEditPart;
+	
+	private Scale scale;
 	
 	private FreedrawingEditorActionManager(FreedrawingEditor editor, List<Object> selectionActions) {
 		this.editor = editor;
@@ -174,8 +183,9 @@ public class FreedrawingEditorActionManager implements FreedrawingEditDomainList
 	void createToolBar(Composite parent) {
 		ToolBar toolbar = new ToolBar(parent, SWT.FLAT | SWT.RIGHT);
 		toolbar.setLayoutData(GridDataFactory.swtDefaults().grab(true, false).align(SWT.FILL, SWT.FILL).create());
-		
+	
 		ActionRegistry registry = (ActionRegistry)editor.getAdapter(ActionRegistry.class);
+		
 		// add actions to ToolBar
 		toolbarManager = new ToolBarManager(toolbar);
 		toolbarManager.add(registry.getAction(PaletteActionFactory.TOGGLE_PANNING.getId()));
@@ -206,7 +216,70 @@ public class FreedrawingEditorActionManager implements FreedrawingEditDomainList
 		
 		toolbarManager.add(new Separator());
 		
+		toolbarManager.add(new ControlContribution("XXXX") {
+
+			@Override
+			protected Control createControl(Composite parent) {
+//				final Scale scale = new Scale (parent, SWT.NONE);
+//				GraphicalViewer viewer = (GraphicalViewer)editor.getAdapter(GraphicalViewer.class);
+//				ScalableFreeformRootEditPart rootEditPart = (ScalableFreeformRootEditPart)viewer.getRootEditPart();
+//				final ZoomManager zoomManager = rootEditPart.getZoomManager();
+//				scale.setMaximum (zoomManager.getZoomLevels().length-1);
+//				scale.setPageIncrement (1);
+//				scale.pack();
+//				int currentLocation = 0;
+//				for ( int index = 0; index < zoomManager.getZoomLevels().length; index++ ) {
+//					if ( zoomManager.getZoom() == zoomManager.getZoomLevels()[index] ) {
+//						currentLocation = index;
+//					}
+//				}
+//				scale.setSelection(currentLocation);
+//				scale.addSelectionListener(new SelectionAdapter() {
+//					@Override
+//					public void widgetSelected(SelectionEvent e) {
+//						zoomManager.setZoom(zoomManager.getZoomLevels()[scale.getSelection()]);
+//					}
+//				});
+//				return scale;
+				
+				scale = new Scale (parent, SWT.NONE);
+				scale.pack();
+				scale.addSelectionListener(new SelectionAdapter() {
+					@Override
+					public void widgetSelected(SelectionEvent e) {
+						scaleChanged();
+					}
+				});
+				return scale;
+			}
+			
+		});
 		toolbarManager.update(true);
+	}
+	
+	void doAfterGraphicalViewerCreated() {
+		// scale initialize
+		GraphicalViewer viewer = (GraphicalViewer)editor.getAdapter(GraphicalViewer.class);
+		ScalableFreeformRootEditPart rootEditPart = (ScalableFreeformRootEditPart)viewer.getRootEditPart();
+		ZoomManager zoomManager = rootEditPart.getZoomManager();
+
+		scale.setMaximum (zoomManager.getZoomLevels().length-1);
+		scale.setPageIncrement (1);
+		int currentLocation = 0;
+		for ( int index = 0; index < zoomManager.getZoomLevels().length; index++ ) {
+			if ( zoomManager.getZoom() == zoomManager.getZoomLevels()[index] ) {
+				currentLocation = index;
+			}
+		}
+		scale.setSelection(currentLocation);
+	}
+	
+	private void scaleChanged() {
+		GraphicalViewer viewer = (GraphicalViewer)editor.getAdapter(GraphicalViewer.class);
+		ScalableFreeformRootEditPart rootEditPart = (ScalableFreeformRootEditPart)viewer.getRootEditPart();
+		final ZoomManager zoomManager = rootEditPart.getZoomManager();
+
+		zoomManager.setZoom(zoomManager.getZoomLevels()[scale.getSelection()]);
 	}
 	
 	void dispose() {
