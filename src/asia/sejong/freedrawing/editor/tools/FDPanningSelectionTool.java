@@ -13,6 +13,7 @@ public class FDPanningSelectionTool extends SelectionTool {
 		this.freedrawingEditor = freedrawingEditor;
 	}
 
+	// TODO FOR DEBUG
 	protected boolean handleButtonDown(int button) {
 //		
 //		if ( button == 3 ) {

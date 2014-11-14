@@ -3,15 +3,30 @@ package asia.sejong.freedrawing.parts.FDNodeRootEditPart;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.draw2d.ColorConstants;
+import org.eclipse.draw2d.FigureUtilities;
+import org.eclipse.draw2d.Graphics;
+import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.ImageFigure;
+import org.eclipse.draw2d.RectangleFigure;
+import org.eclipse.draw2d.SWTGraphics;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
+import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
+import org.eclipse.gef.editpolicies.ResizableEditPolicy;
 import org.eclipse.gef.editpolicies.XYLayoutEditPolicy;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.requests.CreateRequest;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Pattern;
+import org.eclipse.swt.widgets.Display;
 
 import asia.sejong.freedrawing.model.FDContainer;
 import asia.sejong.freedrawing.model.FDNode;
@@ -62,7 +77,44 @@ public class XYLayoutFDNodeRootEditPolicy extends XYLayoutEditPolicy {
 	protected EditPolicy createChildEditPolicy(EditPart child) {
 //		if (child instanceof MarriageEditPart)
 //			return new NonResizableMarriageEditPolicy();
-		return super.createChildEditPolicy(child);
+//		return super.createChildEditPolicy(child);
+		return new ResizableEditPolicy() {
+			protected IFigure createDragSourceFeedbackFigure() {
+				// Use a ghost rectangle for feedback
+//				RectangleFigure r = new RectangleFigure();
+//				FigureUtilities.makeGhostShape(r);
+//				r.setLineStyle(Graphics.LINE_DASHDOT);
+//				r.setLineWidth(2);
+//				r.setForegroundColor(ColorConstants.white);
+//				r.setBounds(getInitialFeedbackBounds());
+//				r.validate();
+//				addFeedback(r);
+				
+				Rectangle bounds = getInitialFeedbackBounds();
+				Image image = new Image(Display.getCurrent(), bounds.width, bounds.height);
+				GC gc = new GC(image);
+				SWTGraphics graphics = new SWTGraphics(gc);
+				graphics.translate(-bounds.x, -bounds.y);
+				IFigure figure = ((GraphicalEditPart)getHost()).getFigure();
+				figure.paint(graphics);
+				
+				Color background = gc.getBackground ();
+				Pattern p = new Pattern (Display.getCurrent(), 0, 0, 0, bounds.height, background, 100, background, 180);
+				gc.setBackgroundPattern (p);
+				gc.fillRectangle (0, 0, bounds.width, bounds.height);
+				p.dispose ();
+				
+			    gc.dispose();
+			    graphics.dispose();
+			    
+			    ImageFigure imageFigure = new ImageFigure(image);
+			    imageFigure.validate();
+			    addFeedback(imageFigure);
+			    System.out.println("MOVING FIGURE!");
+//			    image.dispose();
+				return imageFigure;
+			}
+		};
 	}
 	
 	protected Command getCloneCommand(ChangeBoundsRequest request) {

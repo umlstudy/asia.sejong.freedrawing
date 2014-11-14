@@ -4,9 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.draw2d.ChopboxAnchor;
+import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.ConnectionAnchor;
+import org.eclipse.draw2d.FigureUtilities;
+import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
+import org.eclipse.draw2d.RectangleFigure;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.ConnectionEditPart;
@@ -20,6 +24,7 @@ import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.ComponentEditPolicy;
 import org.eclipse.gef.editpolicies.DirectEditPolicy;
+import org.eclipse.gef.editpolicies.ResizableEditPolicy;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.requests.CreateConnectionRequest;
 import org.eclipse.gef.requests.DirectEditRequest;
@@ -277,6 +282,21 @@ public class FDNodeEditPart extends AbstractNodeEditPart implements NodeEditPart
 				return null;
 			}
 		});
+		
+		/*
+		installEditPolicy(EditPolicy.COMPONENT_ROLE, new ResizableEditPolicy() {
+			protected IFigure createDragSourceFeedbackFigure() {
+				getFigure();
+				RectangleFigure r = new RectangleFigure();
+				FigureUtilities.makeGhostShape(r);
+				r.setLineStyle(Graphics.LINE_DASHDOTDOT);
+				r.setForegroundColor(ColorConstants.white);
+				r.setBounds(getInitialFeedbackBounds());
+				r.validate();
+				return r;
+			}
+		});
+		*/
 	}
 
 	/* (non-Javadoc)

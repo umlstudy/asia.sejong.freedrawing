@@ -14,6 +14,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.GraphicalViewer;
+import org.eclipse.gef.SnapToGrid;
 import org.eclipse.gef.editparts.ScalableFreeformRootEditPart;
 import org.eclipse.gef.ui.parts.GraphicalEditor;
 import org.eclipse.jface.dialogs.ErrorDialog;
@@ -84,6 +85,15 @@ public class FreedrawingEditor extends GraphicalEditor {
 		final GraphicalViewer viewer = getGraphicalViewer();
 		viewer.setEditPartFactory(new FreedrawingEditPartFactory());
 		viewer.setRootEditPart(new ScalableFreeformRootEditPart());
+		// 그리드 표시
+		viewer.setProperty(SnapToGrid.PROPERTY_GRID_VISIBLE, true);
+//		viewer.setRootEditPart(new ScalableFreeformRootEditPart() {
+//			protected GridLayer createGridLayer() {
+//				return new GridLayer() {
+//					
+//				};
+//			}
+//		});
 		
 		actionManager.createContextMenuManager(viewer);
 	}

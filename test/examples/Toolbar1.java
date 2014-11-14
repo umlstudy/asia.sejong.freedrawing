@@ -1,5 +1,6 @@
 package examples;
 
+import org.eclipse.draw2d.SWTGraphics;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
@@ -12,6 +13,8 @@ import org.eclipse.swt.widgets.ToolItem;
 public class Toolbar1 {
 
   public static void main(String[] args) {
+	  
+//	  SWTGraphics graphics = new SWTGraphics(gc);
     Display display = new Display();
     Image image = new Image(display, 16, 16);
     Color color = display.getSystemColor(SWT.COLOR_RED);
