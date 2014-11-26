@@ -29,5 +29,6 @@ public class FreedrawingEditorActionBarContributor extends ActionBarContributor 
 	}
 
 	protected void declareGlobalActionKeys() {
+		addGlobalActionKey(ActionFactory.PRINT.getId());
 	}
 }

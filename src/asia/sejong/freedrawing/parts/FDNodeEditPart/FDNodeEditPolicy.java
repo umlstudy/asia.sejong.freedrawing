@@ -8,29 +8,29 @@ import org.eclipse.gef.editpolicies.GraphicalNodeEditPolicy;
 import org.eclipse.gef.requests.CreateConnectionRequest;
 import org.eclipse.gef.requests.ReconnectRequest;
 
-import asia.sejong.freedrawing.model.FDNode;
-import asia.sejong.freedrawing.parts.FDConnectionEditPart.FDConnectionEditPart;
-import asia.sejong.freedrawing.parts.FDConnectionEditPart.cmd.DeleteFDConnectionCommand;
-import asia.sejong.freedrawing.parts.FDNodeEditPart.cmd.CreateFDConnectionCommand;
-import asia.sejong.freedrawing.parts.FDNodeEditPart.cmd.RecreateFDConnectionCommand;
+import asia.sejong.freedrawing.model.FDRect;
+import asia.sejong.freedrawing.parts.FDNodeEditPart.command.FDWireCreateCommand;
+import asia.sejong.freedrawing.parts.FDNodeEditPart.command.FDWireRecreateCommand;
+import asia.sejong.freedrawing.parts.FDWireEditPart.FDWireEditPart;
+import asia.sejong.freedrawing.parts.FDWireEditPart.command.FDWireDeleteCommand;
 
 public class FDNodeEditPolicy extends GraphicalNodeEditPolicy {
 	
 	/**
 	 * Answer a new connection command for the receiver.
 	 */
-	public CreateFDConnectionCommand createConnectionCommand() {
-		if ( getHost().getModel() instanceof FDNode ) {
-			return new CreateFDConnectionCommand();
+	public FDWireCreateCommand createConnectionCommand() {
+		if ( getHost().getModel() instanceof FDRect ) {
+			return new FDWireCreateCommand();
 		}
 		return null;
 	}
 	
 	protected Command getConnectionCompleteCommand(CreateConnectionRequest request) {
 		Command startCmd = request.getStartCommand();
-		if (!(startCmd instanceof CreateFDConnectionCommand))
+		if (!(startCmd instanceof FDWireCreateCommand))
 			return null;
-		CreateFDConnectionCommand connCmd = (CreateFDConnectionCommand) startCmd;
+		FDWireCreateCommand connCmd = (FDWireCreateCommand) startCmd;
 		
 		Object target = request.getTargetEditPart().getModel();
 		if (!connCmd.isValidTarget(target)) {
@@ -46,7 +46,7 @@ public class FDNodeEditPolicy extends GraphicalNodeEditPolicy {
 	 * Return a new connection command with the receiver's model as the "source".
 	 */
 	protected Command getConnectionCreateCommand(CreateConnectionRequest request) {
-		CreateFDConnectionCommand connCmd = createConnectionCommand();
+		FDWireCreateCommand connCmd = createConnectionCommand();
 		request.setStartCommand(connCmd);
 		Object source = request.getTargetEditPart().getModel();
 		if (!connCmd.isValidSource(source)) {
@@ -58,55 +58,55 @@ public class FDNodeEditPolicy extends GraphicalNodeEditPolicy {
 	}
 	
 	protected Connection createDummyConnection(Request req) {
-		return FDConnectionEditPart.createConnection(false);
+		return FDWireEditPart.createWireFigure(false);
 	}
 	
 	protected Command getReconnectSourceCommand(ReconnectRequest request) {
 		EditPart currentEditPart = request.getConnectionEditPart();
-		if (!(currentEditPart instanceof FDConnectionEditPart)) {
+		if (!(currentEditPart instanceof FDWireEditPart)) {
 			return null;
 		}
 		
-		FDConnectionEditPart currentConnectionEditPart = (FDConnectionEditPart) currentEditPart;
-		RecreateFDConnectionCommand recreateConnectionCommand = currentConnectionEditPart.recreateCommand();
-		FDNode source = (FDNode)request.getTarget().getModel();
-		if (!recreateConnectionCommand.isValidSource(source) ) {
+		FDWireEditPart currentConnectionEditPart = (FDWireEditPart) currentEditPart;
+		FDWireRecreateCommand wireRecreateCommand = currentConnectionEditPart.recreateCommand();
+		FDRect source = (FDRect)request.getTarget().getModel();
+		if (!wireRecreateCommand.isValidSource(source) ) {
 			return null;
 		}
 		
-		recreateConnectionCommand.setSource(source);
-		if ( source.containsTarget(recreateConnectionCommand.getTarget()) ) {
+		wireRecreateCommand.setSource(source);
+		if ( source.containsTarget(wireRecreateCommand.getTarget()) ) {
 			return null;
 		}
 
-		Command deleteConnCmd = new DeleteFDConnectionCommand(currentConnectionEditPart.getModel());
-		Command modifyConnCmd = deleteConnCmd.chain(recreateConnectionCommand);
-		modifyConnCmd.setLabel("Modify " + recreateConnectionCommand.getConnectionName());
+		Command deleteConnCmd = new FDWireDeleteCommand(currentConnectionEditPart.getModel());
+		Command modifyConnCmd = deleteConnCmd.chain(wireRecreateCommand);
+		modifyConnCmd.setLabel("Modify " + wireRecreateCommand.getWireName());
 		
 		return modifyConnCmd;
 	}
 
 	protected Command getReconnectTargetCommand(ReconnectRequest request) {
 		EditPart currentEditPart = request.getConnectionEditPart();
-		if (!(currentEditPart instanceof FDConnectionEditPart)) {
+		if (!(currentEditPart instanceof FDWireEditPart)) {
 			return null;
 		}
 		
-		FDConnectionEditPart currentConnectionEditPart = (FDConnectionEditPart) currentEditPart;
-		RecreateFDConnectionCommand recreateConnectionCommand = currentConnectionEditPart.recreateCommand();
-		FDNode target = (FDNode)request.getTarget().getModel();
-		if ( !recreateConnectionCommand.isValidTarget(target) ) {
+		FDWireEditPart currentConnectionEditPart = (FDWireEditPart) currentEditPart;
+		FDWireRecreateCommand wireRecreateCommand = currentConnectionEditPart.recreateCommand();
+		FDRect target = (FDRect)request.getTarget().getModel();
+		if ( !wireRecreateCommand.isValidTarget(target) ) {
 			return null;
 		}
 		
-		recreateConnectionCommand.setTarget(target);
-		if ( recreateConnectionCommand.getSource().containsTarget(target) ) {
+		wireRecreateCommand.setTarget(target);
+		if ( wireRecreateCommand.getSource().containsTarget(target) ) {
 			return null;
 		}
 
-		Command deleteConnCmd = new DeleteFDConnectionCommand(currentConnectionEditPart.getModel());
-		Command modifyConnCmd = deleteConnCmd.chain(recreateConnectionCommand);
-		modifyConnCmd.setLabel("Modify " + recreateConnectionCommand.getConnectionName());
+		Command deleteConnCmd = new FDWireDeleteCommand(currentConnectionEditPart.getModel());
+		Command modifyConnCmd = deleteConnCmd.chain(wireRecreateCommand);
+		modifyConnCmd.setLabel("Modify " + wireRecreateCommand.getWireName());
 		
 		return modifyConnCmd;
 	}

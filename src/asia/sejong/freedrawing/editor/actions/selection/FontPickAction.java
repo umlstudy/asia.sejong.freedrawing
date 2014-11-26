@@ -11,8 +11,8 @@ import org.eclipse.swt.widgets.FontDialog;
 import org.eclipse.ui.IEditorPart;
 
 import asia.sejong.freedrawing.model.FontInfo;
-import asia.sejong.freedrawing.model.TextObject;
-import asia.sejong.freedrawing.parts.FDNodeEditPart.cmd.FontChangeCommand;
+import asia.sejong.freedrawing.model.FDTextShape;
+import asia.sejong.freedrawing.parts.FDNodeEditPart.command.FontChangeCommand;
 
 public class FontPickAction extends SelectionAction {
 	
@@ -27,12 +27,12 @@ public class FontPickAction extends SelectionAction {
 		
 		if ( fontData != null ) {
 			
-			List<TextObject> lists = new ArrayList<TextObject>();
+			List<FDTextShape> lists = new ArrayList<FDTextShape>();
 			for ( Object item : getSelectedObjects() ) {
 				if ( item instanceof EditPart ) {
 					Object model = ((EditPart)item).getModel();
-					if ( model instanceof TextObject ) {
-						lists.add((TextObject)model);
+					if ( model instanceof FDTextShape ) {
+						lists.add((FDTextShape)model);
 					}
 				}
 			}

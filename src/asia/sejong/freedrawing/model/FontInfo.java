@@ -49,12 +49,17 @@ public class FontInfo implements Cloneable {
 		return fontInfo;
 	}
 	
-	public FontInfo clone() {
-		FontInfo fi = new FontInfo();
-		fi.setHeight(height);
-		fi.setName(name);
-		fi.setStyle(style);
-		
-		return fi;
+	public final FontInfo clone() {
+		try {
+			return (FontInfo)super.clone();
+		} catch (CloneNotSupportedException e) {
+			throw new RuntimeException(e);
+		}
+//		FontInfo fi = new FontInfo();
+//		fi.setHeight(height);
+//		fi.setName(name);
+//		fi.setStyle(style);
+//		
+//		return fi;
 	}
 }

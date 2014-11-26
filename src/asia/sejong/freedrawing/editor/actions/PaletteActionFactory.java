@@ -4,7 +4,7 @@ import org.eclipse.gef.tools.AbstractTool;
 
 import asia.sejong.freedrawing.editor.FreedrawingEditor;
 import asia.sejong.freedrawing.editor.actions.palette.PaletteAction;
-import asia.sejong.freedrawing.editor.tools.FreedrawingToolFactory;
+import asia.sejong.freedrawing.editor.tools.FDToolFactory;
 import asia.sejong.freedrawing.resources.ContextManager;
 import asia.sejong.freedrawing.resources.IconManager.IconType;
 
@@ -12,7 +12,7 @@ public abstract class PaletteActionFactory extends LocalActionFactory {
 
 	public static final PaletteActionFactory TOGGLE_PANNING = new PaletteActionFactory("TOGGLE_PANNING") {
 		public PaletteAction create(FreedrawingEditor editor) {
-			AbstractTool tool = FreedrawingToolFactory.PANNING_SELECTION_TOOL.createTool(editor);
+			AbstractTool tool = FDToolFactory.PANNING_SELECTION_TOOL.createTool(editor);
 			PaletteAction action = new PaletteAction(editor, ContextManager.getInstance().getImageManager().getSelectImages());
 			action.setId(getId());
 			action.setTool(tool);
@@ -25,7 +25,7 @@ public abstract class PaletteActionFactory extends LocalActionFactory {
 	
 	public static final PaletteActionFactory TOGGLE_RECTANGLE = new PaletteActionFactory("TOGGLE_RECTANGLE") {
 		public PaletteAction create(FreedrawingEditor editor) {
-			AbstractTool tool = FreedrawingToolFactory.NODE_CREATION_TOOL.createTool(editor);
+			AbstractTool tool = FDToolFactory.NODE_CREATION_TOOL.createTool(editor);
 			PaletteAction action = new PaletteAction(editor, ContextManager.getInstance().getImageManager().getRectangleImages());
 			action.setId(getId());
 			action.setTool(tool);
@@ -38,7 +38,7 @@ public abstract class PaletteActionFactory extends LocalActionFactory {
 
 	public static final PaletteActionFactory TOGGLE_MARQUEE = new PaletteActionFactory("TOGGLE_MARQUEE") {
 		public PaletteAction create(FreedrawingEditor editor) {
-			AbstractTool tool = FreedrawingToolFactory.MARQUEE_SELECTION_TOOL.createTool(editor);
+			AbstractTool tool = FDToolFactory.MARQUEE_SELECTION_TOOL.createTool(editor);
 			PaletteAction action = new PaletteAction(editor, ContextManager.getInstance().getImageManager().getMarqueeImages());
 			action.setId(getId());
 			action.setTool(tool);
@@ -51,7 +51,7 @@ public abstract class PaletteActionFactory extends LocalActionFactory {
 	
 	public static final PaletteActionFactory TOGGLE_CONNECTION = new PaletteActionFactory("TOGGLE_CONNECTION") {
 		public PaletteAction create(FreedrawingEditor editor) {
-			AbstractTool tool = FreedrawingToolFactory.CONNECTION_CREATION_TOOL.createTool(editor);
+			AbstractTool tool = FDToolFactory.CONNECTION_CREATION_TOOL.createTool(editor);
 			PaletteAction action = new PaletteAction(editor, ContextManager.getInstance().getImageManager().getConnectionImages());
 			action.setId(getId());
 			action.setTool(tool);

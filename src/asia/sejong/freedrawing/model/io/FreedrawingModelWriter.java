@@ -2,25 +2,25 @@ package asia.sejong.freedrawing.model.io;
 
 import java.io.PrintWriter;
 
-import asia.sejong.freedrawing.model.FDNodeRoot;
+import asia.sejong.freedrawing.model.FDRoot;
 
 public class FreedrawingModelWriter {
 
-	private FDNodeRoot nodeRoot;
+	private FDRoot nodeRoot;
 
-	private FreedrawingModelWriter(FDNodeRoot nodeRoot) {
+	private FreedrawingModelWriter(FDRoot nodeRoot) {
 		this.setNodeRoot(nodeRoot);
 	}
 
-	public static FreedrawingModelWriter newInstance( FDNodeRoot nodeRoot) {
+	public static FreedrawingModelWriter newInstance( FDRoot nodeRoot) {
 		return new FreedrawingModelWriter(nodeRoot);
 	}
 
-	public FDNodeRoot getNodeRoot() {
+	public FDRoot getNodeRoot() {
 		return nodeRoot;
 	}
 
-	public void setNodeRoot(FDNodeRoot nodeRoot) {
+	public void setNodeRoot(FDRoot nodeRoot) {
 		this.nodeRoot = nodeRoot;
 	}
 

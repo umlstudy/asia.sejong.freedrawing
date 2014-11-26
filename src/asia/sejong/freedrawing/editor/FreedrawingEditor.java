@@ -16,11 +16,13 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.MouseWheelHandler;
-import org.eclipse.gef.MouseWheelHelper;
+import org.eclipse.gef.SnapToGeometry;
 import org.eclipse.gef.SnapToGrid;
 import org.eclipse.gef.editparts.ScalableFreeformRootEditPart;
 import org.eclipse.gef.editparts.ZoomManager;
 import org.eclipse.gef.ui.parts.GraphicalEditor;
+import org.eclipse.gef.ui.parts.ScrollingGraphicalViewer;
+import org.eclipse.gef.ui.rulers.RulerComposite;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -34,14 +36,14 @@ import org.eclipse.ui.dialogs.SaveAsDialog;
 import org.eclipse.ui.part.FileEditorInput;
 
 import asia.sejong.freedrawing.editor.actions.PaletteActionFactory;
-import asia.sejong.freedrawing.model.FDNodeRoot;
+import asia.sejong.freedrawing.model.FDRoot;
 import asia.sejong.freedrawing.model.io.FreedrawingModelWriter;
-import asia.sejong.freedrawing.parts.common.FreedrawingEditPartFactory;
+import asia.sejong.freedrawing.parts.common.FDEditPartFactory;
 import asia.sejong.freedrawing.resources.ContextManager;
 
 public class FreedrawingEditor extends GraphicalEditor implements MouseWheelHandler {
 
-	private final FDNodeRoot nodeRoot = new FDNodeRoot();
+	private final FDRoot nodeRoot = new FDRoot();
 	
 	private ContextManager contextManager;
 	
@@ -76,6 +78,8 @@ public class FreedrawingEditor extends GraphicalEditor implements MouseWheelHand
 		
 		ScalableFreeformRootEditPart rootEditPart = (ScalableFreeformRootEditPart)getGraphicalViewer().getRootEditPart();
 		actionManager.initializeScale(rootEditPart.getZoomManager());
+		
+		actionManager.createViewerRelatedActions();
 
 		// 생성된 툴바와 그리기영역의 레이아웃을 잡는다.
 		for ( Control control : parent.getChildren() ) {
@@ -84,6 +88,12 @@ public class FreedrawingEditor extends GraphicalEditor implements MouseWheelHand
 			}
 		}
 	}
+	
+	protected void createGraphicalViewer(Composite parent) {
+		RulerComposite rulerComp = new RulerComposite(parent, SWT.NONE);
+		super.createGraphicalViewer(rulerComp);
+		rulerComp.setGraphicalViewer((ScrollingGraphicalViewer) getGraphicalViewer());
+	}
 
 	/**
 	 * freedrawingData를 뷰에 표시하기 위한 설정
@@ -91,7 +101,7 @@ public class FreedrawingEditor extends GraphicalEditor implements MouseWheelHand
 	protected void configureGraphicalViewer() {
 		super.configureGraphicalViewer();
 		final GraphicalViewer viewer = getGraphicalViewer();
-		viewer.setEditPartFactory(new FreedrawingEditPartFactory());
+		viewer.setEditPartFactory(new FDEditPartFactory());
 		
 		ScalableFreeformRootEditPart rootEditPart = new ScalableFreeformRootEditPart();
 //		ScalableFreeformRootEditPart rootEditPart = new ScalableFreeformRootEditPart() {
@@ -102,9 +112,17 @@ public class FreedrawingEditor extends GraphicalEditor implements MouseWheelHand
 //				return super.getAdapter(adapter);
 //			}
 //		};
+//		IFigure primaryLayer = rootEditPart.getLayer(LayerConstants.PRIMARY_LAYER);
+//		((ConnectionLayer)rootEditPart.getLayer(LayerConstants.CONNECTION_LAYER)).setConnectionRouter(new ShortestPathConnectionRouter(primaryLayer));
+		
 		viewer.setRootEditPart(rootEditPart);
 		// 그리드 표시
 		viewer.setProperty(SnapToGrid.PROPERTY_GRID_VISIBLE, true);
+		// Snap to Geometry property
+		viewer.setProperty(SnapToGeometry.PROPERTY_SNAP_ENABLED, true);
+//		viewer.setProperty(SnapToGrid.PROPERTY_GRID_ENABLED, true);
+				//new Boolean(getLogicDiagram().isSnapToGeometryEnabled()));
+//		viewer.setSnapToGeometry(true);
 		
 		// 마우스 CTRL + 스크롤 이벤트 캐치용
 		viewer.setProperty(MouseWheelHandler.KeyGenerator.getKey(SWT.CTRL), this);

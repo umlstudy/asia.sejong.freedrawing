@@ -10,6 +10,10 @@ import org.eclipse.gef.KeyStroke;
 import org.eclipse.gef.Tool;
 import org.eclipse.gef.editparts.ZoomManager;
 import org.eclipse.gef.ui.actions.ActionRegistry;
+import org.eclipse.gef.ui.actions.GEFActionConstants;
+import org.eclipse.gef.ui.actions.ToggleGridAction;
+import org.eclipse.gef.ui.actions.ToggleRulerVisibilityAction;
+import org.eclipse.gef.ui.actions.ToggleSnapToGeometryAction;
 import org.eclipse.gef.ui.parts.GraphicalViewerKeyHandler;
 import org.eclipse.jface.action.ControlContribution;
 import org.eclipse.jface.action.IAction;
@@ -55,12 +59,28 @@ public class FreedrawingEditorActionManager implements FreedrawingEditDomainList
 	private FreedrawingEditorActionManager(FreedrawingEditor editor, List<Object> selectionActions) {
 		this.editor = editor;
 		this.paletteIconChangables = new ArrayList<PaletteIconChangable>();
+		
 		createPaletteActions();
 		createSelectionActions(selectionActions);
 	}
 
 	static FreedrawingEditorActionManager newInstance(FreedrawingEditor editor, List<Object> selectionActions) {
 		return new FreedrawingEditorActionManager(editor, selectionActions);
+	}
+	
+	void createViewerRelatedActions() {
+		ActionRegistry registry = (ActionRegistry)editor.getAdapter(ActionRegistry.class);
+		GraphicalViewer viewer = (GraphicalViewer)editor.getAdapter(GraphicalViewer.class);
+		
+		// Actions
+		IAction showRulers = new ToggleRulerVisibilityAction(viewer);
+		registry.registerAction(showRulers);
+
+		IAction snapAction = new ToggleSnapToGeometryAction(viewer);
+		registry.registerAction(snapAction);
+
+		IAction showGrid = new ToggleGridAction(viewer);
+		registry.registerAction(showGrid);
 	}
 
 	private void createPaletteActions() {
@@ -305,6 +325,10 @@ public class FreedrawingEditorActionManager implements FreedrawingEditDomainList
 			} else {
 				contextMenuManger.add(registry.getAction(PaletteActionFactory.TOGGLE_RECTANGLE.getId()));
 			}
+			
+			contextMenuManger.add(registry.getAction(GEFActionConstants.TOGGLE_RULER_VISIBILITY));
+			contextMenuManger.add(registry.getAction(GEFActionConstants.TOGGLE_SNAP_TO_GEOMETRY));
+			contextMenuManger.add(registry.getAction(GEFActionConstants.TOGGLE_GRID_VISIBILITY));
 		}
 	}
 	

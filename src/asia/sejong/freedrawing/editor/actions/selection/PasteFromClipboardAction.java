@@ -13,9 +13,9 @@ import org.eclipse.gef.ui.actions.SelectionAction;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.actions.ActionFactory;
 
-import asia.sejong.freedrawing.model.FDNode;
-import asia.sejong.freedrawing.model.FDNodeRoot;
-import asia.sejong.freedrawing.parts.FDNodeRootEditPart.cmd.CreateFDNodeCommand;
+import asia.sejong.freedrawing.model.FDRect;
+import asia.sejong.freedrawing.model.FDRoot;
+import asia.sejong.freedrawing.parts.FDRootEditPart.command.FDShapeCreateCommand;
 
 public class PasteFromClipboardAction extends SelectionAction {
 
@@ -34,13 +34,13 @@ public class PasteFromClipboardAction extends SelectionAction {
 			if (obj instanceof GraphicalEditPart ) {
 				GraphicalEditPart gep = (GraphicalEditPart) obj;
 				RootEditPart root = gep.getRoot();
-				FDNodeRoot nodeRoot = (FDNodeRoot)root.getContents().getModel();
+				FDRoot nodeRoot = (FDRoot)root.getContents().getModel();
 				ArrayList<?> originals = (ArrayList<?>)getClipboardContents();
 				if (originals != null) {
-					List<FDNode> copiedNodes = new ArrayList<FDNode>();
+					List<FDRect> copiedNodes = new ArrayList<FDRect>();
 					for ( Object item : originals ) {
-						if ( item instanceof FDNode ) {
-							FDNode copiedNode = ((FDNode) item).clone();
+						if ( item instanceof FDRect ) {
+							FDRect copiedNode = (FDRect)((FDRect) item).clone();
 							Point nextLocation = null;
 							nextLocation = nodeRoot.getNextLocation(copiedNode.getX(), copiedNode.getY());
 							nextLocation = getNextLocation(copiedNodes, nextLocation.x, nextLocation.y);
@@ -51,8 +51,8 @@ public class PasteFromClipboardAction extends SelectionAction {
 					
 					if ( copiedNodes.size() > 0 ) {
 						CompoundCommand compoundCommand = new CompoundCommand();
-						for ( FDNode node : copiedNodes ) {
-							compoundCommand.add(new CreateFDNodeCommand(nodeRoot, node));
+						for ( FDRect node : copiedNodes ) {
+							compoundCommand.add(new FDShapeCreateCommand(nodeRoot, node));
 						}
 						return compoundCommand;
 					}
@@ -74,10 +74,10 @@ public class PasteFromClipboardAction extends SelectionAction {
 		return Clipboard.getDefault().getContents();
 	}
 	
-	public Point getNextLocation(List<FDNode> nodes, int x, int y) {
+	public Point getNextLocation(List<FDRect> nodes, int x, int y) {
 		while ( true ) {
 			boolean alreadyExistInLocation = false;
-			for ( FDNode item : nodes ) {
+			for ( FDRect item : nodes ) {
 				if ( item.getX() == x && item.getY() == y ) {
 					alreadyExistInLocation = true;
 				}

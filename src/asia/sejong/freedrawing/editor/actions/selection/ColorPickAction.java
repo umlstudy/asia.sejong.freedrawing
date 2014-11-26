@@ -10,8 +10,8 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.ColorDialog;
 import org.eclipse.ui.IEditorPart;
 
-import asia.sejong.freedrawing.model.BaseObject;
-import asia.sejong.freedrawing.parts.FDNodeEditPart.cmd.BorderColorChangeCommand;
+import asia.sejong.freedrawing.model.FDElement;
+import asia.sejong.freedrawing.parts.FDNodeEditPart.command.BorderColorChangeCommand;
 
 
 public class ColorPickAction extends SelectionAction {
@@ -26,12 +26,12 @@ public class ColorPickAction extends SelectionAction {
 		RGB selectedColor = dialog.open();
 		if ( selectedColor != null ) {
 			
-			List<BaseObject> lists = new ArrayList<BaseObject>();
+			List<FDElement> lists = new ArrayList<FDElement>();
 			for ( Object item : getSelectedObjects() ) {
 				if ( item instanceof EditPart ) {
 					Object model = ((EditPart)item).getModel();
-					if ( model instanceof BaseObject ) {
-						lists.add((BaseObject)model);
+					if ( model instanceof FDElement ) {
+						lists.add((FDElement)model);
 					}
 				}
 			}

@@ -13,7 +13,7 @@ import org.eclipse.gef.requests.SimpleFactory;
 
 import asia.sejong.freedrawing.editor.tools.FDConnectionCreationTool;
 import asia.sejong.freedrawing.editor.tools.FDPanningSelectionTool;
-import asia.sejong.freedrawing.model.FDNode;
+import asia.sejong.freedrawing.model.FDRect;
 import asia.sejong.freedrawing.resources.IconManager;
 import asia.sejong.freedrawing.resources.IconManager.IconType;
 
@@ -53,9 +53,9 @@ public class FreedrawingEditorPaletteFactory {
 		
 		// 사각형 생성을 위한 팩토리 및 툴 생성
 		{
-			SimpleFactory factory = new SimpleFactory(FDNode.class) {
+			SimpleFactory factory = new SimpleFactory(FDRect.class) {
 				public Object getNewObject() {
-					FDNode node = new FDNode();
+					FDRect node = new FDRect();
 					return node;
 				}
 			};
