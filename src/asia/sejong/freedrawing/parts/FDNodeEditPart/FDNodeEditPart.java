@@ -3,6 +3,7 @@ package asia.sejong.freedrawing.parts.FDNodeEditPart;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.draw2d.ChopboxAnchor;
 import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.IFigure;
@@ -39,12 +40,12 @@ import org.eclipse.swt.widgets.Text;
 
 import asia.sejong.freedrawing.debug.ForEditPart;
 import asia.sejong.freedrawing.figures.FDRectFigure;
-import asia.sejong.freedrawing.model.FDWire;
 import asia.sejong.freedrawing.model.FDRect;
+import asia.sejong.freedrawing.model.FDWire;
 import asia.sejong.freedrawing.model.FontInfo;
 import asia.sejong.freedrawing.model.listener.FDNodeListener;
-import asia.sejong.freedrawing.parts.FDNodeEditPart.command.FDWireCreateCommand;
 import asia.sejong.freedrawing.parts.FDNodeEditPart.command.DeleteFDNodeCommand;
+import asia.sejong.freedrawing.parts.FDNodeEditPart.command.FDWireCreateCommand;
 import asia.sejong.freedrawing.parts.FDNodeEditPart.command.FDWireRecreateCommand;
 import asia.sejong.freedrawing.parts.FDNodeEditPart.command.TextChangeCommand;
 import asia.sejong.freedrawing.parts.FDWireEditPart.FDWireEditPart;
@@ -231,20 +232,19 @@ public class FDNodeEditPart extends FDShapeEditPart implements NodeEditPart, FDN
 	
 	@Override
 	protected List<FDWire> getModelSourceConnections() {
-		// this -> modelX ?
-		List<FDWire> list = new ArrayList<FDWire>();
-		for ( FDRect target : getModel().getTargets() ) {
-			list.add(FDWire.newInstance(getModel(), target));
-		}
-		return list;
+		// this model is source
+		return getModel().getWires();
 	}
 
 	@Override
 	protected List<FDWire> getModelTargetConnections() {
-		// nodeX -> this ?
+		// this model is target
 		List<FDWire> list = new ArrayList<FDWire>();
 		for ( FDRect source : getModel().getSources() ) {
-			list.add(FDWire.newInstance(source, getModel()));
+			FDWire wire = source.getWire(getModel());
+			if ( source.getWire(getModel()) != null ) {
+				list.add(wire);
+			}
 		}
 		return list;
 	}
@@ -349,48 +349,56 @@ public class FDNodeEditPart extends FDShapeEditPart implements NodeEditPart, FDN
 	//============================================================
 	// FDNodeListener
 	
+//	@Override
+//	public void sourceAdded(FDRect source) {
+////		FDWire wire = FDWire.newInstance(source, getModel());
+//		FDWire wire = source.getWire(getModel());
+//		Assert.isTrue(wire == null);
+//		
+//		wire = FDWire.newInstance__(source, getModel());
+//		FDWireEditPart part = (FDWireEditPart)findEditPart(wire);
+//		Assert.isTrue(part == null);
+//		
+//		part = (FDWireEditPart)createConnection(wire);
+//		addTargetConnection(part, 0);
+//	}
+//
+//	@Override
+//	public void sourceRemoved(FDRect source) {
+//		// remove sourceConnection
+//		
+//		FDWire wire = source.getWire(getModel());
+//		Assert.isTrue(wire != null);
+//		
+//		FDWireEditPart part = (FDWireEditPart)findEditPart(wire);
+//		Assert.isTrue(part != null);
+//		removeTargetConnection(part);
+//	}
+
 	@Override
-	public void sourceAdded(FDRect source) {
-		FDWire wire = FDWire.newInstance(source, getModel());
-		ConnectionEditPart part = findWireEditPart(wire);
+	public void targetAdded(FDRect target) {
+		FDRect source = getModel();
 		
-		if (part == null) {
-			part = createOrFindConnection(wire);
-			addTargetConnection(part, 0);
-		}
-	}
-
-	@Override
-	public void sourceRemoved(FDRect source) {
-		// remove connection
-		FDWire conn = FDWire.newInstance(source, getModel());
-		ConnectionEditPart part = findWireEditPart(conn);
-		if ( conn != null ) {
-			removeTargetConnection(part);
-		}
-		return;
-	}
-
-	@Override
-	public void targetAdded(FDRect target, FDWire targetWire) {
-		FDWire conn = FDWire.newInstance(getModel(), target);
-		FDWireEditPart part = (FDWireEditPart)findWireEditPart(conn);
-		if ( part == null ) {
-			throw new RuntimeException();
-		}
-		part.connectTarget(targetWire);
+		FDWire wire = source.getWire(target);
+		FDWireEditPart wireEditPart = (FDWireEditPart)findEditPart(wire);
+		Assert.isTrue(wireEditPart == null);
+		wireEditPart = (FDWireEditPart)createConnection(wire);
 		
-		addSourceConnection(part, 0);
+		addSourceConnection(wireEditPart, 0);
+		
+		FDNodeEditPart targetEditPart = (FDNodeEditPart)findEditPart(target);
+		targetEditPart.addTargetConnection(wireEditPart, 0);
 	}
 
 	@Override
-	public void targetRemoved(FDRect target) {
-		// remove connection
-		FDWire conn = FDWire.newInstance(getModel(), target);
-		ConnectionEditPart part = findWireEditPart(conn);
-		if ( conn != null ) {
-			removeSourceConnection(part);
-		}
+	public void targetRemoved(FDRect target, FDWire removedWire) {
+
+		FDWireEditPart wireEditPart = (FDWireEditPart)findEditPart(removedWire);
+		Assert.isTrue(wireEditPart != null);
+		removeSourceConnection(wireEditPart);
+		
+		FDNodeEditPart targetEditPart = (FDNodeEditPart)findEditPart(target);
+		targetEditPart.removeTargetConnection(wireEditPart);
 	}
 	
 	@Override
@@ -409,25 +417,25 @@ public class FDNodeEditPart extends FDShapeEditPart implements NodeEditPart, FDN
 		setFont(fontInfo);
 		getFigure().repaint();
 	}
-
-	@Override
-	public void bendpointAdded(int locationIndex, Point location, FDRect target) {
-		FDWireEditPart connectionEditPart = (FDWireEditPart)findWireEditPart(FDWire.newInstance(getModel(), target));
-		connectionEditPart.bendpointAdded(locationIndex, location);
-	}
-
-	@Override
-	public void bendpointRemoved(int locationIndex, FDRect target) {
-		FDWireEditPart connectionEditPart = (FDWireEditPart)findWireEditPart(FDWire.newInstance(getModel(), target));
-		connectionEditPart.bendpointRemoved(locationIndex);
-	}
-
-	@Override
-	public void bendpointMoved(int locationIndex, Point newPoint, FDRect target) {
-		FDWireEditPart connectionEditPart = (FDWireEditPart)findWireEditPart(FDWire.newInstance(getModel(), target));
-		connectionEditPart.bendpointMoved(locationIndex, newPoint);
-	}
-	
+//
+//	@Override
+//	public void bendpointAdded(int locationIndex, Point location, FDRect target) {
+//		FDWireEditPart wireEditPart = getWireEditPart(getModel(), target);
+//		wireEditPart.bendpointAdded(locationIndex, location);
+//	}
+//
+//	@Override
+//	public void bendpointRemoved(int locationIndex, FDRect target) {
+//		FDWireEditPart wireEditPart = getWireEditPart(getModel(), target);
+//		wireEditPart.bendpointRemoved(locationIndex);
+//	}
+//
+//	@Override
+//	public void bendpointMoved(int locationIndex, Point newPoint, FDRect target) {
+//		FDWireEditPart wireEditPart = getWireEditPart(getModel(), target);
+//		wireEditPart.bendpointMoved(locationIndex, newPoint);
+//	}
+//	
 	// -------------------------------------------
 	// FOR DEBUG
 	public DragTracker getDragTracker(Request request) {

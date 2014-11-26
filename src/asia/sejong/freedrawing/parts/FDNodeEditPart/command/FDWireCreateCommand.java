@@ -18,7 +18,7 @@ public class FDWireCreateCommand extends Command {
 
 	public void execute() {
 		if ( createdWire == null ) {
-			createdWire = FDWire.newInstance(source, target);
+			createdWire = FDWire.newInstance__(source, target);
 		}
 		source.addTarget(target, createdWire);
 	}
@@ -40,7 +40,9 @@ public class FDWireCreateCommand extends Command {
 
 	public boolean isValidTarget(Object target) {
 		if ( source != null && target instanceof FDRect && source != target ) {
-			return true;
+			if ( !source.containsTarget((FDRect)target) ) {
+				return true;
+			}
 		}
 		return false;
 	}

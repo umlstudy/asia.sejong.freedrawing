@@ -26,10 +26,11 @@ import asia.sejong.freedrawing.debug.ForEditPart;
 import asia.sejong.freedrawing.figures.FDWireFigure;
 import asia.sejong.freedrawing.model.FDRect;
 import asia.sejong.freedrawing.model.FDWire;
+import asia.sejong.freedrawing.model.listener.FDWireListener;
+import asia.sejong.freedrawing.parts.FDNodeEditPart.command.FDWireDeleteCommand;
 import asia.sejong.freedrawing.parts.FDNodeEditPart.command.FDWireRecreateCommand;
-import asia.sejong.freedrawing.parts.FDWireEditPart.command.FDWireDeleteCommand;
 
-public class FDWireEditPart extends AbstractConnectionEditPart {
+public class FDWireEditPart extends AbstractConnectionEditPart implements FDWireListener {
 
 	protected static final PointList ARROWHEAD = new PointList(new int[]{
 			0, 0, -2, 2, -2, 0, -2, -2, 0, 0
@@ -206,28 +207,6 @@ public class FDWireEditPart extends AbstractConnectionEditPart {
 		return bendpoints;
 	}
 	
-	public void bendpointAdded(int locationIndex, Point location) {
-		List<Bendpoint> bendpoints = getBendpoints();
-		AbsoluteBendpoint bp = new AbsoluteBendpoint(location);
-		bendpoints.add(locationIndex, bp);
-		
-		refresh();
-	}
-	
-	public void bendpointRemoved(int locationIndex) {
-		List<Bendpoint> bendpoints = getBendpoints();
-		bendpoints.remove(locationIndex);
-
-		refresh();
-	}
-	
-	public void bendpointMoved(int locationIndex, Point newPoint) {
-		AbsoluteBendpoint newBendpoint = new AbsoluteBendpoint(newPoint);
-		getBendpoints().set(locationIndex, newBendpoint);
-		
-		refresh();
-	}
-
 	public void connectTarget(FDWire targetWire) {
 		PolylineConnection connection = getConnection();
 		BendpointConnectionRouter connectionRouter = (BendpointConnectionRouter)connection.getConnectionRouter();
@@ -238,5 +217,44 @@ public class FDWireEditPart extends AbstractConnectionEditPart {
 			}
 			connectionRouter.setConstraint(connection, bendpoints);
 		}
+	}
+	
+	@Override
+	public void bendpointAdded(int locationIndex, Point location) {
+		List<Bendpoint> bendpoints = getBendpoints();
+		AbsoluteBendpoint bp = new AbsoluteBendpoint(location);
+		bendpoints.add(locationIndex, bp);
+		
+		refresh();
+	}
+
+	@Override
+	public void bendpointRemoved(int locationIndex) {
+		List<Bendpoint> bendpoints = getBendpoints();
+		bendpoints.remove(locationIndex);
+
+		refresh();
+	}
+	
+	@Override
+	public void bendpointMoved(int locationIndex, Point newPoint) {
+		AbsoluteBendpoint newBendpoint = new AbsoluteBendpoint(newPoint);
+		getBendpoints().set(locationIndex, newBendpoint);
+		
+		refresh();
+	}
+
+	public void addNotify() {
+		super.addNotify();
+		getModel().addFDWireListener(this);
+	}
+	
+	/**
+	 * Override the superclass implementation so that the receiver
+	 * can stop listening to events from the underlying model object
+	 */
+	public void removeNotify() {
+		getModel().removeFDWireListener(this);
+		super.removeNotify();
 	}
 }

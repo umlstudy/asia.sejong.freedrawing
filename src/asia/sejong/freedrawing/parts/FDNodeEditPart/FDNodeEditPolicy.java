@@ -10,9 +10,9 @@ import org.eclipse.gef.requests.ReconnectRequest;
 
 import asia.sejong.freedrawing.model.FDRect;
 import asia.sejong.freedrawing.parts.FDNodeEditPart.command.FDWireCreateCommand;
+import asia.sejong.freedrawing.parts.FDNodeEditPart.command.FDWireDeleteCommand;
 import asia.sejong.freedrawing.parts.FDNodeEditPart.command.FDWireRecreateCommand;
 import asia.sejong.freedrawing.parts.FDWireEditPart.FDWireEditPart;
-import asia.sejong.freedrawing.parts.FDWireEditPart.command.FDWireDeleteCommand;
 
 public class FDNodeEditPolicy extends GraphicalNodeEditPolicy {
 	

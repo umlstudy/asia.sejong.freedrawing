@@ -2,7 +2,6 @@ package asia.sejong.freedrawing.parts.FDNodeEditPart.command;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 import org.eclipse.gef.commands.Command;
 
@@ -15,9 +14,9 @@ public class DeleteFDNodeCommand extends Command
 	private final FDRoot nodeRoot;
 	private final FDRect target;
 	
-	private Set<FDRect> removedSources;
+//	private Set<FDRect> removedSources;
 	private Map<FDRect, FDWire> removedSourceWires;
-	private Set<FDRect> removedTargets;
+//	private Set<FDRect> removedTargets;
 	private Map<FDRect, FDWire> removedTargetWires;
 
 	public DeleteFDNodeCommand(FDRoot nodeRoot, FDRect target) {
@@ -36,15 +35,16 @@ public class DeleteFDNodeCommand extends Command
 		removedSourceWires.clear();
 		removedTargetWires.clear();
 		
-		removedSources = target.getSources();
-		for ( FDRect source : removedSources ) {
+//		removedSources = target.getSources();
+		for ( FDRect source : target.getSources() ) {
 			removedSourceWires.put(source, source.removeTarget(target));
 		}
 		
-		removedTargets = target.getTargets();
-		for ( FDRect targetOfTarget : removedTargets ) {
-			removedTargetWires.put(targetOfTarget, target.removeTarget(targetOfTarget));
-		}
+//		removedTargets = target.getTargets();
+		removedTargetWires.putAll(target.getTargets());
+//		for ( FDRect targetOfTarget : target.getTargets() ) {
+//			removedTargetWires.put(targetOfTarget, target.removeTarget(targetOfTarget));
+//		}
 		
 		nodeRoot.removeNode(target);
 	}
@@ -56,11 +56,11 @@ public class DeleteFDNodeCommand extends Command
 		
 		nodeRoot.addNode(target);
 		
-		for ( FDRect source : removedSources ) {
+		for ( FDRect source : removedSourceWires.keySet() ) {
 			source.addTarget(target, removedSourceWires.get(source));
 		}
 		
-		for ( FDRect targetOfTarget : removedTargets ) {
+		for ( FDRect targetOfTarget : removedTargetWires.keySet() ) {
 			target.addTarget(targetOfTarget, removedTargetWires.get(targetOfTarget));
 		}
 	}

@@ -2,20 +2,26 @@ package asia.sejong.freedrawing.model;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.swt.graphics.RGB;
 
+import asia.sejong.freedrawing.model.listener.FDWireListener;
+
 public class FDWire extends FDElement {
 
-	private FDRect source;
-	private FDRect target;
 	private final List<Point> bendpoints = new ArrayList<Point>();
+	
+	transient private Set<FDWireListener> listeners = new HashSet<FDWireListener>();
+	transient private FDRect source;
+	transient private FDRect target;
 	
 	private FDWire() {}
 
-	public static FDWire newInstance(FDRect source, FDRect target) {
+	public static FDWire newInstance__(FDRect source, FDRect target) {
 		return new FDWire(source, target);
 	}
 	
@@ -56,16 +62,21 @@ public class FDWire extends FDElement {
 		this.target = target;
 	}
 	
-	public void add(int index, Point point) {
-		bendpoints.add(index, point);
+	public void add(int locationIndex, Point location) {
+		bendpoints.add(locationIndex, location);
+		fireBendpointAdded(locationIndex, location);
 	}
 
 	public Point remove(int locationIndex) {
-		return bendpoints.remove(locationIndex);
+		Point removed = bendpoints.remove(locationIndex);
+		fireBendpointRemoved(locationIndex);
+		return removed;
 	}
 	
 	public Point set(int locationIndex, Point newPoint) {
-		return bendpoints.set(locationIndex, newPoint);
+		Point oldLocation = bendpoints.set(locationIndex, newPoint);
+		fireBendpointMoved(locationIndex, newPoint);
+		return oldLocation;
 	}
 	
 	public List<Point> getBendpoints() {
@@ -76,5 +87,38 @@ public class FDWire extends FDElement {
 	protected void fireBorderColorChanged(RGB borderColor) {
 		
 	}
+	
 
+	//============================================================
+	// Listener add and remove
+	
+	public void addFDWireListener(FDWireListener listener ) {
+		if ( listener != null ) {
+			listeners.add(listener);
+		}
+	}
+
+	public void removeFDWireListener(FDWireListener listener ) {
+		if ( listener != null ) {
+			listeners.remove(listener);
+		}
+	}
+
+	protected void fireBendpointAdded(int locationIndex, Point location) {
+		for (FDWireListener l : listeners) {
+			l.bendpointAdded(locationIndex, location);
+		}
+	}
+	
+	protected void fireBendpointRemoved(int locationIndex) {
+		for (FDWireListener l : listeners) {
+			l.bendpointRemoved(locationIndex);
+		}
+	}
+	
+	protected void fireBendpointMoved(int locationIndex, Point newPoint) {
+		for (FDWireListener l : listeners) {
+			l.bendpointMoved(locationIndex, newPoint);
+		}
+	}
 }
