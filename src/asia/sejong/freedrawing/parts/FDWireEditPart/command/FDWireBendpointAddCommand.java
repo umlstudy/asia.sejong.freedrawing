@@ -10,7 +10,7 @@ public class FDWireBendpointAddCommand extends FDWireBendpointCommand {
 	}
 	
 	public void execute() {
-		addBendpint(getLocationIndex(), getLocation());
+		addBendpoint(getLocationIndex(), getLocation());
 	}
 
 	public void undo() {

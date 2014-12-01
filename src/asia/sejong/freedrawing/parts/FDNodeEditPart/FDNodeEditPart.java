@@ -1,14 +1,11 @@
 package asia.sejong.freedrawing.parts.FDNodeEditPart;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.draw2d.ChopboxAnchor;
 import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
-import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.DragTracker;
@@ -23,10 +20,8 @@ import org.eclipse.gef.editpolicies.ComponentEditPolicy;
 import org.eclipse.gef.editpolicies.DirectEditPolicy;
 import org.eclipse.gef.editpolicies.SnapFeedbackPolicy;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
-import org.eclipse.gef.requests.CreateConnectionRequest;
 import org.eclipse.gef.requests.DirectEditRequest;
 import org.eclipse.gef.requests.GroupRequest;
-import org.eclipse.gef.requests.ReconnectRequest;
 import org.eclipse.gef.tools.CellEditorLocator;
 import org.eclipse.gef.tools.DirectEditManager;
 import org.eclipse.jface.viewers.CellEditor;
@@ -45,8 +40,6 @@ import asia.sejong.freedrawing.model.FDWire;
 import asia.sejong.freedrawing.model.FontInfo;
 import asia.sejong.freedrawing.model.listener.FDNodeListener;
 import asia.sejong.freedrawing.parts.FDNodeEditPart.command.DeleteFDNodeCommand;
-import asia.sejong.freedrawing.parts.FDNodeEditPart.command.FDWireCreateCommand;
-import asia.sejong.freedrawing.parts.FDNodeEditPart.command.FDWireRecreateCommand;
 import asia.sejong.freedrawing.parts.FDNodeEditPart.command.TextChangeCommand;
 import asia.sejong.freedrawing.parts.FDWireEditPart.FDWireEditPart;
 import asia.sejong.freedrawing.parts.common.FDShapeEditPart;
@@ -119,22 +112,22 @@ public class FDNodeEditPart extends FDShapeEditPart implements NodeEditPart, FDN
 	 * This is called when the user is interactively creating a connection.
 	 */
 	public ConnectionAnchor getSourceConnectionAnchor(Request request) {
-		if (request instanceof ReconnectRequest) {
-			EditPart editPart = ((ReconnectRequest) request).getConnectionEditPart();
-			if (!(editPart instanceof ConnectionEditPart)) {
-				return null;
-			}
-			
-			FDWireEditPart wireEditPart = (FDWireEditPart) editPart;
-			FDWireRecreateCommand recreateCommand = wireEditPart.recreateCommand();
-			if (!recreateCommand.isValidSource(getModel())) {
-				return null;
-			}
-			return new ChopboxAnchor(getFigure());
-		} else {
-			// 새로운 커넥션
-			return new ChopboxAnchor(getFigure());
-		}
+		return new ChopboxAnchor(getFigure());
+//		if (request instanceof ReconnectRequest) {
+//			FDWireEditPart wireEditPart = (FDWireEditPart)((ReconnectRequest) request).getConnectionEditPart();
+//			FDWireRecreateCommand recreateCommand = wireEditPart.recreateCommand();
+//			boolean validSource = recreateCommand.isValidSource(getModel());
+//			boolean validTarget = recreateCommand.isValidTarget(recreateCommand.getTarget());
+//			
+//			if (! (validSource && validTarget) ) {
+//				return null;
+//			}
+//			
+//			return new ChopboxAnchor(getFigure());
+//		} else {
+//			// 새로운 커넥션
+//			return new ChopboxAnchor(getFigure());
+//		}
 	}
 
 	/**
@@ -155,42 +148,43 @@ public class FDNodeEditPart extends FDShapeEditPart implements NodeEditPart, FDN
 	 * This is called when the user is interactively creating a connection.
 	 */
 	public ConnectionAnchor getTargetConnectionAnchor(Request request) {
-		if (request instanceof CreateConnectionRequest) {
-			Command command = ((CreateConnectionRequest) request).getStartCommand();
-			if (!(command instanceof FDWireCreateCommand)) {
-				return null;
-			}
-			
-			FDWireCreateCommand createConnectionCommand = (FDWireCreateCommand) command;
-			FDRect target = getModel();
-			if ( !createConnectionCommand.isValidTarget(target) ) {
-				return null;
-			}
-			if ( createConnectionCommand.getSource().containsTarget(target) ) {
-				return null;
-			}
-			
-			return new ChopboxAnchor(getFigure());
-		}
-		if (request instanceof ReconnectRequest) {
-			EditPart editPart = ((ReconnectRequest) request).getConnectionEditPart();
-			if (!(editPart instanceof FDWireEditPart)) {
-				return null;
-			}
-			
-			FDWireEditPart connectionEditPart = (FDWireEditPart) editPart;
-			FDWireRecreateCommand recreateConnectionCommand = connectionEditPart.recreateCommand();
-			FDRect target = getModel();
-			if ( !recreateConnectionCommand.isValidTarget(target) ) {
-				return null;
-			}
-			if ( recreateConnectionCommand.getSource().containsTarget(target) ) {
-				return null;
-			}
-			
-			return new ChopboxAnchor(getFigure());
-		}
-		return null;
+		return new ChopboxAnchor(getFigure());
+//		if (request instanceof CreateConnectionRequest) {
+//			Command command = ((CreateConnectionRequest) request).getStartCommand();
+//			if (!(command instanceof FDWireCreateCommand)) {
+//				return null;
+//			}
+//			
+//			FDWireCreateCommand createConnectionCommand = (FDWireCreateCommand) command;
+//			FDRect target = getModel();
+//			if ( !createConnectionCommand.isValidTarget(target) ) {
+//				return null;
+//			}
+//			if ( createConnectionCommand.getSource().containsTarget(target) ) {
+//				return null;
+//			}
+//			
+//			return new ChopboxAnchor(getFigure());
+//		}
+//		if (request instanceof ReconnectRequest) {
+//			EditPart editPart = ((ReconnectRequest) request).getConnectionEditPart();
+//			if (!(editPart instanceof FDWireEditPart)) {
+//				return null;
+//			}
+//			
+//			FDWireEditPart connectionEditPart = (FDWireEditPart) editPart;
+//			FDWireRecreateCommand recreateConnectionCommand = connectionEditPart.recreateCommand();
+//			FDRect target = getModel();
+//			if ( !recreateConnectionCommand.isValidTarget(target) ) {
+//				return null;
+//			}
+//			if ( recreateConnectionCommand.getSource().containsTarget(target) ) {
+//				return null;
+//			}
+//			
+//			return new ChopboxAnchor(getFigure());
+//		}
+//		return null;
 	}
 	
 //	public Command getCommand(Request request) {
@@ -233,20 +227,13 @@ public class FDNodeEditPart extends FDShapeEditPart implements NodeEditPart, FDN
 	@Override
 	protected List<FDWire> getModelSourceConnections() {
 		// this model is source
-		return getModel().getWires();
+		return getModel().getIncommingWires();
 	}
 
 	@Override
 	protected List<FDWire> getModelTargetConnections() {
 		// this model is target
-		List<FDWire> list = new ArrayList<FDWire>();
-		for ( FDRect source : getModel().getSources() ) {
-			FDWire wire = source.getWire(getModel());
-			if ( source.getWire(getModel()) != null ) {
-				list.add(wire);
-			}
-		}
-		return list;
+		return getModel().getOutgoingWires();
 	}
 
 	@Override
@@ -261,7 +248,7 @@ public class FDNodeEditPart extends FDShapeEditPart implements NodeEditPart, FDN
 		// Handles deleting the selected node
 		installEditPolicy(EditPolicy.COMPONENT_ROLE, new ComponentEditPolicy() {
 			protected Command createDeleteCommand(GroupRequest request) {
-				return new DeleteFDNodeCommand(getNodeRoot(), getModel());
+				return new DeleteFDNodeCommand(getRootModel(), getModel());
 			}
 		});
 		
@@ -375,31 +362,32 @@ public class FDNodeEditPart extends FDShapeEditPart implements NodeEditPart, FDN
 //		removeTargetConnection(part);
 //	}
 
-	@Override
-	public void targetAdded(FDRect target) {
-		FDRect source = getModel();
-		
-		FDWire wire = source.getWire(target);
-		FDWireEditPart wireEditPart = (FDWireEditPart)findEditPart(wire);
-		Assert.isTrue(wireEditPart == null);
-		wireEditPart = (FDWireEditPart)createConnection(wire);
-		
-		addSourceConnection(wireEditPart, 0);
-		
-		FDNodeEditPart targetEditPart = (FDNodeEditPart)findEditPart(target);
-		targetEditPart.addTargetConnection(wireEditPart, 0);
-	}
-
-	@Override
-	public void targetRemoved(FDRect target, FDWire removedWire) {
-
-		FDWireEditPart wireEditPart = (FDWireEditPart)findEditPart(removedWire);
-		Assert.isTrue(wireEditPart != null);
-		removeSourceConnection(wireEditPart);
-		
-		FDNodeEditPart targetEditPart = (FDNodeEditPart)findEditPart(target);
-		targetEditPart.removeTargetConnection(wireEditPart);
-	}
+//	
+//	@Override
+//	public void targetAdded(FDRect target) {
+//		FDRect source = getModel();
+//		
+//		FDWire wire = source.getWire(target);
+//		FDWireEditPart wireEditPart = (FDWireEditPart)findEditPart(wire);
+//		Assert.isTrue(wireEditPart == null);
+//		wireEditPart = (FDWireEditPart)createConnection(wire);
+//		
+//		addSourceConnection(wireEditPart, 0);
+//		
+//		FDNodeEditPart targetEditPart = (FDNodeEditPart)findEditPart(target);
+//		targetEditPart.addTargetConnection(wireEditPart, 0);
+//	}
+//
+//	@Override
+//	public void targetRemoved(FDRect target, FDWire removedWire) {
+//
+//		FDWireEditPart wireEditPart = (FDWireEditPart)findEditPart(removedWire);
+//		Assert.isTrue(wireEditPart != null);
+//		removeSourceConnection(wireEditPart);
+//		
+//		FDNodeEditPart targetEditPart = (FDNodeEditPart)findEditPart(target);
+//		targetEditPart.removeTargetConnection(wireEditPart);
+//	}
 	
 	@Override
 	public void textChanged(String newText) {
@@ -461,6 +449,22 @@ public class FDNodeEditPart extends FDShapeEditPart implements NodeEditPart, FDN
 			return targetEditPart.getParent();
 		}
 		return targetEditPart;
+	}
+
+	public void addSourceConnection(FDWireEditPart wireEditPart) {
+		addSourceConnection(wireEditPart, 0);
+	}
+
+	public void addTargetConnection(FDWireEditPart wireEditPart) {
+		addTargetConnection(wireEditPart, 0);
+	}
+	
+	public void removeSourceConnection_(FDWireEditPart wireEditPart) {
+		removeSourceConnection(wireEditPart);
+	}
+
+	public void removeTargetConnection_(FDWireEditPart wireEditPart) {
+		removeTargetConnection(wireEditPart);
 	}
 	
 //	@Override

@@ -2,7 +2,9 @@ package asia.sejong.freedrawing.parts.FDRootEditPart;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.FreeformLayer;
 import org.eclipse.draw2d.FreeformLayout;
@@ -24,7 +26,10 @@ import org.eclipse.gef.editpolicies.SnapFeedbackPolicy;
 import asia.sejong.freedrawing.debug.ForEditPart;
 import asia.sejong.freedrawing.model.FDRect;
 import asia.sejong.freedrawing.model.FDRoot;
+import asia.sejong.freedrawing.model.FDWire;
 import asia.sejong.freedrawing.model.listener.FDNodeRootListener;
+import asia.sejong.freedrawing.parts.FDNodeEditPart.FDNodeEditPart;
+import asia.sejong.freedrawing.parts.FDWireEditPart.FDWireEditPart;
 
 /**
  * The {@link EditPart} for the {@link GenealogyGraph} model object. This EditPart is
@@ -94,6 +99,43 @@ public class FDRootEditPart extends AbstractGraphicalEditPart implements FDNodeR
 			removeChild((EditPart) part);
 		}
 	}
+	
+	@Override
+	public void wireAdded(FDWire wire) {
+		FDRect source = wire.getSource();
+		FDRect target = wire.getTarget();
+		
+		FDWireEditPart wireEditPart = (FDWireEditPart)findEditPart(wire);
+		Assert.isTrue(wireEditPart == null);
+		wireEditPart = (FDWireEditPart)createConnection(wire);
+		
+		FDNodeEditPart sourceEditPart = (FDNodeEditPart)findEditPart(source);
+		sourceEditPart.addSourceConnection(wireEditPart);
+		
+		FDNodeEditPart targetEditPart = (FDNodeEditPart)findEditPart(target);
+		targetEditPart.addTargetConnection(wireEditPart);
+		
+		for ( int idx=0; idx<wire.getBendpoints().size(); idx++ ) {
+			wireEditPart.bendpointAdded(idx, wire.getBendpoints().get(idx));
+		}
+	}
+
+	@Override
+	public void wireRemoved(FDWire wire) {
+		FDRect source = wire.getSource();
+		FDRect target = wire.getTarget();
+		
+		FDWireEditPart wireEditPart = (FDWireEditPart)findEditPart(wire);
+		Assert.isTrue(wireEditPart != null);
+		
+		FDNodeEditPart sourceEditPart = (FDNodeEditPart)findEditPart(source);
+		sourceEditPart.removeSourceConnection_(wireEditPart);
+		
+		FDNodeEditPart targetEditPart = (FDNodeEditPart)findEditPart(target);
+		targetEditPart.removeTargetConnection_(wireEditPart);
+		
+		removeChild(wireEditPart);
+	} 
 	
 	@Override
 	public void positionChanged(int newPosition, FDRect child) {
@@ -207,5 +249,13 @@ public class FDRootEditPart extends AbstractGraphicalEditPart implements FDNodeR
 	        }
 	    }
 	    return super.getAdapter(key);
-	} 
+	}
+	
+	protected EditPart findEditPart(Object model) {
+		if (model == null) {
+			return null;
+		}
+		Map<?, ?> registry = getViewer().getEditPartRegistry();
+		return (EditPart)registry.get(model);
+	}
 }

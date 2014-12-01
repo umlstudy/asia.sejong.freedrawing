@@ -62,18 +62,18 @@ public class FDWire extends FDElement {
 		this.target = target;
 	}
 	
-	public void add(int locationIndex, Point location) {
+	public void addBendpoint(int locationIndex, Point location) {
 		bendpoints.add(locationIndex, location);
 		fireBendpointAdded(locationIndex, location);
 	}
 
-	public Point remove(int locationIndex) {
+	public Point removeBendpoint(int locationIndex) {
 		Point removed = bendpoints.remove(locationIndex);
 		fireBendpointRemoved(locationIndex);
 		return removed;
 	}
 	
-	public Point set(int locationIndex, Point newPoint) {
+	public Point moveBendpoint(int locationIndex, Point newPoint) {
 		Point oldLocation = bendpoints.set(locationIndex, newPoint);
 		fireBendpointMoved(locationIndex, newPoint);
 		return oldLocation;
@@ -81,6 +81,12 @@ public class FDWire extends FDElement {
 	
 	public List<Point> getBendpoints() {
 		return Collections.unmodifiableList(bendpoints);
+	}
+	
+	public void addBendpoints(List<Point> bendpoints) {
+		if ( bendpoints.size()>0 ) {
+			this.bendpoints.addAll(bendpoints);
+		}
 	}
 	
 	@Override

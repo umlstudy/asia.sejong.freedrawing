@@ -1,14 +1,13 @@
 package asia.sejong.freedrawing.parts.FDNodeEditPart.command;
 
-import org.eclipse.gef.commands.Command;
-
 import asia.sejong.freedrawing.model.FDRect;
+import asia.sejong.freedrawing.model.FDRoot;
 import asia.sejong.freedrawing.model.FDWire;
 
 /**
  * Command to delete a connection 
  */
-public class FDWireDeleteCommand extends Command
+public class FDWireDeleteCommand extends FDWireCommand
 {
 
 //	private FDRect source;
@@ -16,8 +15,9 @@ public class FDWireDeleteCommand extends Command
 	
 	private FDWire wire;
 	
-	public FDWireDeleteCommand(FDWire wire) {
-		super("Delete Connection");
+	public FDWireDeleteCommand(FDRoot root, FDWire wire) {
+		super(root);
+		setLabel("Delete Connection");
 		
 		this.wire = wire;
 //		
@@ -29,17 +29,19 @@ public class FDWireDeleteCommand extends Command
 	 * Delete the connection
 	 */
 	public void execute() {
-		FDRect source = wire.getSource();
-		FDRect target = wire.getTarget();
-		source.removeTarget(target);
+		getRoot().removeWire(wire);
+//		FDRect source = wire.getSource();
+//		FDRect target = wire.getTarget();
+//		source.removeTarget(target);
 	}
 	
 	/**
 	 * Restore the connection
 	 */
 	public void undo() {
-		FDRect source = wire.getSource();
-		FDRect target = wire.getTarget();
-		source.addTarget(target, wire);
+		getRoot().addWire(wire);
+//		FDRect source = wire.getSource();
+//		FDRect target = wire.getTarget();
+//		source.addTarget(target, wire);
 	}
 }

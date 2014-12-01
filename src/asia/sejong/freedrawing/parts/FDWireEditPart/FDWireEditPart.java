@@ -25,6 +25,7 @@ import org.eclipse.swt.SWT;
 import asia.sejong.freedrawing.debug.ForEditPart;
 import asia.sejong.freedrawing.figures.FDWireFigure;
 import asia.sejong.freedrawing.model.FDRect;
+import asia.sejong.freedrawing.model.FDRoot;
 import asia.sejong.freedrawing.model.FDWire;
 import asia.sejong.freedrawing.model.listener.FDWireListener;
 import asia.sejong.freedrawing.parts.FDNodeEditPart.command.FDWireDeleteCommand;
@@ -108,6 +109,10 @@ public class FDWireEditPart extends AbstractConnectionEditPart implements FDWire
 		return wireFigure;
 	}
 	
+	private final FDRoot getRootModel() {
+		return (FDRoot)getViewer().getContents().getModel();
+	}
+	
 //	/**
 //	 * Answer a new command to recreate the receiver
 //	 */
@@ -169,7 +174,7 @@ public class FDWireEditPart extends AbstractConnectionEditPart implements FDWire
 		installEditPolicy(EditPolicy.COMPONENT_ROLE, new ConnectionEditPolicy() {
 			@Override
 			protected Command getDeleteCommand(GroupRequest request) {
-				return new FDWireDeleteCommand(getModel());
+				return new FDWireDeleteCommand(getRootModel(), getModel());
 			}
 		});
 		
@@ -180,15 +185,12 @@ public class FDWireEditPart extends AbstractConnectionEditPart implements FDWire
 		return (PolylineConnection)getFigure();
 	}
 
-	public FDWireRecreateCommand recreateCommand() {
-		FDRect src = (FDRect)getSource().getModel();
-		FDWire wire = src.getWire((FDRect)getTarget().getModel());
-		
-		FDWireRecreateCommand cmd = new FDWireRecreateCommand(wire);
-		cmd.setSource(getSource().getModel());
-		cmd.setTarget(getTarget().getModel());
-		return cmd;
-	}
+//	public FDWireRecreateCommand createRecreateCommand() {
+//		FDWireRecreateCommand cmd = new FDWireRecreateCommand(getRootModel(), getModel());
+////		cmd.setSource(getSource().getModel());
+////		cmd.setTarget(getTarget().getModel());
+//		return cmd;
+//	}
 	
 	public void deactivate() {
 		super.deactivate();

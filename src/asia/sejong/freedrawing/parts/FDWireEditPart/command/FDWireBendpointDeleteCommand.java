@@ -16,6 +16,6 @@ public class FDWireBendpointDeleteCommand extends FDWireBendpointCommand {
 	}
 	
 	public void undo() {
-		addBendpint(getLocationIndex(), removedPoint);
+		addBendpoint(getLocationIndex(), removedPoint);
 	}
 }

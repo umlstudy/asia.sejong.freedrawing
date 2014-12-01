@@ -1,7 +1,6 @@
 package asia.sejong.freedrawing.parts.FDNodeEditPart.command;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
 
 import org.eclipse.gef.commands.Command;
 
@@ -15,17 +14,17 @@ public class DeleteFDNodeCommand extends Command
 	private final FDRect target;
 	
 //	private Set<FDRect> removedSources;
-	private Map<FDRect, FDWire> removedSourceWires;
+	private ArrayList<FDWire> removedSourceWires;
 //	private Set<FDRect> removedTargets;
-	private Map<FDRect, FDWire> removedTargetWires;
+	private ArrayList<FDWire> removedTargetWires;
 
 	public DeleteFDNodeCommand(FDRoot nodeRoot, FDRect target) {
 		super("Delete Node");
 		this.nodeRoot = nodeRoot;
 		this.target = target;
 		
-		this.removedSourceWires = new HashMap<FDRect, FDWire>();
-		this.removedTargetWires = new HashMap<FDRect, FDWire>();
+		this.removedSourceWires = new ArrayList<FDWire>();
+		this.removedTargetWires = new ArrayList<FDWire>();
 	}
 
 	/**
@@ -36,12 +35,10 @@ public class DeleteFDNodeCommand extends Command
 		removedTargetWires.clear();
 		
 //		removedSources = target.getSources();
-		for ( FDRect source : target.getSources() ) {
-			removedSourceWires.put(source, source.removeTarget(target));
-		}
+		removedSourceWires.addAll(target.getIncommingWires());
 		
 //		removedTargets = target.getTargets();
-		removedTargetWires.putAll(target.getTargets());
+		removedTargetWires.addAll(target.getOutgoingWires());
 //		for ( FDRect targetOfTarget : target.getTargets() ) {
 //			removedTargetWires.put(targetOfTarget, target.removeTarget(targetOfTarget));
 //		}
@@ -56,12 +53,12 @@ public class DeleteFDNodeCommand extends Command
 		
 		nodeRoot.addNode(target);
 		
-		for ( FDRect source : removedSourceWires.keySet() ) {
-			source.addTarget(target, removedSourceWires.get(source));
+		for ( FDWire wire : removedSourceWires ) {
+			nodeRoot.addWire(wire);
 		}
 		
-		for ( FDRect targetOfTarget : removedTargetWires.keySet() ) {
-			target.addTarget(targetOfTarget, removedTargetWires.get(targetOfTarget));
+		for ( FDWire wire : removedTargetWires ) {
+			nodeRoot.addWire(wire);
 		}
 	}
 }

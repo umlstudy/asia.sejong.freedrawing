@@ -9,7 +9,6 @@ import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 
 import asia.sejong.freedrawing.model.FDRect;
 import asia.sejong.freedrawing.model.FDRoot;
-import asia.sejong.freedrawing.model.FDShape;
 import asia.sejong.freedrawing.model.FDWire;
 import asia.sejong.freedrawing.parts.FDWireEditPart.FDWireEditPart;
 
@@ -23,19 +22,19 @@ public abstract class FDShapeEditPart extends AbstractGraphicalEditPart {
 		return (EditPart)registry.get(model);
 	}
 	
-	protected FDWireEditPart getWireEditPart(FDRect source, FDRect target) {
-		
-		FDWire wire = source.getWire(target);
-		Assert.isTrue(wire == null);
-		
-		wire = FDWire.newInstance__(source, target);
-		FDWireEditPart part = (FDWireEditPart)findEditPart(wire);
-		Assert.isTrue(part == null);
-
-		return part;
-	}
+//	protected FDWireEditPart getWireEditPart(FDRect source, FDRect target) {
+//		
+//		FDWire wire = source.getWire(target);
+//		Assert.isTrue(wire == null);
+//		
+//		wire = FDWire.newInstance__(source, target);
+//		FDWireEditPart part = (FDWireEditPart)findEditPart(wire);
+//		Assert.isTrue(part == null);
+//
+//		return part;
+//	}
 	
-	protected final FDRoot getNodeRoot() {
+	protected final FDRoot getRootModel() {
 		return (FDRoot)getViewer().getContents().getModel();
 		// TODO REMOVE
 //		EditPart editPart = this;

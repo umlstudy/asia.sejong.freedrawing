@@ -1,14 +1,10 @@
 package asia.sejong.freedrawing.model;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.graphics.RGB;
 
@@ -16,9 +12,9 @@ import asia.sejong.freedrawing.model.listener.FDNodeListener;
 
 public class FDRect extends FDTextShape {
 	
-	private HashSet<FDRect> sources;
+	private ArrayList<FDWire> incommingWires;
+	private ArrayList<FDWire> outgoingWires;
 //	private HashSet<FDRect> targets;
-	private HashMap<FDRect, FDWire> targets;
 	
 	private int x, y, width, height;
 	
@@ -28,18 +24,35 @@ public class FDRect extends FDTextShape {
 	transient private FDContainer parent;
 	
 	public FDRect() {
-		sources     = new HashSet<FDRect>();
+		setOutgoingWires(new ArrayList<FDWire>());
+		setIncommingWires(new ArrayList<FDWire>());
 //		targets     = new HashSet<FDRect>();
-		targets = new HashMap<FDRect, FDWire>();
+//		targets = new HashMap<FDRect, FDWire>();
+	}
+
+	public ArrayList<FDWire> getIncommingWires() {
+		return incommingWires;
+	}
+
+	public void setIncommingWires(ArrayList<FDWire> incommingWires) {
+		this.incommingWires = incommingWires;
+	}
+
+	public ArrayList<FDWire> getOutgoingWires() {
+		return outgoingWires;
+	}
+
+	public void setOutgoingWires(ArrayList<FDWire> outgoingWires) {
+		this.outgoingWires = outgoingWires;
 	}
 	
 	public FDContainer getParent() {
 		return parent;
 	}
 
-	public List<FDWire> getWires() {
-		return new ArrayList<FDWire>(targets.values());
-	}
+//	public Set<FDWire> getOutgoingWires() {
+//		return outgoingWires;
+//	}
 
 	void setParent(FDContainer parent) {
 		this.parent = parent;
@@ -83,88 +96,113 @@ public class FDRect extends FDTextShape {
 		setLocation(rect.x, rect.y);
 		setSize(rect.width, rect.height);
 	}
-	
-	public Set<FDRect> getSources() {
-		return new HashSet<FDRect>(sources);
-	}
-	
-	private void addSource(FDRect source) {
-		if ( source == null || sources.contains(source) ) {
-			throw new RuntimeException("already exist");
-		}
-
-		sources.add(source);
-//
-//		// notify event
-//		for ( FDNodeListener l : listeners ) {
-//			l.sourceAdded(source);
+//	
+//	public Set<FDRect> getSources() {
+//		HashSet<FDRect> rslt = new HashSet<FDRect>();
+//		for ( FDWire wire : wires ) {
+//			rslt.add(wire.getSource());
 //		}
-	}
-	
-	private void removeSource(FDRect source) {
-		if ( source == null || !sources.contains(source) ) {
-			throw new RuntimeException("not exist");
-		}
-
-		sources.remove(source);
-//
-//		// notify event
-//		for ( FDNodeListener l : listeners ) {
-//			l.sourceRemoved(source);
+//		
+//		return new HashSet<FDRect>(sources);
+//	}
+//	
+//	private void addSource(FDRect source) {
+//		if ( source == null || sources.contains(source) ) {
+//			throw new RuntimeException("already exist");
 //		}
-	}
+//
+//		sources.add(source);
+////
+////		// notify event
+////		for ( FDNodeListener l : listeners ) {
+////			l.sourceAdded(source);
+////		}
+//	}
+//	
+//	private void removeSource(FDRect source) {
+//		if ( source == null || !sources.contains(source) ) {
+//			throw new RuntimeException("not exist");
+//		}
+//
+//		sources.remove(source);
+////
+////		// notify event
+////		for ( FDNodeListener l : listeners ) {
+////			l.sourceRemoved(source);
+////		}
+//	}
 
 //	public Set<FDRect> getTargets() {
 //		return new HashSet<FDRect>(targets);
 //	}
 
 	public boolean containsTarget(FDRect target) {
-		if ( targets.containsKey(target) ) {
-			return true;
+		return getOutgoingWire(target) != null;
+	}
+	
+	private FDWire getOutgoingWire(FDRect target) {
+		for ( FDWire wire : getOutgoingWires() ) {
+			if ( wire.getTarget().equals(target ) ) {
+				return wire;
+			}
 		}
-		return false;
+		return null;
 	}
 	
-	public FDWire getWire(FDRect target) {
-		return targets.get(target);
-	}
-	
-	public Map<? extends FDRect, ? extends FDWire> getTargets() {
-		return Collections.unmodifiableMap(targets);
-	}
+//	public Map<? extends FDRect, ? extends FDWire> getTargets() {
+//		return Collections.unmodifiableMap(targets);
+//	}
 
-	public void addTarget(FDRect target, FDWire wire) {
-		if ( targets.containsKey(target) ) {
-			// already exist
-			return;
-		}
+	public void addWire(FDWire wire) {
+		Assert.isTrue(!containsTarget(wire.getTarget()));
 		
-		target.addSource(this);
+		FDRect target = wire.getTarget();
+		getOutgoingWires().add(wire);
+		target.getIncommingWires().add(wire);
 		
-		targets.put(target, wire);
+//		// notify event
+//		for ( FDNodeListener l : listeners ) {
+//			l.wireAdded(wire);
+//		}
+	}
+	
+	public void removeWire(FDWire wire) {
+		Assert.isTrue(containsTarget(wire.getTarget()));
 		
-		// notify event
-		for ( FDNodeListener l : listeners ) {
-			l.targetAdded(target);
-		}
+		FDRect target = wire.getTarget();
+		getOutgoingWires().remove(wire);
+		target.getIncommingWires().remove(wire);
+		
+//		// notify event
+//		for ( FDNodeListener l : listeners ) {
+//			l.wireAdded(wire);
+//		}
 	}
 	
 	public FDWire removeTarget(FDRect target) {
-		if ( !targets.containsKey(target) ) {
+		
+		FDWire removingWire = null;
+		for ( FDWire wire : getOutgoingWires() ) {
+			if ( wire.getSource().equals(this) && wire.getTarget().equals(target) ) {
+				removingWire = wire;
+				break;
+			}
+		}
+		
+		if ( removingWire == null ) {
 			// not exist
 			return null;
 		}
 		
-		target.removeSource(this);
+		getOutgoingWires().remove(removingWire);
+		target.getIncommingWires().remove(removingWire);
 		
-		FDWire removedWire = targets.remove(target);
+//		// notify event
+//		for ( FDNodeListener l : listeners ) {
+//			l.wireRemoved(removingWire);
+//		}
 		
-		// notify event
-		for ( FDNodeListener l : listeners ) {
-			l.targetRemoved(target, removedWire);
-		}
-		
-		return removedWire;
+		return removingWire;
 	}
 
 	public String getText() {
@@ -189,27 +227,27 @@ public class FDRect extends FDTextShape {
 		return true;
 	}
 	
-	public void addBendpoint(int locationIndex, Point location, FDRect target) {
-		FDWire wire = targets.get(target);
-		
-		wire.add(locationIndex, location);
-	}
-
-	public Point removeBendpoint(int locationIndex, FDRect target) {
-		FDWire wire = targets.get(target);
-		
-		Point removed = wire.remove(locationIndex);
-		
-		return removed;
-	}
-	
-	public Point moveBendpoint(int locationIndex, Point newPoint, FDRect target) {
-		FDWire wire = targets.get(target);
-		
-		Point oldPoint = wire.set(locationIndex, newPoint);
-
-		return oldPoint;
-	}
+//	public void addBendpoint(int locationIndex, Point location, FDRect target) {
+//		FDWire wire = targets.get(target);
+//		
+//		wire.add(locationIndex, location);
+//	}
+//
+//	public Point removeBendpoint(int locationIndex, FDRect target) {
+//		FDWire wire = targets.get(target);
+//		
+//		Point removed = wire.remove(locationIndex);
+//		
+//		return removed;
+//	}
+//	
+//	public Point moveBendpoint(int locationIndex, Point newPoint, FDRect target) {
+//		FDWire wire = targets.get(target);
+//		
+//		Point oldPoint = wire.set(locationIndex, newPoint);
+//
+//		return oldPoint;
+//	}
 
 	//============================================================
 	// Listener add and remove
@@ -259,9 +297,11 @@ public class FDRect extends FDTextShape {
 		
 		FDRect node = (FDRect)super.clone();
 		
-		node.sources = new HashSet<FDRect>();
-//		node.targets = new HashSet<FDRect>();
-		node.targets = new HashMap<FDRect, FDWire>();
+//		node.sources = new HashSet<FDRect>();
+////		node.targets = new HashSet<FDRect>();
+//		node.targets = new HashMap<FDRect, FDWire>();
+		node.setOutgoingWires(new ArrayList<FDWire>());
+		node.setIncommingWires(new ArrayList<FDWire>());
 		
 		node.x = x;
 		node.y = y;

@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.draw2d.geometry.Point;
 
 import asia.sejong.freedrawing.model.listener.FDContainerListener;
@@ -13,7 +14,7 @@ import asia.sejong.freedrawing.model.listener.FDNodeRootListener;
 public class FDRoot implements FDContainer {
 
 	private final List<FDRect> childElements = new ArrayList<FDRect>();
-//	private final Set<FDConnection> childConnections = new HashSet<FDConnection>();
+	private final List<FDWire> wires = new ArrayList<FDWire>();
 	
 	private final Collection<FDNodeRootListener> listeners = new HashSet<FDNodeRootListener>();
 	
@@ -41,34 +42,65 @@ public class FDRoot implements FDContainer {
 	
 	@Override
 	public void addNode(FDRect target) {
-		if ( childElements.contains(target) ) {
-			throw new RuntimeException();
-		}
+		Assert.isTrue(!childElements.contains(target));
+
 		childElements.add(target);
 		target.setParent(this);
 		
-		for (FDContainerListener l : listeners) {
+		for (FDNodeRootListener l : listeners) {
 			l.childNodeAdded(target);
 		}
 	}
 	
 	@Override
 	public void removeNode(FDRect target) {
-		if ( !childElements.contains(target) ) {
-			throw new RuntimeException();
+		Assert.isTrue(childElements.contains(target));
+		
+		List<FDWire> copiedList = null;
+		copiedList = new ArrayList<FDWire>(target.getIncommingWires());
+		for ( FDWire wire : copiedList) {
+			removeWire(wire);
 		}
+		
+		copiedList = new ArrayList<FDWire>(target.getOutgoingWires());
+		for ( FDWire wire : copiedList) {
+			removeWire(wire);
+		}
+		
 		childElements.remove(target);
 		target.setParent(null);
 		
-		for (FDContainerListener l : listeners) {
+		for (FDNodeRootListener l : listeners) {
 			l.childNodeRemoved(target);
+		}
+	}
+
+	public void addWire(FDWire wire) {
+		Assert.isTrue(!wires.contains(wire));
+		
+		wires.add(wire);
+		
+		wire.getSource().addWire(wire);
+		
+		for (FDNodeRootListener l : listeners) {
+			l.wireAdded(wire);
+		}
+	}
+
+	public void removeWire(FDWire wire) {
+		Assert.isTrue(wires.contains(wire));
+		
+		wires.remove(wire);
+		
+		wire.getSource().removeWire(wire);
+		
+		for (FDNodeRootListener l : listeners) {
+			l.wireRemoved(wire);
 		}
 	}
 	
 	public int changePosition(int newPosition, FDRect target) {
-		if ( !childElements.contains(target) ) {
-			throw new RuntimeException();
-		}
+		Assert.isTrue(childElements.contains(target));
 		
 		int oldPosition = childElements.indexOf(target);
 		

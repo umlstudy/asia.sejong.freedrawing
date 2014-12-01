@@ -4,20 +4,23 @@ import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.BendpointRequest;
 
-import asia.sejong.freedrawing.model.FDRect;
+import asia.sejong.freedrawing.model.FDWire;
 
 public abstract class FDWireBendpointCommand extends Command {
 	
-	private FDRect source;
-	private FDRect target;
+//	private FDRect source;
+//	private FDRect target;
 //	private EditPartViewer viewer;
 	private Point location;
 	private int locationIndex;
+	private FDWire wire;
 	
 	protected FDWireBendpointCommand(BendpointRequest request) {
 //		this.viewer = request.getSource().getViewer();
-		this.source = (FDRect)request.getSource().getSource().getModel();
-		this.target = (FDRect)request.getSource().getTarget().getModel();
+//		this.source = (FDRect)request.getSource().getSource().getModel();
+//		this.target = (FDRect)request.getSource().getTarget().getModel();
+		this.wire = (FDWire)request.getSource().getModel();
+		
 		this.setLocation(request.getLocation());
 		this.setLocationIndex(request.getIndex());
 	}
@@ -41,8 +44,8 @@ public abstract class FDWireBendpointCommand extends Command {
 //		return (PolylineConnection)conx.getFigure();
 //	}
 	
-	protected void addBendpint(int locationIndex, Point location) {
-		source.addBendpoint(locationIndex, location, target);
+	protected void addBendpoint(int locationIndex, Point location) {
+		wire.addBendpoint(locationIndex, location);
 		
 		
 //		List<Bendpoint> bendpoints = getBendpoints();
@@ -51,14 +54,15 @@ public abstract class FDWireBendpointCommand extends Command {
 	}
 	
 	protected Point removeBendpoint(int locationIndex) {
-		Point removedPoint = source.removeBendpoint(locationIndex, target);
+		
+		Point removedPoint = wire.removeBendpoint(locationIndex);
 		return removedPoint;
 //		List<Bendpoint> bendpoints = getBendpoints();
 //		return bendpoints.remove(locationIndex);
 	}
 	
 	protected Point moveBendpoint(int locationIndex, Point newPoint) {
-		Point oldPoint = source.moveBendpoint(locationIndex, newPoint, target);
+		Point oldPoint = wire.moveBendpoint(locationIndex, newPoint);
 		return oldPoint;
 	}
 
