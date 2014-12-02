@@ -32,6 +32,7 @@ public abstract class FDElement implements Cloneable {
 	
 	//============================================================
 	// Listener add and remove
+	
 	public void addListener(FDElementListener listener ) {
 		if ( listener != null ) {
 			listeners.add(listener);
@@ -46,8 +47,9 @@ public abstract class FDElement implements Cloneable {
 	
 	//============================================================
 	// FDElement
+	
 	@Override
-	protected FDElement clone() {
+	public FDElement clone() {
 		
 		FDElement object = null;;
 		try {
@@ -60,7 +62,8 @@ public abstract class FDElement implements Cloneable {
 	}
 	
 	//============================================================
-	// Test
+	// For Debug
+	
 	public static void main(String[] args) {
 		FDElement ele = new FDElement() {
 			

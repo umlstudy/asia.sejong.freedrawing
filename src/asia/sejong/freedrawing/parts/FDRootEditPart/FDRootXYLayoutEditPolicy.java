@@ -22,8 +22,11 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 
 import asia.sejong.freedrawing.model.FDContainer;
+import asia.sejong.freedrawing.model.FDElement;
+import asia.sejong.freedrawing.model.FDEllipse;
 import asia.sejong.freedrawing.model.FDRect;
 import asia.sejong.freedrawing.model.FDRoot;
+import asia.sejong.freedrawing.model.FDShape;
 import asia.sejong.freedrawing.parts.FDRootEditPart.command.FDShapeCreateCommand;
 import asia.sejong.freedrawing.parts.FDRootEditPart.command.FDShapeMoveAndResizeCommand;
 
@@ -43,6 +46,10 @@ public class FDRootXYLayoutEditPolicy extends XYLayoutEditPolicy {
 			FDRect element = (FDRect) request.getNewObject();
 			element.setRectangle(box);
 			return new FDShapeCreateCommand(nodeRoot, element);
+		} else if (type == FDEllipse.class) {
+			FDEllipse element = (FDEllipse) request.getNewObject();
+			element.setRectangle(box);
+			return new FDShapeCreateCommand(nodeRoot, element);
 		}
 		return null;
 	}
@@ -59,9 +66,9 @@ public class FDRootXYLayoutEditPolicy extends XYLayoutEditPolicy {
 	 * Return a command for moving elements around the canvas
 	 */
 	protected Command createChangeConstraintCommand(ChangeBoundsRequest request, EditPart child, Object constraint) {
-		FDRect node = (FDRect) child.getModel();
+		FDShape shape = (FDShape) child.getModel();
 		Rectangle rect = (Rectangle) constraint;
-		return new FDShapeMoveAndResizeCommand(node, rect);
+		return new FDShapeMoveAndResizeCommand(shape, rect);
 	}
 	
 	/**
@@ -116,21 +123,21 @@ public class FDRootXYLayoutEditPolicy extends XYLayoutEditPolicy {
 		FDContainer container = (FDContainer)getHost().getModel();
 		ArrayList<?> editParts = (ArrayList<?>)request.getEditParts();
 		if (editParts != null && editParts.size()>0 ) {
-			List<FDRect> copiedNodes = new ArrayList<FDRect>();
+			List<FDShape> copiedShapes = new ArrayList<FDShape>();
 			for ( Object selected : editParts ) {
 				EditPart selectedEditPart = (EditPart)selected;
-				if ( selectedEditPart.getModel() instanceof FDRect ) {
-					FDRect copiedNode = (FDRect)((FDRect) selectedEditPart.getModel()).clone();
+				if ( selectedEditPart.getModel() instanceof FDElement ) {
+					FDShape copiedShape = ((FDShape) selectedEditPart.getModel()).clone();
 					Point delta = request.getMoveDelta();
-					copiedNode.setLocation(copiedNode.getX() + delta.x, copiedNode.getY()+delta.y);
-					copiedNodes.add(copiedNode);
+					copiedShape.setLocation(copiedShape.getX() + delta.x, copiedShape.getY()+delta.y);
+					copiedShapes.add(copiedShape);
 				}
 			}
 			
-			if ( copiedNodes.size() > 0 ) {
+			if ( copiedShapes.size() > 0 ) {
 				CompoundCommand compoundCommand = new CompoundCommand();
-				for ( FDRect node : copiedNodes ) {
-					compoundCommand.add(new FDShapeCreateCommand(container, node));
+				for ( FDShape shape : copiedShapes ) {
+					compoundCommand.add(new FDShapeCreateCommand(container, shape));
 				}
 				return compoundCommand;
 			}

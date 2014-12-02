@@ -61,11 +61,20 @@ public class PaletteAction extends Action implements PaletteIconChangable {
 	public void iconChange(Tool tool, IconType newType) {
 		if ( type != newType ) {
 			type = newType;
-			setImageDescriptor(ImageDescriptor.createFromImage(getIcon(type)));
+			Image icon = getIcon(type);
+			if ( icon != null ) {
+				setImageDescriptor(ImageDescriptor.createFromImage(getIcon(type)));
+			} else {
+				setImageDescriptor(null);
+			}
 		}
 	}
 
 	Image getIcon(IconType type) {
-		return icons[type.ordinal()];
+		if ( icons != null ) {
+			return icons[type.ordinal()];
+		}
+		
+		return null;
 	}
 }

@@ -5,6 +5,7 @@ import org.eclipse.gef.tools.AbstractTool;
 import org.eclipse.gef.tools.CreationTool;
 
 import asia.sejong.freedrawing.editor.FreedrawingEditor;
+import asia.sejong.freedrawing.model.FDEllipse;
 import asia.sejong.freedrawing.model.FDRect;
 
 public abstract class FDToolFactory {
@@ -30,7 +31,7 @@ public abstract class FDToolFactory {
 		}
 	};
 
-	public static FDToolFactory NODE_CREATION_TOOL = new FDToolFactory() {
+	public static FDToolFactory RECT_CREATION_TOOL = new FDToolFactory() {
 		@Override
 		public AbstractTool createTool(FreedrawingEditor editor) {
 			return new CreationTool(new CreationFactory() {
@@ -43,6 +44,24 @@ public abstract class FDToolFactory {
 				@Override
 				public Object getNewObject() {
 					return new FDRect();
+				}
+			});
+		}
+	};
+	
+	public static FDToolFactory ELLIPSE_CREATION_TOOL = new FDToolFactory() {
+		@Override
+		public AbstractTool createTool(FreedrawingEditor editor) {
+			return new CreationTool(new CreationFactory() {
+				
+				@Override
+				public Object getObjectType() {
+					return FDEllipse.class;
+				}
+				
+				@Override
+				public Object getNewObject() {
+					return new FDEllipse();
 				}
 			});
 		}

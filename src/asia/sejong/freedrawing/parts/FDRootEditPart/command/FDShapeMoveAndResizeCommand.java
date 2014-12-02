@@ -4,24 +4,25 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.commands.Command;
 
 import asia.sejong.freedrawing.model.FDRect;
+import asia.sejong.freedrawing.model.FDShape;
 
 /**
  * Move and resize a {@link FDRect}
  */
 public class FDShapeMoveAndResizeCommand extends Command
 {
-	private final FDRect node;
-	private final Rectangle rect;
-	private Rectangle oldRect;
+	private final FDShape shape;
+	private final Rectangle bounds;
+	private Rectangle oldBounds;
 
-	public FDShapeMoveAndResizeCommand(FDRect node, Rectangle rect) {
-		this.node = node;
-		this.rect = rect;
-		setLabel("Modify " + getNodeName());
+	public FDShapeMoveAndResizeCommand(FDShape shape, Rectangle bounds) {
+		this.shape = shape;
+		this.bounds = bounds;
+		setLabel("Modify " + getShapeType());
 	}
 	
-	private String getNodeName() {
-		return "node";
+	private String getShapeType() {
+		return shape.getClass().getSimpleName();
 	}
 
 	/**
@@ -29,9 +30,9 @@ public class FDShapeMoveAndResizeCommand extends Command
 	 */
 	@Override
 	public void execute() {
-		oldRect = new Rectangle(node.getX(), node.getY(), node.getWidth(), node.getHeight());
-		node.setLocation(rect.x, rect.y);
-		node.setSize(rect.width, rect.height);
+		oldBounds = new Rectangle(shape.getX(), shape.getY(), shape.getWidth(), shape.getHeight());
+		shape.setLocation(bounds.x, bounds.y);
+		shape.setSize(bounds.width, bounds.height);
 	}
 	
 	/**
@@ -39,7 +40,7 @@ public class FDShapeMoveAndResizeCommand extends Command
 	 */
 	@Override
 	public void undo() {
-		node.setLocation(oldRect.x, oldRect.y);
-		node.setSize(oldRect.width, oldRect.height);
+		shape.setLocation(oldBounds.x, oldBounds.y);
+		shape.setSize(oldBounds.width, oldBounds.height);
 	}
 }

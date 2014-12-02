@@ -13,8 +13,8 @@ import org.eclipse.gef.ui.actions.SelectionAction;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.actions.ActionFactory;
 
-import asia.sejong.freedrawing.model.FDRect;
 import asia.sejong.freedrawing.model.FDRoot;
+import asia.sejong.freedrawing.model.FDShape;
 import asia.sejong.freedrawing.parts.FDRootEditPart.command.FDShapeCreateCommand;
 
 public class PasteFromClipboardAction extends SelectionAction {
@@ -33,26 +33,26 @@ public class PasteFromClipboardAction extends SelectionAction {
 			Object obj = selection.get(0);
 			if (obj instanceof GraphicalEditPart ) {
 				GraphicalEditPart gep = (GraphicalEditPart) obj;
-				RootEditPart root = gep.getRoot();
-				FDRoot nodeRoot = (FDRoot)root.getContents().getModel();
+				RootEditPart rootEditPart = gep.getRoot();
+				FDRoot root = (FDRoot)rootEditPart.getContents().getModel();
 				ArrayList<?> originals = (ArrayList<?>)getClipboardContents();
 				if (originals != null) {
-					List<FDRect> copiedNodes = new ArrayList<FDRect>();
+					List<FDShape> copiedShapes = new ArrayList<FDShape>();
 					for ( Object item : originals ) {
-						if ( item instanceof FDRect ) {
-							FDRect copiedNode = (FDRect)((FDRect) item).clone();
+						if ( item instanceof FDShape ) {
+							FDShape copiedShape = ((FDShape) item).clone();
 							Point nextLocation = null;
-							nextLocation = nodeRoot.getNextLocation(copiedNode.getX(), copiedNode.getY());
-							nextLocation = getNextLocation(copiedNodes, nextLocation.x, nextLocation.y);
-							copiedNode.setLocation(nextLocation.x, nextLocation.y);
-							copiedNodes.add(copiedNode);
+							nextLocation = root.getNextLocation(copiedShape.getX(), copiedShape.getY());
+							nextLocation = getNextLocation(copiedShapes, nextLocation.x, nextLocation.y);
+							copiedShape.setLocation(nextLocation.x, nextLocation.y);
+							copiedShapes.add(copiedShape);
 						}
 					}
 					
-					if ( copiedNodes.size() > 0 ) {
+					if ( copiedShapes.size() > 0 ) {
 						CompoundCommand compoundCommand = new CompoundCommand();
-						for ( FDRect node : copiedNodes ) {
-							compoundCommand.add(new FDShapeCreateCommand(nodeRoot, node));
+						for ( FDShape shpae : copiedShapes ) {
+							compoundCommand.add(new FDShapeCreateCommand(root, shpae));
 						}
 						return compoundCommand;
 					}
@@ -74,10 +74,10 @@ public class PasteFromClipboardAction extends SelectionAction {
 		return Clipboard.getDefault().getContents();
 	}
 	
-	public Point getNextLocation(List<FDRect> nodes, int x, int y) {
+	public Point getNextLocation(List<FDShape> shapes, int x, int y) {
 		while ( true ) {
 			boolean alreadyExistInLocation = false;
-			for ( FDRect item : nodes ) {
+			for ( FDShape item : shapes ) {
 				if ( item.getX() == x && item.getY() == y ) {
 					alreadyExistInLocation = true;
 				}

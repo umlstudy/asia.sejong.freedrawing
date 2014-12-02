@@ -8,7 +8,7 @@ import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gef.ui.actions.SelectionAction;
 import org.eclipse.ui.IWorkbenchPart;
 
-import asia.sejong.freedrawing.model.FDRect;
+import asia.sejong.freedrawing.model.FDShape;
 import asia.sejong.freedrawing.parts.FDShapeEditPart.command.ToBackZOrderCommand;
 import asia.sejong.freedrawing.parts.FDShapeEditPart.command.ToFrontZOrderCommand;
 
@@ -45,15 +45,15 @@ public class ChangeZOrderAction extends SelectionAction {
 		CompoundCommand compoundCmd = new CompoundCommand(actionName);
 		for (int i = 0; i < objects.size(); i++) {
 			EditPart object = (EditPart) objects.get(i);
-			if ( object.getModel() instanceof FDRect ) {
+			if ( object.getModel() instanceof FDShape ) {
 				
 				Command cmd = null;
 				switch ( direction ) {
 				case TO_FRONT : 
-					cmd = new ToFrontZOrderCommand((FDRect)object.getModel());
+					cmd = new ToFrontZOrderCommand((FDShape)object.getModel());
 					break;
 				case TO_BACK :
-					cmd = new ToBackZOrderCommand((FDRect)object.getModel());
+					cmd = new ToBackZOrderCommand((FDShape)object.getModel());
 					actionName = "To Back";
 					break;
 				}

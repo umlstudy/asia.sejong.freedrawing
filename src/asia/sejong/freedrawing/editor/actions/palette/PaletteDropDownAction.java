@@ -9,6 +9,7 @@ import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 
@@ -112,7 +113,12 @@ public class PaletteDropDownAction extends Action implements IMenuCreator, Palet
 		if ( selectedAction != null ) {
 			if ( type != newType || tool != selectedAction.getTool() ) {
 				type = newType;
-				setImageDescriptor(ImageDescriptor.createFromImage(selectedAction.getIcon(type)));
+				Image icon = selectedAction.getIcon(type);
+				if ( icon != null ) {
+					setImageDescriptor(ImageDescriptor.createFromImage(icon));
+				} else {
+					setImageDescriptor(null);
+				}
 			}
 		}
 	}

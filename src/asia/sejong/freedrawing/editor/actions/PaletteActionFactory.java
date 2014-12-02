@@ -25,12 +25,25 @@ public abstract class PaletteActionFactory extends LocalActionFactory {
 	
 	public static final PaletteActionFactory TOGGLE_RECTANGLE = new PaletteActionFactory("TOGGLE_RECTANGLE") {
 		public PaletteAction create(FreedrawingEditor editor) {
-			AbstractTool tool = FDToolFactory.NODE_CREATION_TOOL.createTool(editor);
+			AbstractTool tool = FDToolFactory.RECT_CREATION_TOOL.createTool(editor);
 			PaletteAction action = new PaletteAction(editor, ContextManager.getInstance().getImageManager().getRectangleImages());
 			action.setId(getId());
 			action.setTool(tool);
 			action.setImageDescriptor(ContextManager.getInstance().getImageManager().getRectangleImageDescriptor(IconType.NORMAL));
 			action.setText("사각형");
+			
+			return action;
+		}
+	};
+	
+	public static final PaletteActionFactory CREATE_ELLIPSE = new PaletteActionFactory("CREATE_ELLIPSE") {
+		public PaletteAction create(FreedrawingEditor editor) {
+			AbstractTool tool = FDToolFactory.ELLIPSE_CREATION_TOOL.createTool(editor);
+			PaletteAction action = new PaletteAction(editor, null);
+			action.setId(getId());
+			action.setTool(tool);
+			action.setImageDescriptor(null);
+			action.setText("원");
 			
 			return action;
 		}

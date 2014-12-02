@@ -86,11 +86,11 @@ public abstract class FDShape extends FDElement {
 	}
 	
 
-	public boolean containsTarget(FDRect target) {
+	public boolean containsTarget(FDShape target) {
 		return getOutgoingWire(target) != null;
 	}
 	
-	private FDWire getOutgoingWire(FDRect target) {
+	private FDWire getOutgoingWire(FDShape target) {
 		for ( FDWire wire : getOutgoingWires() ) {
 			if ( wire.getTarget().equals(target ) ) {
 				return wire;
@@ -102,7 +102,7 @@ public abstract class FDShape extends FDElement {
 	public void addWire(FDWire wire) {
 		Assert.isTrue(!containsTarget(wire.getTarget()));
 		
-		FDRect target = wire.getTarget();
+		FDShape target = wire.getTarget();
 		getOutgoingWires().add(wire);
 		target.getIncommingWires().add(wire);
 	}
@@ -110,7 +110,7 @@ public abstract class FDShape extends FDElement {
 	public void removeWire(FDWire wire) {
 		Assert.isTrue(containsTarget(wire.getTarget()));
 		
-		FDRect target = wire.getTarget();
+		FDShape target = wire.getTarget();
 		getOutgoingWires().remove(wire);
 		target.getIncommingWires().remove(wire);
 	}
