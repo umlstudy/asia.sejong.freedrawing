@@ -1,7 +1,7 @@
 package asia.sejong.freedrawing.model.listener;
 
 
-public interface FDNodeListener extends TextObjectListener {
+public interface FDNodeListener extends TextShapeListener {
 
 //	void sourceAdded(FDRect source);
 //	void sourceRemoved(FDRect source);

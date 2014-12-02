@@ -24,12 +24,10 @@ import org.eclipse.swt.SWT;
 
 import asia.sejong.freedrawing.debug.ForEditPart;
 import asia.sejong.freedrawing.figures.FDWireFigure;
-import asia.sejong.freedrawing.model.FDRect;
 import asia.sejong.freedrawing.model.FDRoot;
 import asia.sejong.freedrawing.model.FDWire;
 import asia.sejong.freedrawing.model.listener.FDWireListener;
 import asia.sejong.freedrawing.parts.FDNodeEditPart.command.FDWireDeleteCommand;
-import asia.sejong.freedrawing.parts.FDNodeEditPart.command.FDWireRecreateCommand;
 
 public class FDWireEditPart extends AbstractConnectionEditPart implements FDWireListener {
 
@@ -246,15 +244,13 @@ public class FDWireEditPart extends AbstractConnectionEditPart implements FDWire
 		refresh();
 	}
 
+	@Override
 	public void addNotify() {
 		super.addNotify();
 		getModel().addFDWireListener(this);
 	}
 	
-	/**
-	 * Override the superclass implementation so that the receiver
-	 * can stop listening to events from the underlying model object
-	 */
+	@Override
 	public void removeNotify() {
 		getModel().removeFDWireListener(this);
 		super.removeNotify();

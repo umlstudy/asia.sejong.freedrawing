@@ -14,12 +14,19 @@ import org.eclipse.draw2d.Bendpoint;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 
-public class FDWireBendpoint implements Bendpoint, Cloneable {
+public class FDWireBendpoint extends Point implements Bendpoint {
 
+	private static final long serialVersionUID = 3620395553184051283L;
+	
 	private float weight = 0.5f;
 	private Dimension d1, d2;
 
-	public FDWireBendpoint() {
+	private FDWireBendpoint(Point p) {
+		super(p);
+	}
+	
+	public static FDWireBendpoint newInstance(Point location) {
+		return new FDWireBendpoint(location);
 	}
 
 	public Dimension getFirstRelativeDimension() {

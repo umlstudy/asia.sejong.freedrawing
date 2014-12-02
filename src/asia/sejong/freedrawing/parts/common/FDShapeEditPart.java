@@ -2,15 +2,11 @@ package asia.sejong.freedrawing.parts.common;
 
 import java.util.Map;
 
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 
-import asia.sejong.freedrawing.model.FDRect;
 import asia.sejong.freedrawing.model.FDRoot;
-import asia.sejong.freedrawing.model.FDWire;
-import asia.sejong.freedrawing.parts.FDWireEditPart.FDWireEditPart;
 
 public abstract class FDShapeEditPart extends AbstractGraphicalEditPart {
 

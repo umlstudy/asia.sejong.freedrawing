@@ -3,7 +3,7 @@ package asia.sejong.freedrawing.model.listener;
 import asia.sejong.freedrawing.model.FDWire;
 
 
-public interface FDNodeRootListener extends FDContainerListener {
+public interface FDRootListener extends FDContainerListener {
 	
 	void wireAdded(FDWire wire);
 

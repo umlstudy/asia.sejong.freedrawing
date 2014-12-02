@@ -27,7 +27,7 @@ import asia.sejong.freedrawing.debug.ForEditPart;
 import asia.sejong.freedrawing.model.FDRect;
 import asia.sejong.freedrawing.model.FDRoot;
 import asia.sejong.freedrawing.model.FDWire;
-import asia.sejong.freedrawing.model.listener.FDNodeRootListener;
+import asia.sejong.freedrawing.model.listener.FDRootListener;
 import asia.sejong.freedrawing.parts.FDNodeEditPart.FDNodeEditPart;
 import asia.sejong.freedrawing.parts.FDWireEditPart.FDWireEditPart;
 
@@ -36,7 +36,7 @@ import asia.sejong.freedrawing.parts.FDWireEditPart.FDWireEditPart;
  * responsible for creating the layer in which all other figures are placed and for
  * returning the collection of top level model objects to be displayed in that layer.
  */
-public class FDRootEditPart extends AbstractGraphicalEditPart implements FDNodeRootListener {
+public class FDRootEditPart extends AbstractGraphicalEditPart implements FDRootListener {
 	
 	public FDRootEditPart(FDRoot nodeRoot) {
 		setModel(nodeRoot);

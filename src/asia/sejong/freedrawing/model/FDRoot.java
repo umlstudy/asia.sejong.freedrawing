@@ -9,14 +9,14 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.draw2d.geometry.Point;
 
 import asia.sejong.freedrawing.model.listener.FDContainerListener;
-import asia.sejong.freedrawing.model.listener.FDNodeRootListener;
+import asia.sejong.freedrawing.model.listener.FDRootListener;
 
 public class FDRoot implements FDContainer {
 
 	private final List<FDRect> childElements = new ArrayList<FDRect>();
 	private final List<FDWire> wires = new ArrayList<FDWire>();
 	
-	private final Collection<FDNodeRootListener> listeners = new HashSet<FDNodeRootListener>();
+	private final Collection<FDRootListener> listeners = new HashSet<FDRootListener>();
 	
 	public FDRoot() {}
 	
@@ -47,7 +47,7 @@ public class FDRoot implements FDContainer {
 		childElements.add(target);
 		target.setParent(this);
 		
-		for (FDNodeRootListener l : listeners) {
+		for (FDRootListener l : listeners) {
 			l.childNodeAdded(target);
 		}
 	}
@@ -70,7 +70,7 @@ public class FDRoot implements FDContainer {
 		childElements.remove(target);
 		target.setParent(null);
 		
-		for (FDNodeRootListener l : listeners) {
+		for (FDRootListener l : listeners) {
 			l.childNodeRemoved(target);
 		}
 	}
@@ -82,7 +82,7 @@ public class FDRoot implements FDContainer {
 		
 		wire.getSource().addWire(wire);
 		
-		for (FDNodeRootListener l : listeners) {
+		for (FDRootListener l : listeners) {
 			l.wireAdded(wire);
 		}
 	}
@@ -94,7 +94,7 @@ public class FDRoot implements FDContainer {
 		
 		wire.getSource().removeWire(wire);
 		
-		for (FDNodeRootListener l : listeners) {
+		for (FDRootListener l : listeners) {
 			l.wireRemoved(wire);
 		}
 	}
@@ -199,11 +199,11 @@ public class FDRoot implements FDContainer {
 	//============================================================
 	// Listeners
 	
-	public void addNodeRootListener(FDNodeRootListener l) {
+	public void addNodeRootListener(FDRootListener l) {
 		listeners.add(l);
 	}
 	
-	public void removeNodeRootListener(FDNodeRootListener l) {
+	public void removeNodeRootListener(FDRootListener l) {
 		listeners.remove(l);
 	}
 }

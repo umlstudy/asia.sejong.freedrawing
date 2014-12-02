@@ -1,7 +1,7 @@
 package asia.sejong.freedrawing.model;
 
 
-public abstract class FDTextShape extends FDElement {
+public abstract class FDTextShape extends FDShape {
 	
 	private FontInfo fontInfo;
 

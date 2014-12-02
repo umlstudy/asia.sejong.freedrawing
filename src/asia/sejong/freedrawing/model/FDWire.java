@@ -13,7 +13,7 @@ import asia.sejong.freedrawing.model.listener.FDWireListener;
 
 public class FDWire extends FDElement {
 
-	private final List<Point> bendpoints = new ArrayList<Point>();
+	private final List<FDWireBendpoint> bendpoints = new ArrayList<FDWireBendpoint>();
 	
 	transient private Set<FDWireListener> listeners = new HashSet<FDWireListener>();
 	transient private FDRect source;
@@ -63,7 +63,7 @@ public class FDWire extends FDElement {
 	}
 	
 	public void addBendpoint(int locationIndex, Point location) {
-		bendpoints.add(locationIndex, location);
+		bendpoints.add(locationIndex, FDWireBendpoint.newInstance(location));
 		fireBendpointAdded(locationIndex, location);
 	}
 
@@ -74,16 +74,16 @@ public class FDWire extends FDElement {
 	}
 	
 	public Point moveBendpoint(int locationIndex, Point newPoint) {
-		Point oldLocation = bendpoints.set(locationIndex, newPoint);
+		Point oldLocation = bendpoints.set(locationIndex, FDWireBendpoint.newInstance(newPoint));
 		fireBendpointMoved(locationIndex, newPoint);
 		return oldLocation;
 	}
 	
-	public List<Point> getBendpoints() {
+	public List<FDWireBendpoint> getBendpoints() {
 		return Collections.unmodifiableList(bendpoints);
 	}
 	
-	public void addBendpoints(List<Point> bendpoints) {
+	public void addBendpoints(List<FDWireBendpoint> bendpoints) {
 		if ( bendpoints.size()>0 ) {
 			this.bendpoints.addAll(bendpoints);
 		}
