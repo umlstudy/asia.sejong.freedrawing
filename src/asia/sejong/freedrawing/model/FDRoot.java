@@ -39,6 +39,33 @@ public class FDRoot implements FDContainer {
 		
 		return new Point(x, y);
 	}
+
+	public void addWire(FDWire wire) {
+		Assert.isTrue(!wires.contains(wire));
+		
+		wires.add(wire);
+		
+		wire.getSource().addWire(wire);
+		
+		for (FDRootListener l : listeners) {
+			l.wireAdded(wire);
+		}
+	}
+
+	public void removeWire(FDWire wire) {
+		Assert.isTrue(wires.contains(wire));
+		
+		wires.remove(wire);
+		
+		wire.getSource().removeWire(wire);
+		
+		for (FDRootListener l : listeners) {
+			l.wireRemoved(wire);
+		}
+	}
+	
+	//============================================================
+	// FDContainer
 	
 	@Override
 	public void addShape(FDShape target) {
@@ -74,31 +101,8 @@ public class FDRoot implements FDContainer {
 			l.childShapeRemoved(target);
 		}
 	}
-
-	public void addWire(FDWire wire) {
-		Assert.isTrue(!wires.contains(wire));
-		
-		wires.add(wire);
-		
-		wire.getSource().addWire(wire);
-		
-		for (FDRootListener l : listeners) {
-			l.wireAdded(wire);
-		}
-	}
-
-	public void removeWire(FDWire wire) {
-		Assert.isTrue(wires.contains(wire));
-		
-		wires.remove(wire);
-		
-		wire.getSource().removeWire(wire);
-		
-		for (FDRootListener l : listeners) {
-			l.wireRemoved(wire);
-		}
-	}
 	
+	@Override
 	public int changePosition(int newPosition, FDShape target) {
 		Assert.isTrue(childElements.contains(target));
 		
@@ -116,85 +120,6 @@ public class FDRoot implements FDContainer {
 		
 		return oldPosition;
 	}
-	
-//	public int changeToFront(FDNode target) {
-//		if ( !childElements.contains(target) ) {
-//			throw new RuntimeException();
-//		}
-//		
-//		int position = childElements.indexOf(target);
-//		
-//		childElements.remove(target);
-//		childElements.add(target);
-//		
-//		for (FDContainerListener l : listeners) {
-//			l.changeToFront(target);
-//		}
-//		
-//		return position;
-//	}
-//	
-//	public int changeToBack(FDNode target) {
-//		if ( !childElements.contains(target) ) {
-//			throw new RuntimeException();
-//		}
-//		int position = childElements.indexOf(target);
-//		
-//		childElements.remove(target);
-//		childElements.add(0, target);
-//		
-//		for (FDContainerListener l : listeners) {
-//			l.changeToBack(target);
-//		}
-//		
-//		return position;
-//	}
-	
-//	public void addConnection(FDConnection child) {
-//		childConnections.add(child);
-//	}
-//	
-//	public FDConnection createOrFindConnection(FDNode source, FDNode target) {
-//		if ( source == null || source == target ) {
-//			return null;
-//		}
-//		FDConnection fdConnection = new FDConnection();
-//		fdConnection.setSource(source);
-//		fdConnection.setTarget(target);
-//		
-//		for ( FDConnection item : childConnections ) {
-//			if ( item.equals(fdConnection) ) {
-//				return item;
-//			}
-//		}
-//		
-//		childConnections.add(fdConnection);
-//		
-//		return fdConnection;
-//	}
-//	
-//	public FDConnection findConnection(FDNode source, FDNode target) {
-//		if ( source == null || source == target ) {
-//			return null;
-//		}
-//		FDConnection fdConnection = new FDConnection();
-//		fdConnection.setSource(source);
-//		fdConnection.setTarget(target);
-//		
-//		for ( FDConnection item : childConnections ) {
-//			if ( item.equals(fdConnection) ) {
-//				return item;
-//			}
-//		}
-//		
-//		return null;
-//	}
-//	
-//	public void removeConnection(FDConnection conn) {
-//		if ( conn != null ) {
-//			childConnections.remove(conn);
-//		}
-//	}
 	
 	//============================================================
 	// Listeners

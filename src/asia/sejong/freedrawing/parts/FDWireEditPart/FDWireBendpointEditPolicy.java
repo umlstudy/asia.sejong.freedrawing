@@ -9,6 +9,7 @@ import asia.sejong.freedrawing.parts.FDWireEditPart.command.FDWireBendpointDelet
 import asia.sejong.freedrawing.parts.FDWireEditPart.command.FDWireBendpointMoveCommand;
 
 public class FDWireBendpointEditPolicy extends BendpointEditPolicy {
+	
 	@Override
 	protected Command getMoveBendpointCommand(BendpointRequest request) {
 		return new FDWireBendpointMoveCommand(request);

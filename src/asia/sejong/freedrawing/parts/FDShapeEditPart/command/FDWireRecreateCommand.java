@@ -15,6 +15,7 @@ public class FDWireRecreateCommand extends FDWireCreateCommand {
 		this.oldWire = oldWire;
 	}
 
+	@Override
 	public void execute() {
 		if ( newWire == null ) {
 			newWire = FDWire.newInstance__(source, target);
@@ -22,16 +23,12 @@ public class FDWireRecreateCommand extends FDWireCreateCommand {
 		}
 		getRoot().removeWire(oldWire);
 		getRoot().addWire(newWire);
-		
-//		getRoot().removeWire(oldWire);
-//		getRoot().addWire(oldWire);
 	}
 	
+	@Override
 	public void undo() {
 		getRoot().removeWire(newWire);
 		getRoot().addWire(oldWire);
-//		getRoot().removeWire(oldWire);
-//		getRoot().addWire(oldWire);
 	}
 	
 	public boolean isValidSourceAndTarget() {
@@ -45,13 +42,4 @@ public class FDWireRecreateCommand extends FDWireCreateCommand {
 		
 		return true;
 	}
-
-//	
-//	public FDNode getTarget() {
-//		return target;
-//	}
-//
-//	public FDNode getSource() {
-//		return source;
-//	}
 }

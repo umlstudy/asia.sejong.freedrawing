@@ -41,11 +41,18 @@ public class FDWireEditPart extends AbstractConnectionEditPart implements FDWire
 	public FDWireEditPart(FDWire connection) {
 		setModel(connection);
 	}
+	
+	@Override
+	protected IFigure createFigure() {
+		return createWireFigure(true);
+	}
 
+	@Override
 	public FDWire getModel() {
 		return (FDWire) super.getModel();
 	}
 	
+	@Override
 	public FDWireFigure getFigure() {
 		return (FDWireFigure)super.getFigure();
 	}
@@ -54,45 +61,6 @@ public class FDWireEditPart extends AbstractConnectionEditPart implements FDWire
 		return (PolylineConnection)getFigure();
 	}
 	
-	// TODO FOR DEBUG
-	public Command getCommand(Request request) {
-		Command command = super.getCommand(request);
-		ForEditPart.traceRequest(this, request, command);
-		return command;
-	}
-	
-//	@Override
-//	public void sourceChanged(FDElement sourceModel) {
-//		DebugUtil.printLogStart();
-//		EditPart originalSourceEditPart = getSource();
-//		Map<?, ?> registry = getViewer().getEditPartRegistry();
-//		if ( registry.get(sourceModel) != originalSourceEditPart ) {
-//			if ( registry.get(sourceModel) instanceof AbstractFDNodeEditPart ) {
-//				AbstractFDNodeEditPart newEditPart = (AbstractFDNodeEditPart)registry.get(sourceModel);
-//				setSource(newEditPart);
-//			}
-//		}
-//		DebugUtil.printLogEnd();
-//	}
-//
-//	@Override
-//	public void targetChanged(FDElement targetModel) {
-//		DebugUtil.printLogStart();
-//		EditPart originalTargetEditPart = getTarget();
-//		Map<?, ?> registry = getViewer().getEditPartRegistry();
-//		if ( registry.get(targetModel) != originalTargetEditPart ) {
-//			if ( registry.get(targetModel) instanceof AbstractFDNodeEditPart ) {
-//				AbstractFDNodeEditPart newEditPart = (AbstractFDNodeEditPart)registry.get(targetModel);
-//				setTarget(newEditPart);
-//			}
-//		}
-//		DebugUtil.printLogEnd();
-//	}
-	
-	protected IFigure createFigure() {
-		return createWireFigure(true);
-	}
-
 	public static FDWireFigure createWireFigure(boolean custom) {
 		FDWireFigure wireFigure = null;
 		if ( custom ) {
@@ -121,54 +89,14 @@ public class FDWireEditPart extends AbstractConnectionEditPart implements FDWire
 	private final FDRoot getRootModel() {
 		return (FDRoot)getViewer().getContents().getModel();
 	}
-	
-//	/**
-//	 * Answer a new command to recreate the receiver
-//	 */
-//	public CreateConnectionCommand recreateCommand() {
-//		CreateConnectionCommand cmd;
-//		if (getModel().isOffspringConnection()) {
-//			cmd = new CreateOffspringConnectionCommand(getModel().marriage);
-//			cmd.setTarget(getModel().person);
-//		}
-//		else {
-//			cmd = new CreateSpouseConnectionCommand(getModel().person);
-//			cmd.setTarget(getModel().marriage);
-//		}
-//		return cmd;
-//	}
 
-	/**
-	 * Extend the superclass implementation to provide MarriageAnchor for MarriageFigures
-	 * so that the connection terminates along the outside of the MarriageFigure rather
-	 * than at the MarriageFigure's bounding box.
-	 */
+	@Override
 	protected ConnectionAnchor getSourceConnectionAnchor() {
-		/*
-		 * Rather than implementing the getSourceConnectionAnchor() in this class,
-		 * modify MarriageEditPart to implement the NodeEditPart interface
-		 */
-		//if (getSource() instanceof MarriageEditPart) {
-		//	MarriageEditPart editPart = (MarriageEditPart) getSource();
-		//	return new MarriageAnchor(editPart.getFigure());
-		//}
 		return super.getSourceConnectionAnchor();
 	}
 
-	/**
-	 * Extend the superclass implementation to provide MarriageAnchor for MarriageFigures
-	 * so that the connection terminates along the outside of the MarriageFigure rather
-	 * than at the MarriageFigure's bounding box.
-	 */
+	@Override
 	protected ConnectionAnchor getTargetConnectionAnchor() {
-		/*
-		 * Rather than implementing the getSourceConnectionAnchor() in this class,
-		 * modify MarriageEditPart to implement the NodeEditPart interface
-		 */
-		//if (getTarget() instanceof MarriageEditPart) {
-		//	MarriageEditPart editPart = (MarriageEditPart) getTarget();
-		//	return new MarriageAnchor(editPart.getFigure());
-		//}
 		return super.getTargetConnectionAnchor();
 	}
 	
@@ -188,17 +116,6 @@ public class FDWireEditPart extends AbstractConnectionEditPart implements FDWire
 		});
 		
 		installEditPolicy(EditPolicy.CONNECTION_BENDPOINTS_ROLE, new FDWireBendpointEditPolicy());
-	}
-
-//	public FDWireRecreateCommand createRecreateCommand() {
-//		FDWireRecreateCommand cmd = new FDWireRecreateCommand(getRootModel(), getModel());
-////		cmd.setSource(getSource().getModel());
-////		cmd.setTarget(getTarget().getModel());
-//		return cmd;
-//	}
-	
-	public void deactivate() {
-		super.deactivate();
 	}
 	
 	private List<Bendpoint> getBendpoints() {
@@ -224,6 +141,21 @@ public class FDWireEditPart extends AbstractConnectionEditPart implements FDWire
 			}
 			connectionRouter.setConstraint(connection, bendpoints);
 		}
+	}
+	
+	//============================================================
+	// For Debug
+	
+	@Override
+	public Command getCommand(Request request) {
+		Command command = super.getCommand(request);
+		ForEditPart.traceRequest(this, request, command);
+		return command;
+	}
+	
+	@Override
+	public void deactivate() {
+		super.deactivate();
 	}
 	
 	//============================================================

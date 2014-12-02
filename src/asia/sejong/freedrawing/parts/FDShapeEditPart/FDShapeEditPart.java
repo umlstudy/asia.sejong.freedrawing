@@ -90,18 +90,22 @@ public abstract class FDShapeEditPart extends AbstractGraphicalEditPart implemen
 		*/
 	}
 	
+	@Override
 	public ConnectionAnchor getSourceConnectionAnchor(ConnectionEditPart connection) {
 		return new ChopboxAnchor(getFigure());
 	}
 
+	@Override
 	public ConnectionAnchor getSourceConnectionAnchor(Request request) {
 		return new ChopboxAnchor(getFigure());
 	}
 
+	@Override
 	public ConnectionAnchor getTargetConnectionAnchor(ConnectionEditPart connection) {
 		return new ChopboxAnchor(getFigure());
 	}
 
+	@Override
 	public ConnectionAnchor getTargetConnectionAnchor(Request request) {
 		return new ChopboxAnchor(getFigure());
 		// create 와 recreate 에 따른 화살표 모양 생성 가능
@@ -121,11 +125,10 @@ public abstract class FDShapeEditPart extends AbstractGraphicalEditPart implemen
 	
 	/**
 	 * 노드위로 노드가 지나갈 때 무브 액션이 활성화 되도록 함
-	 * @see org.eclipse.gef.editparts.AbstractEditPart#getTargetEditPart(org.eclipse.gef.Request)
 	 */
+	@Override
 	public EditPart getTargetEditPart(Request request) {
 		EditPart targetEditPart = super.getTargetEditPart(request);
-//		System.out.println("TARGET EDITPART ? " + request + "," + targetEditPart);
 		if ( request instanceof ChangeBoundsRequest && targetEditPart instanceof FDRectEditPart ) {
 			return targetEditPart.getParent();
 		}
@@ -134,6 +137,7 @@ public abstract class FDShapeEditPart extends AbstractGraphicalEditPart implemen
 
 	//============================================================
 	// protected method adapter
+	
 	public void addSourceConnection(FDWireEditPart wireEditPart) {
 		addSourceConnection(wireEditPart, 0);
 	}
@@ -152,6 +156,7 @@ public abstract class FDShapeEditPart extends AbstractGraphicalEditPart implemen
 	
 	//============================================================
 	// For Debug
+	
 	public DragTracker getDragTracker(Request request) {
 		return new org.eclipse.gef.tools.DragEditPartsTracker(this) {
 			protected Command getCommand() {
@@ -172,6 +177,7 @@ public abstract class FDShapeEditPart extends AbstractGraphicalEditPart implemen
 	
 	//============================================================
 	// AbstractGraphicalEditPart
+	
 	public void addNotify() {
 		super.addNotify();
 		((FDShape)getModel()).addListener(this);

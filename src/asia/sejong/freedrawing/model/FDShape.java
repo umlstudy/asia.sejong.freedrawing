@@ -138,6 +138,7 @@ public abstract class FDShape extends FDElement {
 
 	//============================================================
 	// Clonable
+	
 	public FDShape clone() {
 		
 		FDShape shape = (FDShape)super.clone();
@@ -155,6 +156,7 @@ public abstract class FDShape extends FDElement {
 
 	//============================================================
 	// FDShapeListener
+	
 	protected void fireLocationChanged(int newX, int newY) {
 		for (FDElementListener l : listeners) {
 			((FDShapeListener)l).locationChanged(newX, newY);

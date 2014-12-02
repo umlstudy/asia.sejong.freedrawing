@@ -16,6 +16,7 @@ public class FDWireCreateCommand extends FDWireCommand {
 		setLabel("Create " + getWireName());
 	}
 
+	@Override
 	public void execute() {
 		if ( createdWire == null ) {
 			createdWire = FDWire.newInstance__(source, target);
@@ -24,6 +25,7 @@ public class FDWireCreateCommand extends FDWireCommand {
 		getRoot().addWire(createdWire);
 	}
 	
+	@Override
 	public void undo() {
 		getRoot().removeWire(createdWire);
 	}
@@ -64,34 +66,6 @@ public class FDWireCreateCommand extends FDWireCommand {
 		this.target = (FDRect)target;
 	}
 
-//	public boolean isValidSource(Object source) {
-//		if ( source instanceof FDRect && source != target ) {
-//			return true;
-//		}
-//		return false;
-//	}
-//
-//	public boolean isValidTarget(Object target) {
-//		if ( source != null && target instanceof FDRect && source != target ) {
-//			if ( !source.containsTarget((FDRect)target) ) {
-//				return true;
-//			}
-//		}
-//		return false;
-//	}
-//
-//	public void setSource(Object source) {
-//		if ( isValidSource(source) ) {
-//			this.source = (FDRect)source;
-//		}
-//	}
-//
-//	public void setTarget(Object target) {
-//		if ( isValidTarget(target) ) {
-//			this.target = (FDRect)target;
-//		}
-//	}
-	
 	public FDRect getSource() {
 		return source;
 	}

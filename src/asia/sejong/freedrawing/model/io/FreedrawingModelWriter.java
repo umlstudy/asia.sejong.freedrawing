@@ -6,22 +6,22 @@ import asia.sejong.freedrawing.model.FDRoot;
 
 public class FreedrawingModelWriter {
 
-	private FDRoot nodeRoot;
+	private FDRoot root;
 
-	private FreedrawingModelWriter(FDRoot nodeRoot) {
-		this.setNodeRoot(nodeRoot);
+	private FreedrawingModelWriter(FDRoot root) {
+		this.setNodeRoot(root);
 	}
 
-	public static FreedrawingModelWriter newInstance( FDRoot nodeRoot) {
-		return new FreedrawingModelWriter(nodeRoot);
+	public static FreedrawingModelWriter newInstance( FDRoot root) {
+		return new FreedrawingModelWriter(root);
 	}
 
 	public FDRoot getNodeRoot() {
-		return nodeRoot;
+		return root;
 	}
 
-	public void setNodeRoot(FDRoot nodeRoot) {
-		this.nodeRoot = nodeRoot;
+	private void setNodeRoot(FDRoot root) {
+		this.root = root;
 	}
 
 	public void write(PrintWriter printWriter) {

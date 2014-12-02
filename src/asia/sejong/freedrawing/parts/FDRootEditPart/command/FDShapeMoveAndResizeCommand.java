@@ -27,17 +27,17 @@ public class FDShapeMoveAndResizeCommand extends Command
 	/**
 	 * Move and resize the {@link FDRect}
 	 */
+	@Override
 	public void execute() {
 		oldRect = new Rectangle(node.getX(), node.getY(), node.getWidth(), node.getHeight());
-//		System.out.println("oldRect ? " + oldRect);
 		node.setLocation(rect.x, rect.y);
-//		System.out.println("newRect ? " + rect);
 		node.setSize(rect.width, rect.height);
 	}
 	
 	/**
 	 * Restore the {@link FDRect} to its original location and size
 	 */
+	@Override
 	public void undo() {
 		node.setLocation(oldRect.x, oldRect.y);
 		node.setSize(oldRect.width, oldRect.height);

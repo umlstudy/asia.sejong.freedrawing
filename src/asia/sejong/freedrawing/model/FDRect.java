@@ -8,6 +8,7 @@ public class FDRect extends FDTextShape {
 	
 	//============================================================
 	// Clonable
+	
 	@Override
 	public FDRect clone() {
 		FDRect rect = (FDRect)super.clone();

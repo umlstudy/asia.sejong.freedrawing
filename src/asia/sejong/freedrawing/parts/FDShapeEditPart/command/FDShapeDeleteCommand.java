@@ -13,9 +13,7 @@ public class FDShapeDeleteCommand extends Command
 	private final FDRoot nodeRoot;
 	private final FDShape target;
 	
-//	private Set<FDRect> removedSources;
 	private ArrayList<FDWire> removedSourceWires;
-//	private Set<FDRect> removedTargets;
 	private ArrayList<FDWire> removedTargetWires;
 
 	public FDShapeDeleteCommand(FDRoot nodeRoot, FDShape target) {
@@ -30,18 +28,13 @@ public class FDShapeDeleteCommand extends Command
 	/**
 	 * Delete the connection
 	 */
+	@Override
 	public void execute() {
 		removedSourceWires.clear();
 		removedTargetWires.clear();
 		
-//		removedSources = target.getSources();
 		removedSourceWires.addAll(target.getIncommingWires());
-		
-//		removedTargets = target.getTargets();
 		removedTargetWires.addAll(target.getOutgoingWires());
-//		for ( FDRect targetOfTarget : target.getTargets() ) {
-//			removedTargetWires.put(targetOfTarget, target.removeTarget(targetOfTarget));
-//		}
 		
 		nodeRoot.removeShape(target);
 	}
@@ -49,6 +42,7 @@ public class FDShapeDeleteCommand extends Command
 	/**
 	 * Restore the connection
 	 */
+	@Override
 	public void undo() {
 		
 		nodeRoot.addShape(target);

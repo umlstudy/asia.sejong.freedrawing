@@ -6,6 +6,5 @@ import asia.sejong.freedrawing.model.FDWire;
 public interface FDRootListener extends FDContainerListener {
 	
 	void wireAdded(FDWire wire);
-
 	void wireRemoved(FDWire wire);
 }

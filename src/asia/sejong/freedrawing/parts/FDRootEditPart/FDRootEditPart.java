@@ -54,17 +54,6 @@ public class FDRootEditPart extends AbstractGraphicalEditPart implements FDRootL
 		return figure;
 	}
 
-//	/**
-//	 * Return a collection of top level genealogy model objects to be displayed
-//	 */
-//	protected List<GenealogyElement> getModelChildren() {
-//		List<GenealogyElement> allObjects = new ArrayList<GenealogyElement>();
-//		allObjects.addAll(getModel().getMarriages());
-//		allObjects.addAll(getModel().getPeople());
-//		allObjects.addAll(getModel().getNotes());
-//		return allObjects;
-//	}
-
 	protected void createEditPolicies() {
 		
 		// Disallows the removal of this edit part from its parent
@@ -77,29 +66,17 @@ public class FDRootEditPart extends AbstractGraphicalEditPart implements FDRootL
 		installEditPolicy("Snap Feedback", new SnapFeedbackPolicy()); //$NON-NLS-1$
 	}
 	
-	// TODO FOR DEBUG
+	// ==========================================================================
+	// For Debug
+	
 	public Command getCommand(Request request) {
 		Command command = super.getCommand(request);
 		ForEditPart.traceRequest(this, request, command);
 		return command;
 	}
 	
-	// ===============================================================
+	// ==========================================================================
 	// FDRootNodeListener
-
-	@Override
-	public void childShapeAdded(FDShape child) {
-		//addChild(createChild(child), 0);
-		addChild(createChild(child), -1);
-	}
-	
-	@Override
-	public void childShapeRemoved(FDShape child) {
-		Object part = getViewer().getEditPartRegistry().get(child);
-		if (part instanceof EditPart) {
-			removeChild((EditPart) part);
-		}
-	}
 	
 	@Override
 	public void wireAdded(FDWire wire) {
@@ -138,6 +115,22 @@ public class FDRootEditPart extends AbstractGraphicalEditPart implements FDRootL
 		removeChild(wireEditPart);
 	} 
 	
+	// ===============================================================
+	// FDContainerListener
+
+	@Override
+	public void childShapeAdded(FDShape child) {
+		addChild(createChild(child), -1);
+	}
+	
+	@Override
+	public void childShapeRemoved(FDShape child) {
+		Object part = getViewer().getEditPartRegistry().get(child);
+		if (part instanceof EditPart) {
+			removeChild((EditPart) part);
+		}
+	}
+	
 	@Override
 	public void positionChanged(int newPosition, FDShape child) {
 		Object childPart = getViewer().getEditPartRegistry().get(child);
@@ -151,88 +144,21 @@ public class FDRootEditPart extends AbstractGraphicalEditPart implements FDRootL
 		}
 	}
 
-	/**
-	 * Override the superclass implementation so that the receiver
-	 * can add itself as a listener to the underlying model object
-	 */
+	// ==========================================================================
+	// AbstractGraphicalEditPart
+
+	@Override
 	public void addNotify() {
 		super.addNotify();
 		getModel().addNodeRootListener(this);
 	}
 	
-	/**
-	 * Override the superclass implementation so that the receiver
-	 * can stop listening to events from the underlying model object
-	 */
+	@Override
 	public void removeNotify() {
 		getModel().removeNodeRootListener(this);
 		super.removeNotify();
 	}
 
-//	// ===============================================================
-//	// GenealogyGraphListener
-//
-//	/**
-//	 * When a person is added to the model,
-//	 * add a new EditPart to manage the corresponding figure.
-//	 */
-//	public void personAdded(Person p) {
-//		addChild(createChild(p), 0);
-//	}
-//
-//	/**
-//	 * When a person is removed from the model,
-//	 * find and remove the corresponding edit part
-//	 */
-//	public void personRemoved(Person p) {
-//		genealogyElementRemoved(p);
-//	}
-//
-//	/**
-//	 * When a marriage is added to the model,
-//	 * add a new EditPart to manage the corresponding figure.
-//	 */
-//	public void marriageAdded(Marriage m) {
-//		addChild(createChild(m), 0);
-//	}
-//
-//	/**
-//	 * When a marriage is removed from the model,
-//	 * find and remove the corresponding edit part
-//	 */
-//	public void marriageRemoved(Marriage m) {
-//		genealogyElementRemoved(m);
-//	}
-//
-//	/**
-//	 * When a note is added to the model,
-//	 * add a new EditPart to manage the corresponding figure.
-//	 */
-//	public void noteAdded(int index, Note n) {
-//		addChild(createChild(n), index);
-//	}
-//
-//	/**
-//	 * When a note is removed from the model,
-//	 * find and remove the corresponding edit part
-//	 */
-//	public void noteRemoved(Note n) {
-//		genealogyElementRemoved(n);
-//	}
-//
-//	/**
-//	 * When an element is removed from the model,
-//	 * find and remove the corresponding edit part
-//	 */
-//	private void genealogyElementRemoved(GenealogyElement elem) {
-//		Object part = getViewer().getEditPartRegistry().get(elem);
-//		if (part instanceof EditPart)
-//			removeChild((EditPart) part);
-//	}
-//
-//	public void graphCleared() {
-//	}
-	
 	@Override 
 	public Object getAdapter(@SuppressWarnings("rawtypes") Class key) {
 	    if (key == SnapToHelper.class) {
