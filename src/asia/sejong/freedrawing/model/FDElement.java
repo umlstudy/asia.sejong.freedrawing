@@ -1,10 +1,17 @@
 package asia.sejong.freedrawing.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.eclipse.swt.graphics.RGB;
+
+import asia.sejong.freedrawing.model.listener.FDElementListener;
 
 public abstract class FDElement implements Cloneable {
 	
 	private RGB borderColor;
+	
+	transient protected Set<FDElementListener> listeners = new HashSet<FDElementListener>();
 
 	public RGB getBorderColor() {
 		return borderColor;
@@ -17,18 +24,31 @@ public abstract class FDElement implements Cloneable {
 		fireBorderColorChanged(borderColor);
 	}
 
-	protected abstract void fireBorderColorChanged(RGB borderColor);
+	protected void fireBorderColorChanged(RGB rgbColor) {
+		for (FDElementListener l : listeners) {
+			l.borderColorChanged(rgbColor);
+		}
+	}
 	
+	//============================================================
+	// Listener add and remove
+	public void addListener(FDElementListener listener ) {
+		if ( listener != null ) {
+			listeners.add(listener);
+		}
+	}
+
+	public void removeListener(FDElementListener listener ) {
+		if ( listener != null ) {
+			listeners.remove(listener);
+		}
+	}
+	
+	//============================================================
+	// FDElement
+	@Override
 	protected FDElement clone() {
 		
-//		Object cloned;
-//		try {
-//			cloned = super.clone();
-//		} catch (CloneNotSupportedException e) {
-//			throw new RuntimeException(e);
-//		}
-//		return (FDElement)cloned;
-//		
 		FDElement object = null;;
 		try {
 			object = (FDElement)this.getClass().newInstance();
@@ -39,6 +59,8 @@ public abstract class FDElement implements Cloneable {
 		return object;
 	}
 	
+	//============================================================
+	// Test
 	public static void main(String[] args) {
 		FDElement ele = new FDElement() {
 			
@@ -55,6 +77,5 @@ public abstract class FDElement implements Cloneable {
 		} catch ( Exception e) {
 			
 		}
-		
 	}
 }

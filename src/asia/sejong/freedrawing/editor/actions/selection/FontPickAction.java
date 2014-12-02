@@ -12,7 +12,7 @@ import org.eclipse.ui.IEditorPart;
 
 import asia.sejong.freedrawing.model.FontInfo;
 import asia.sejong.freedrawing.model.FDTextShape;
-import asia.sejong.freedrawing.parts.FDNodeEditPart.command.FontChangeCommand;
+import asia.sejong.freedrawing.parts.FDTextShapeEditPart.command.FontChangeCommand;
 
 public class FontPickAction extends SelectionAction {
 	

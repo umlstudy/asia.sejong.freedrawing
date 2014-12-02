@@ -13,7 +13,7 @@ import asia.sejong.freedrawing.model.listener.FDRootListener;
 
 public class FDRoot implements FDContainer {
 
-	private final List<FDRect> childElements = new ArrayList<FDRect>();
+	private final List<FDShape> childElements = new ArrayList<FDShape>();
 	private final List<FDWire> wires = new ArrayList<FDWire>();
 	
 	private final Collection<FDRootListener> listeners = new HashSet<FDRootListener>();
@@ -23,7 +23,7 @@ public class FDRoot implements FDContainer {
 	public Point getNextLocation(int x, int y) {
 		while ( true ) {
 			boolean alreadyExistInLocation = false;
-			for ( FDRect item : childElements ) {
+			for ( FDShape item : childElements ) {
 				if ( item.getX() == x && item.getY() == y ) {
 					alreadyExistInLocation = true;
 				}
@@ -41,19 +41,19 @@ public class FDRoot implements FDContainer {
 	}
 	
 	@Override
-	public void addNode(FDRect target) {
+	public void addShape(FDShape target) {
 		Assert.isTrue(!childElements.contains(target));
 
 		childElements.add(target);
 		target.setParent(this);
 		
 		for (FDRootListener l : listeners) {
-			l.childNodeAdded(target);
+			l.childShapeAdded(target);
 		}
 	}
 	
 	@Override
-	public void removeNode(FDRect target) {
+	public void removeShape(FDShape target) {
 		Assert.isTrue(childElements.contains(target));
 		
 		List<FDWire> copiedList = null;
@@ -71,7 +71,7 @@ public class FDRoot implements FDContainer {
 		target.setParent(null);
 		
 		for (FDRootListener l : listeners) {
-			l.childNodeRemoved(target);
+			l.childShapeRemoved(target);
 		}
 	}
 
@@ -99,7 +99,7 @@ public class FDRoot implements FDContainer {
 		}
 	}
 	
-	public int changePosition(int newPosition, FDRect target) {
+	public int changePosition(int newPosition, FDShape target) {
 		Assert.isTrue(childElements.contains(target));
 		
 		int oldPosition = childElements.indexOf(target);

@@ -21,13 +21,16 @@ import org.eclipse.gef.editpolicies.ConnectionEditPolicy;
 import org.eclipse.gef.editpolicies.ConnectionEndpointEditPolicy;
 import org.eclipse.gef.requests.GroupRequest;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.RGB;
 
 import asia.sejong.freedrawing.debug.ForEditPart;
 import asia.sejong.freedrawing.figures.FDWireFigure;
 import asia.sejong.freedrawing.model.FDRoot;
 import asia.sejong.freedrawing.model.FDWire;
 import asia.sejong.freedrawing.model.listener.FDWireListener;
-import asia.sejong.freedrawing.parts.FDNodeEditPart.command.FDWireDeleteCommand;
+import asia.sejong.freedrawing.parts.FDShapeEditPart.command.FDWireDeleteCommand;
+import asia.sejong.freedrawing.resources.ContextManager;
 
 public class FDWireEditPart extends AbstractConnectionEditPart implements FDWireListener {
 
@@ -41,6 +44,14 @@ public class FDWireEditPart extends AbstractConnectionEditPart implements FDWire
 
 	public FDWire getModel() {
 		return (FDWire) super.getModel();
+	}
+	
+	public FDWireFigure getFigure() {
+		return (FDWireFigure)super.getFigure();
+	}
+	
+	protected PolylineConnection getConnection() {
+		return (PolylineConnection)getFigure();
 	}
 	
 	// TODO FOR DEBUG
@@ -178,10 +189,6 @@ public class FDWireEditPart extends AbstractConnectionEditPart implements FDWire
 		
 		installEditPolicy(EditPolicy.CONNECTION_BENDPOINTS_ROLE, new FDWireBendpointEditPolicy());
 	}
-	
-	protected PolylineConnection getConnection() {
-		return (PolylineConnection)getFigure();
-	}
 
 //	public FDWireRecreateCommand createRecreateCommand() {
 //		FDWireRecreateCommand cmd = new FDWireRecreateCommand(getRootModel(), getModel());
@@ -219,6 +226,9 @@ public class FDWireEditPart extends AbstractConnectionEditPart implements FDWire
 		}
 	}
 	
+	//============================================================
+	// FDWireListener
+	
 	@Override
 	public void bendpointAdded(int locationIndex, Point location) {
 		List<Bendpoint> bendpoints = getBendpoints();
@@ -243,16 +253,29 @@ public class FDWireEditPart extends AbstractConnectionEditPart implements FDWire
 		
 		refresh();
 	}
+	
+	@Override
+	public void borderColorChanged(RGB rgbColor) {
+		Color color = null;
+		if ( rgbColor != null ) {
+			color = ContextManager.getInstance().getColorManager().get(rgbColor);
+			getFigure().setForegroundColor(color);
+			refresh();
+		}
+	}
 
+	//============================================================
+	// AbstractConnectionEditPart
+	
 	@Override
 	public void addNotify() {
 		super.addNotify();
-		getModel().addFDWireListener(this);
+		getModel().addListener(this);
 	}
 	
 	@Override
 	public void removeNotify() {
-		getModel().removeFDWireListener(this);
+		getModel().removeListener(this);
 		super.removeNotify();
 	}
 }

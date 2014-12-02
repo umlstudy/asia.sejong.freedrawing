@@ -26,9 +26,10 @@ import org.eclipse.gef.editpolicies.SnapFeedbackPolicy;
 import asia.sejong.freedrawing.debug.ForEditPart;
 import asia.sejong.freedrawing.model.FDRect;
 import asia.sejong.freedrawing.model.FDRoot;
+import asia.sejong.freedrawing.model.FDShape;
 import asia.sejong.freedrawing.model.FDWire;
 import asia.sejong.freedrawing.model.listener.FDRootListener;
-import asia.sejong.freedrawing.parts.FDNodeEditPart.FDNodeEditPart;
+import asia.sejong.freedrawing.parts.FDRectEditPart.FDRectEditPart;
 import asia.sejong.freedrawing.parts.FDWireEditPart.FDWireEditPart;
 
 /**
@@ -87,13 +88,13 @@ public class FDRootEditPart extends AbstractGraphicalEditPart implements FDRootL
 	// FDRootNodeListener
 
 	@Override
-	public void childNodeAdded(FDRect child) {
+	public void childShapeAdded(FDShape child) {
 		//addChild(createChild(child), 0);
 		addChild(createChild(child), -1);
 	}
 	
 	@Override
-	public void childNodeRemoved(FDRect child) {
+	public void childShapeRemoved(FDShape child) {
 		Object part = getViewer().getEditPartRegistry().get(child);
 		if (part instanceof EditPart) {
 			removeChild((EditPart) part);
@@ -109,10 +110,10 @@ public class FDRootEditPart extends AbstractGraphicalEditPart implements FDRootL
 		Assert.isTrue(wireEditPart == null);
 		wireEditPart = (FDWireEditPart)createConnection(wire);
 		
-		FDNodeEditPart sourceEditPart = (FDNodeEditPart)findEditPart(source);
+		FDRectEditPart sourceEditPart = (FDRectEditPart)findEditPart(source);
 		sourceEditPart.addSourceConnection(wireEditPart);
 		
-		FDNodeEditPart targetEditPart = (FDNodeEditPart)findEditPart(target);
+		FDRectEditPart targetEditPart = (FDRectEditPart)findEditPart(target);
 		targetEditPart.addTargetConnection(wireEditPart);
 		
 		for ( int idx=0; idx<wire.getBendpoints().size(); idx++ ) {
@@ -128,17 +129,17 @@ public class FDRootEditPart extends AbstractGraphicalEditPart implements FDRootL
 		FDWireEditPart wireEditPart = (FDWireEditPart)findEditPart(wire);
 		Assert.isTrue(wireEditPart != null);
 		
-		FDNodeEditPart sourceEditPart = (FDNodeEditPart)findEditPart(source);
+		FDRectEditPart sourceEditPart = (FDRectEditPart)findEditPart(source);
 		sourceEditPart.removeSourceConnection_(wireEditPart);
 		
-		FDNodeEditPart targetEditPart = (FDNodeEditPart)findEditPart(target);
+		FDRectEditPart targetEditPart = (FDRectEditPart)findEditPart(target);
 		targetEditPart.removeTargetConnection_(wireEditPart);
 		
 		removeChild(wireEditPart);
 	} 
 	
 	@Override
-	public void positionChanged(int newPosition, FDRect child) {
+	public void positionChanged(int newPosition, FDShape child) {
 		Object childPart = getViewer().getEditPartRegistry().get(child);
 		if (childPart instanceof GraphicalEditPart ) {
 			IFigure childFigure = ((GraphicalEditPart) childPart).getFigure();

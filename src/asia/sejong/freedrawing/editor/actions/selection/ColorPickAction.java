@@ -11,7 +11,7 @@ import org.eclipse.swt.widgets.ColorDialog;
 import org.eclipse.ui.IEditorPart;
 
 import asia.sejong.freedrawing.model.FDElement;
-import asia.sejong.freedrawing.parts.FDNodeEditPart.command.BorderColorChangeCommand;
+import asia.sejong.freedrawing.parts.FDShapeEditPart.command.BorderColorChangeCommand;
 
 
 public class ColorPickAction extends SelectionAction {

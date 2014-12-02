@@ -1,16 +1,16 @@
 package asia.sejong.freedrawing.model.listener;
 
-import asia.sejong.freedrawing.model.FDRect;
+import asia.sejong.freedrawing.model.FDShape;
 
 public interface FDContainerListener {
 	
-	void childNodeAdded(FDRect child);
+	void childShapeAdded(FDShape child);
 
-	void childNodeRemoved(FDRect child);
+	void childShapeRemoved(FDShape child);
 	
 //	void changeToFront(FDNode child);
 //
 //	void changeToBack(FDNode child);
 
-	void positionChanged(int newPosition, FDRect child);
+	void positionChanged(int newPosition, FDShape child);
 }

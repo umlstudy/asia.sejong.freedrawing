@@ -9,8 +9,8 @@ import org.eclipse.gef.ui.actions.SelectionAction;
 import org.eclipse.ui.IWorkbenchPart;
 
 import asia.sejong.freedrawing.model.FDRect;
-import asia.sejong.freedrawing.parts.FDNodeEditPart.command.ToBackZOrderCommand;
-import asia.sejong.freedrawing.parts.FDNodeEditPart.command.ToFrontZOrderCommand;
+import asia.sejong.freedrawing.parts.FDShapeEditPart.command.ToBackZOrderCommand;
+import asia.sejong.freedrawing.parts.FDShapeEditPart.command.ToFrontZOrderCommand;
 
 public class ChangeZOrderAction extends SelectionAction {
 

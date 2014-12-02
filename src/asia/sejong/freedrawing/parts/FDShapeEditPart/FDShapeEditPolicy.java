@@ -1,4 +1,4 @@
-package asia.sejong.freedrawing.parts.FDNodeEditPart;
+package asia.sejong.freedrawing.parts.FDShapeEditPart;
 
 import org.eclipse.draw2d.Connection;
 import org.eclipse.gef.Request;
@@ -10,26 +10,16 @@ import org.eclipse.gef.requests.ReconnectRequest;
 import asia.sejong.freedrawing.model.FDRect;
 import asia.sejong.freedrawing.model.FDRoot;
 import asia.sejong.freedrawing.model.FDWire;
-import asia.sejong.freedrawing.parts.FDNodeEditPart.command.FDWireCreateCommand;
-import asia.sejong.freedrawing.parts.FDNodeEditPart.command.FDWireRecreateCommand;
+import asia.sejong.freedrawing.parts.FDShapeEditPart.command.FDWireCreateCommand;
+import asia.sejong.freedrawing.parts.FDShapeEditPart.command.FDWireRecreateCommand;
 import asia.sejong.freedrawing.parts.FDWireEditPart.FDWireEditPart;
 
-public class FDNodeEditPolicy extends GraphicalNodeEditPolicy {
+public class FDShapeEditPolicy extends GraphicalNodeEditPolicy {
 	
 	private FDRoot getRoot() {
 		return (FDRoot)getHost().getViewer().getContents().getModel();
 	}
 
-//	/**
-//	 * Answer a new connection command for the receiver.
-//	 */
-//	public FDWireCreateCommand createConnectionCommand() {
-//		if ( getHost().getModel() instanceof FDRect ) {
-//			return new FDWireCreateCommand(root);
-//		}
-//		return null;
-//	}
-//	
 	protected Command getConnectionCompleteCommand(CreateConnectionRequest request) {
 		if ( !(request.getStartCommand() instanceof FDWireCreateCommand) ) {
 			return null;
@@ -48,9 +38,6 @@ public class FDNodeEditPolicy extends GraphicalNodeEditPolicy {
 		return wireCreateCommand;
 	}
 
-	/**
-	 * Return a new connection command with the receiver's model as the "source".
-	 */
 	protected Command getConnectionCreateCommand(CreateConnectionRequest request) {
 		Object source = request.getTargetEditPart().getModel();
 		if (!FDWireCreateCommand.isValidSource__(source)) {
@@ -83,10 +70,6 @@ public class FDNodeEditPolicy extends GraphicalNodeEditPolicy {
 		if ( !wireRecreateCommand.isValidSourceAndTarget() ) {
 			return null;
 		}
-//		Command deleteConnCmd = new FDWireDeleteCommand(root, currentWireEditPart.getModel());
-//		Command modifyConnCmd = deleteConnCmd.chain(wireRecreateCommand);
-//		modifyConnCmd.setLabel("Modify " + wireRecreateCommand.getWireName());
-		
 		return wireRecreateCommand;
 	}
 
@@ -105,10 +88,6 @@ public class FDNodeEditPolicy extends GraphicalNodeEditPolicy {
 		if ( !wireRecreateCommand.isValidSourceAndTarget() ) {
 			return null;
 		}
-//		Command deleteConnCmd = new FDWireDeleteCommand(root, currentWireEditPart.getModel());
-//		Command modifyConnCmd = deleteConnCmd.chain(wireRecreateCommand);
-//		modifyConnCmd.setLabel("Modify " + wireRecreateCommand.getWireName());
-		
 		return wireRecreateCommand;
 	}
 }

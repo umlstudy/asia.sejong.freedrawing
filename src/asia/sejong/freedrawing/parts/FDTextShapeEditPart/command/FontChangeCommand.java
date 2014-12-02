@@ -1,4 +1,4 @@
-package asia.sejong.freedrawing.parts.FDNodeEditPart.command;
+package asia.sejong.freedrawing.parts.FDTextShapeEditPart.command;
 
 import java.util.HashMap;
 import java.util.List;

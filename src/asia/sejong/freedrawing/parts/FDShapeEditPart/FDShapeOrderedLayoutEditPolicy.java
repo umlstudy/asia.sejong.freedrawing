@@ -1,4 +1,4 @@
-package asia.sejong.freedrawing.parts.FDNodeEditPart;
+package asia.sejong.freedrawing.parts.FDShapeEditPart;
 
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.Request;
@@ -11,7 +11,7 @@ import org.eclipse.gef.requests.CreateRequest;
  * @author SeJong
  *
  */
-public class FDNodeOrderedLayoutEditPolicy extends OrderedLayoutEditPolicy {
+public class FDShapeOrderedLayoutEditPolicy extends OrderedLayoutEditPolicy {
 
 	protected Command getCreateCommand(CreateRequest request) {
 //		Object type = request.getNewObjectType();

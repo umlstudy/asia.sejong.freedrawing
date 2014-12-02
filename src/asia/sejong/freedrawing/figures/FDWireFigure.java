@@ -55,7 +55,10 @@ public class FDWireFigure extends PolylineConnection {
 			}
 		}
 		g.setAntialias(SWT.ON);
-		g.setForegroundColor(display.getSystemColor(SWT.COLOR_DARK_BLUE));
+		
+		if ( getForegroundColor() != null ) {
+			g.setForegroundColor(getForegroundColor());
+		}
 		g.setLineWidth(2);
 		g.setAlpha(180);
 		g.setInterpolation(SWT.HIGH);
@@ -114,8 +117,6 @@ public class FDWireFigure extends PolylineConnection {
 		p2 = new Point(10, 200);
 		System.out.printf("x: %d, y: %d\n", 0, getY(p1, p2, 0));
 		System.out.printf("x: %d, y: %d\n", 300, getY(p1, p2, 300));
-		
-		
 	}
 	
 	public Point getBezierPoint(Point sp, Point ep, int maxCurbe, double defaultRate) {
@@ -133,7 +134,6 @@ public class FDWireFigure extends PolylineConnection {
 
 		int beizerLocX = sp.x>ep.x? ep.x + relativeBeizerLocX : ep.x - relativeBeizerLocX;
 		int beizerLocY = sp.y>ep.y? ep.y + relativeBeizerLocY : ep.y - relativeBeizerLocY;
-		
 		
 		return new Point(beizerLocX, beizerLocY);
 	}

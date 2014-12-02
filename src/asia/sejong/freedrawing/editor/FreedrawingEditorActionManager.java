@@ -40,7 +40,7 @@ import asia.sejong.freedrawing.editor.actions.palette.PaletteIconChangable;
 import asia.sejong.freedrawing.editor.actions.selection.CopyToClipboardAction;
 import asia.sejong.freedrawing.editor.actions.selection.PasteFromClipboardAction;
 import asia.sejong.freedrawing.editor.tools.FDPanningSelectionTool;
-import asia.sejong.freedrawing.parts.FDNodeEditPart.FDNodeEditPart;
+import asia.sejong.freedrawing.parts.FDRectEditPart.FDRectEditPart;
 import asia.sejong.freedrawing.resources.IconManager.IconType;
 
 public class FreedrawingEditorActionManager implements FreedrawingEditDomainListener {
@@ -318,7 +318,7 @@ public class FreedrawingEditorActionManager implements FreedrawingEditDomainList
 		EditDomain editDomain = editor.getEditDomain();
 		
 		if ( editDomain.getActiveTool() instanceof FDPanningSelectionTool ) {
-			if ( targetEditPart instanceof FDNodeEditPart ) {
+			if ( targetEditPart instanceof FDRectEditPart ) {
 				contextMenuManger.add(registry.getAction(SelectionActionFactory.FONT_PICK.getId()));
 				contextMenuManger.add(registry.getAction(SelectionActionFactory.ZORDER_TO_FRONT.getId()));
 				contextMenuManger.add(registry.getAction(SelectionActionFactory.ZORDER_TO_BACK.getId()));
