@@ -1,4 +1,4 @@
-package asia.sejong.freedrawing.parts.FDRootEditPart.command;
+package asia.sejong.freedrawing.parts.FDContainerEditPart.command;
 
 import org.eclipse.gef.commands.Command;
 

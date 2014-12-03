@@ -69,6 +69,30 @@ public class FDWire extends FDElement {
 			this.bendpoints.addAll(bendpoints);
 		}
 	}
+
+	public void applyBendpointsDelta(Point delta) {
+		for ( FDWireBendpoint bp : bendpoints ) {
+			bp.applyDelta(delta);
+		}
+	}
+	
+	//============================================================
+	// Clonable
+	
+	@Override
+	public FDWire clone() {
+		
+		FDWire object = null;;
+		try {
+			object = (FDWire)this.getClass().newInstance();
+			for ( FDWireBendpoint bp : bendpoints ) {
+				object.bendpoints.add((FDWireBendpoint)bp.clone());
+			}
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		return object;
+	}
 	
 	//============================================================
 	// FDWireListener

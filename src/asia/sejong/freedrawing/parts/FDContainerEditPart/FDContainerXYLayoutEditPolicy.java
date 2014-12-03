@@ -1,18 +1,17 @@
-package asia.sejong.freedrawing.parts.FDRootEditPart;
+package asia.sejong.freedrawing.parts.FDContainerEditPart;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.ImageFigure;
 import org.eclipse.draw2d.SWTGraphics;
-import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.commands.Command;
-import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gef.editpolicies.ResizableEditPolicy;
 import org.eclipse.gef.editpolicies.XYLayoutEditPolicy;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
@@ -22,13 +21,14 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 
 import asia.sejong.freedrawing.model.FDContainer;
-import asia.sejong.freedrawing.model.FDElement;
 import asia.sejong.freedrawing.model.FDEllipse;
 import asia.sejong.freedrawing.model.FDRect;
 import asia.sejong.freedrawing.model.FDRoot;
 import asia.sejong.freedrawing.model.FDShape;
-import asia.sejong.freedrawing.parts.FDRootEditPart.command.FDShapeCreateCommand;
-import asia.sejong.freedrawing.parts.FDRootEditPart.command.FDShapeMoveAndResizeCommand;
+import asia.sejong.freedrawing.model.FDWire;
+import asia.sejong.freedrawing.parts.FDContainerEditPart.command.FDShapeCloneCommand;
+import asia.sejong.freedrawing.parts.FDContainerEditPart.command.FDShapeCreateCommand;
+import asia.sejong.freedrawing.parts.FDContainerEditPart.command.FDShapeMoveAndResizeCommand;
 
 /**
  * Handles constraint changes (e.g. moving and/or resizing) of model elements
@@ -36,20 +36,20 @@ import asia.sejong.freedrawing.parts.FDRootEditPart.command.FDShapeMoveAndResize
  * @author SeJong
  *
  */
-public class FDRootXYLayoutEditPolicy extends XYLayoutEditPolicy {
+public class FDContainerXYLayoutEditPolicy extends XYLayoutEditPolicy {
 	
 	protected Command getCreateCommand(CreateRequest request) {
 		Object type = request.getNewObjectType();
 		Rectangle box = (Rectangle) getConstraintFor(request);
-		FDRoot nodeRoot = (FDRoot)getHost().getModel();
+		FDContainer container = (FDContainer)getHost().getModel();
 		if (type == FDRect.class) {
 			FDRect element = (FDRect) request.getNewObject();
 			element.setRectangle(box);
-			return new FDShapeCreateCommand(nodeRoot, element);
+			return new FDShapeCreateCommand(container, element);
 		} else if (type == FDEllipse.class) {
 			FDEllipse element = (FDEllipse) request.getNewObject();
 			element.setRectangle(box);
-			return new FDShapeCreateCommand(nodeRoot, element);
+			return new FDShapeCreateCommand(container, element);
 		}
 		return null;
 	}
@@ -122,28 +122,9 @@ public class FDRootXYLayoutEditPolicy extends XYLayoutEditPolicy {
 	protected Command getCloneCommand(ChangeBoundsRequest request) {
 		FDContainer container = (FDContainer)getHost().getModel();
 		ArrayList<?> editParts = (ArrayList<?>)request.getEditParts();
-		if (editParts != null && editParts.size()>0 ) {
-			List<FDShape> copiedShapes = new ArrayList<FDShape>();
-			for ( Object selected : editParts ) {
-				EditPart selectedEditPart = (EditPart)selected;
-				if ( selectedEditPart.getModel() instanceof FDElement ) {
-					FDShape copiedShape = ((FDShape) selectedEditPart.getModel()).clone();
-					Point delta = request.getMoveDelta();
-					copiedShape.setLocation(copiedShape.getX() + delta.x, copiedShape.getY()+delta.y);
-					copiedShapes.add(copiedShape);
-				}
-			}
-			
-			if ( copiedShapes.size() > 0 ) {
-				CompoundCommand compoundCommand = new CompoundCommand();
-				for ( FDShape shape : copiedShapes ) {
-					compoundCommand.add(new FDShapeCreateCommand(container, shape));
-				}
-				return compoundCommand;
-			}
-		}
+		Map<FDShape, List<FDWire>> copiedShapesAndWires = FDShapeCloneCommand.cloneShapesWithWires(editParts, request.getMoveDelta());
 		
-		return null;
+		return new FDShapeCloneCommand((FDRoot)container, container, copiedShapesAndWires);
 	}
 	
 //	/**

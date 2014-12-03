@@ -53,4 +53,21 @@ public class FDWireBendpoint extends Point implements Bendpoint {
 	public void setWeight(float w) {
 		weight = w;
 	}
+	
+	public void applyDelta(Point delta) {
+		this.x = x + delta.x;
+		this.y = y + delta.y;
+	}
+	
+	//============================================================
+	// Clonable
+	
+	@Override
+	public FDWireBendpoint clone() {
+		try {
+			return (FDWireBendpoint)super.clone();
+		} catch (CloneNotSupportedException e) {
+			throw new RuntimeException(e);
+		}
+	}
 }

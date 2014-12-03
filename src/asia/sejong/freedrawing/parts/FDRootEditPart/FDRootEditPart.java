@@ -28,6 +28,7 @@ import asia.sejong.freedrawing.model.FDRoot;
 import asia.sejong.freedrawing.model.FDShape;
 import asia.sejong.freedrawing.model.FDWire;
 import asia.sejong.freedrawing.model.listener.FDRootListener;
+import asia.sejong.freedrawing.parts.FDContainerEditPart.FDContainerXYLayoutEditPolicy;
 import asia.sejong.freedrawing.parts.FDShapeEditPart.FDShapeEditPart;
 import asia.sejong.freedrawing.parts.FDWireEditPart.FDWireEditPart;
 
@@ -60,7 +61,7 @@ public class FDRootEditPart extends AbstractGraphicalEditPart implements FDRootL
 		
 		// Handles constraint changes (e.g. moving and/or resizing) of model elements
 		// and creation of new model elements
-		installEditPolicy(EditPolicy.LAYOUT_ROLE, new FDRootXYLayoutEditPolicy());
+		installEditPolicy(EditPolicy.LAYOUT_ROLE, new FDContainerXYLayoutEditPolicy());
 		
 		installEditPolicy("Snap Feedback", new SnapFeedbackPolicy()); //$NON-NLS-1$
 	}
@@ -75,7 +76,7 @@ public class FDRootEditPart extends AbstractGraphicalEditPart implements FDRootL
 	}
 	
 	// ==========================================================================
-	// FDRootNodeListener
+	// FDRootListener
 	
 	@Override
 	public void wireAdded(FDWire wire) {

@@ -139,6 +139,7 @@ public abstract class FDShape extends FDElement {
 	//============================================================
 	// Clonable
 	
+	@Override
 	public FDShape clone() {
 		
 		FDShape shape = (FDShape)super.clone();
