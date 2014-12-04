@@ -7,6 +7,7 @@ import org.eclipse.ui.actions.ActionFactory;
 
 import asia.sejong.freedrawing.editor.actions.selection.ChangeZOrderAction;
 import asia.sejong.freedrawing.editor.actions.selection.ChangeZOrderAction.ZOrderDirection;
+import asia.sejong.freedrawing.editor.actions.selection.ChangeRouterAction;
 import asia.sejong.freedrawing.editor.actions.selection.ColorPickAction;
 import asia.sejong.freedrawing.editor.actions.selection.FontPickAction;
 import asia.sejong.freedrawing.editor.actions.selection.MoveAction;
@@ -134,6 +135,17 @@ public abstract class SelectionActionFactory extends LocalActionFactory {
 			ChangeZOrderAction action = new ChangeZOrderAction(part, ZOrderDirection.TO_BACK);
 			action.setId(getId());
 			action.setText("맨뒤로");
+			
+			return action;
+		}
+	};
+	
+	public static final SelectionActionFactory CHANGE_ROUTER = new SelectionActionFactory("CHANGE_ROUTER") {
+		public SelectionAction create(IEditorPart part) {
+			
+			ChangeRouterAction action = new ChangeRouterAction(part);
+			action.setId(getId());
+			action.setText("라우터변경");
 			
 			return action;
 		}

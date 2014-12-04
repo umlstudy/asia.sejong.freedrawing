@@ -5,10 +5,14 @@ import org.eclipse.draw2d.PolylineConnection;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Path;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 
-public class FDWireFigure extends PolylineConnection {
+import asia.sejong.freedrawing.resources.ContextManager;
+
+public class FDWireFigure extends PolylineConnection implements FDElementFigure {
 	
 	public void paintFigure(Graphics graphics) {
 		super.paintFigure(graphics);
@@ -18,6 +22,12 @@ public class FDWireFigure extends PolylineConnection {
 		Display display = Display.getCurrent();
 		Path path = new Path(display);
 		PointList pointList = getPoints();
+		
+		// TODO
+		if ( pointList == null || pointList.size() < 1 ) {
+			super.outlineShape(g);
+			return;
+		}
 		Point firstPoint = pointList.getFirstPoint();
 		path.moveTo(firstPoint.x, firstPoint.y);
 		for ( int i=1;i<pointList.size(); i++ ) {
@@ -136,5 +146,13 @@ public class FDWireFigure extends PolylineConnection {
 		int beizerLocY = sp.y>ep.y? ep.y + relativeBeizerLocY : ep.y - relativeBeizerLocY;
 		
 		return new Point(beizerLocX, beizerLocY);
+	}
+	
+	public void setBorderColor(RGB rgbColor) {
+		Color color = null;
+		if ( rgbColor != null ) {
+			color = ContextManager.getInstance().getColorManager().get(rgbColor);
+			setForegroundColor(color);
+		}
 	}
 }

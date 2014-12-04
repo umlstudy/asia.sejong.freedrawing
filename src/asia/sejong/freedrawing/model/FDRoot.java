@@ -12,13 +12,30 @@ import asia.sejong.freedrawing.model.listener.FDContainerListener;
 import asia.sejong.freedrawing.model.listener.FDRootListener;
 
 public class FDRoot implements FDContainer {
-
+	
+	public static Integer ROUTER_MANUAL = new Integer(0);
+	public static Integer ROUTER_SHORTEST_PATH = new Integer(12);
+	
 	private final List<FDShape> childElements = new ArrayList<FDShape>();
 	private final List<FDWire> wires = new ArrayList<FDWire>();
+	private Integer router = ROUTER_MANUAL;
 	
 	private final Collection<FDRootListener> listeners = new HashSet<FDRootListener>();
 	
 	public FDRoot() {}
+
+	public Integer getConnectionRouter() {
+		return router;
+	}
+	
+	public void setConnectionRouter(Integer router) {
+		if ( this.router != router ) {
+			this.router = router;
+			for (FDRootListener l : listeners) {
+				l.routerChanged(router);
+			}
+		}
+	}
 	
 	public Point getNextLocation(int x, int y) {
 		while ( true ) {

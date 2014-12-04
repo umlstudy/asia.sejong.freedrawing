@@ -4,31 +4,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.draw2d.IFigure;
-import org.eclipse.draw2d.ImageFigure;
-import org.eclipse.draw2d.SWTGraphics;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
-import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.commands.Command;
-import org.eclipse.gef.editpolicies.ResizableEditPolicy;
 import org.eclipse.gef.editpolicies.XYLayoutEditPolicy;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.requests.CreateRequest;
-import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.widgets.Display;
 
 import asia.sejong.freedrawing.model.FDContainer;
-import asia.sejong.freedrawing.model.FDEllipse;
-import asia.sejong.freedrawing.model.FDRect;
 import asia.sejong.freedrawing.model.FDRoot;
 import asia.sejong.freedrawing.model.FDShape;
 import asia.sejong.freedrawing.model.FDWire;
 import asia.sejong.freedrawing.parts.FDContainerEditPart.command.FDShapeCloneCommand;
 import asia.sejong.freedrawing.parts.FDContainerEditPart.command.FDShapeCreateCommand;
 import asia.sejong.freedrawing.parts.FDContainerEditPart.command.FDShapeMoveAndResizeCommand;
+import asia.sejong.freedrawing.parts.FDShapeEditPart.FDShapeResizableEditPolicy;
 
 /**
  * Handles constraint changes (e.g. moving and/or resizing) of model elements
@@ -39,15 +30,11 @@ import asia.sejong.freedrawing.parts.FDContainerEditPart.command.FDShapeMoveAndR
 public class FDContainerXYLayoutEditPolicy extends XYLayoutEditPolicy {
 	
 	protected Command getCreateCommand(CreateRequest request) {
-		Object type = request.getNewObjectType();
+		//Object type = request.getNewObjectType();
 		Rectangle box = (Rectangle) getConstraintFor(request);
 		FDContainer container = (FDContainer)getHost().getModel();
-		if (type == FDRect.class) {
-			FDRect element = (FDRect) request.getNewObject();
-			element.setRectangle(box);
-			return new FDShapeCreateCommand(container, element);
-		} else if (type == FDEllipse.class) {
-			FDEllipse element = (FDEllipse) request.getNewObject();
+		if ( FDShape.class.isInstance(request.getNewObject()) ) {
+			FDShape element = (FDShape) request.getNewObject();
 			element.setRectangle(box);
 			return new FDShapeCreateCommand(container, element);
 		}
@@ -71,52 +58,8 @@ public class FDContainerXYLayoutEditPolicy extends XYLayoutEditPolicy {
 		return new FDShapeMoveAndResizeCommand(shape, rect);
 	}
 	
-	/**
-	 * Exclude MarriageEditParts from being resized
-	 */
 	protected EditPolicy createChildEditPolicy(EditPart child) {
-//		if (child instanceof MarriageEditPart)
-//			return new NonResizableMarriageEditPolicy();
-//		return super.createChildEditPolicy(child);
-		return new ResizableEditPolicy() {
-			protected IFigure createDragSourceFeedbackFigure() {
-				// Use a ghost rectangle for feedback
-//				RectangleFigure r = new RectangleFigure();
-//				FigureUtilities.makeGhostShape(r);
-//				r.setLineStyle(Graphics.LINE_DASHDOT);
-//				r.setLineWidth(2);
-//				r.setForegroundColor(ColorConstants.white);
-//				r.setBounds(getInitialFeedbackBounds());
-//				r.validate();
-//				addFeedback(r);
-				
-				Rectangle bounds = getInitialFeedbackBounds();
-				Image image = new Image(Display.getCurrent(), bounds.width, bounds.height);
-				GC gc = new GC(image);
-				SWTGraphics graphics = new SWTGraphics(gc);
-				graphics.setAlpha(150);
-				graphics.translate(-bounds.x, -bounds.y);
-				IFigure figure = ((GraphicalEditPart)getHost()).getFigure();
-				figure.paint(graphics);
-				
-//				Color background = gc.getBackground ();
-//				Pattern p = new Pattern (Display.getCurrent(), 0, 0, 0, bounds.height, background, 100, background, 180);
-//				gc.setBackgroundPattern (p);
-//				gc.fillRectangle (0, 0, bounds.width, bounds.height);
-//				p.dispose ();
-				
-			    gc.dispose();
-			    graphics.dispose();
-			    
-			    ImageFigure imageFigure = new ImageFigure(image);
-			    imageFigure.setOpaque(true);
-			    imageFigure.validate();
-			    addFeedback(imageFigure);
-			    System.out.println("MOVING FIGURE!");
-//			    image.dispose();
-				return imageFigure;
-			}
-		};
+		return new FDShapeResizableEditPolicy();
 	}
 	
 	protected Command getCloneCommand(ChangeBoundsRequest request) {

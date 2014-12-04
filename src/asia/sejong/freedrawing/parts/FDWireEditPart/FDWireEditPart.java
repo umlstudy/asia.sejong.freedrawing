@@ -1,16 +1,18 @@
 package asia.sejong.freedrawing.parts.FDWireEditPart;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.draw2d.AbsoluteBendpoint;
-import org.eclipse.draw2d.Bendpoint;
-import org.eclipse.draw2d.BendpointConnectionRouter;
 import org.eclipse.draw2d.ColorConstants;
+import org.eclipse.draw2d.Connection;
 import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.ManhattanConnectionRouter;
 import org.eclipse.draw2d.PolygonDecoration;
-import org.eclipse.draw2d.PolylineConnection;
+import org.eclipse.draw2d.RoutingAnimator;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.gef.EditPolicy;
@@ -28,11 +30,12 @@ import asia.sejong.freedrawing.debug.ForEditPart;
 import asia.sejong.freedrawing.figures.FDWireFigure;
 import asia.sejong.freedrawing.model.FDRoot;
 import asia.sejong.freedrawing.model.FDWire;
+import asia.sejong.freedrawing.model.FDWireBendpoint;
 import asia.sejong.freedrawing.model.listener.FDWireListener;
 import asia.sejong.freedrawing.parts.FDShapeEditPart.command.FDWireDeleteCommand;
 import asia.sejong.freedrawing.resources.ContextManager;
 
-public class FDWireEditPart extends AbstractConnectionEditPart implements FDWireListener {
+public class FDWireEditPart extends AbstractConnectionEditPart implements FDWireListener, PropertyChangeListener {
 
 	protected static final PointList ARROWHEAD = new PointList(new int[]{
 			0, 0, -2, 2, -2, 0, -2, -2, 0, 0
@@ -57,10 +60,6 @@ public class FDWireEditPart extends AbstractConnectionEditPart implements FDWire
 		return (FDWireFigure)super.getFigure();
 	}
 	
-	protected PolylineConnection getConnection() {
-		return (PolylineConnection)getFigure();
-	}
-	
 	public static FDWireFigure createWireFigure(boolean custom) {
 		FDWireFigure wireFigure = null;
 		if ( custom ) {
@@ -76,12 +75,12 @@ public class FDWireEditPart extends AbstractConnectionEditPart implements FDWire
 			wireFigure.setAntialias(5);
 		}
 
-		wireFigure.setConnectionRouter(new BendpointConnectionRouter());
-
 		PolygonDecoration decoration = new PolygonDecoration();
 		decoration.setTemplate(ARROWHEAD);
 		decoration.setBackgroundColor(ColorConstants.darkGray);
 		wireFigure.setTargetDecoration(decoration);
+		
+		wireFigure.addRoutingListener(RoutingAnimator.getDefault());
 
 		return wireFigure;
 	}
@@ -118,29 +117,23 @@ public class FDWireEditPart extends AbstractConnectionEditPart implements FDWire
 		installEditPolicy(EditPolicy.CONNECTION_BENDPOINTS_ROLE, new FDWireBendpointEditPolicy());
 	}
 	
-	private List<Bendpoint> getBendpoints() {
-		PolylineConnection connection = getConnection();
-		BendpointConnectionRouter connectionRouter = (BendpointConnectionRouter)connection.getConnectionRouter();
-		@SuppressWarnings("unchecked")
-		List<Bendpoint> bendpoints = (List<Bendpoint>)connectionRouter.getConstraint(connection);
-		if ( bendpoints == null ) {
-			bendpoints = new ArrayList<Bendpoint>();
-			connectionRouter.setConstraint(connection, bendpoints);
+	protected void refreshBendpoints() {
+		if (getConnectionFigure().getConnectionRouter() instanceof ManhattanConnectionRouter)
+			return;
+		List<FDWireBendpoint> modelConstraint = getModel().getBendpoints();
+		List<AbsoluteBendpoint> figureConstraint = new ArrayList<AbsoluteBendpoint>();
+		for (int i = 0; i < modelConstraint.size(); i++) {
+			FDWireBendpoint wbp = (FDWireBendpoint) modelConstraint.get(i);
+//			RelativeBendpoint rbp = new RelativeBendpoint(getConnectionFigure());
+//			rbp.setRelativeDimensions(wbp.getFirstRelativeDimension(), wbp.getSecondRelativeDimension());
+//			rbp.setWeight((i + 1) / ((float) modelConstraint.size() + 1));
+//			figureConstraint.add(rbp);
+			
+			AbsoluteBendpoint bp = new AbsoluteBendpoint(wbp);
+			figureConstraint.add(bp);
 		}
 		
-		return bendpoints;
-	}
-	
-	public void connectTarget(FDWire targetWire) {
-		PolylineConnection connection = getConnection();
-		BendpointConnectionRouter connectionRouter = (BendpointConnectionRouter)connection.getConnectionRouter();
-		List<Bendpoint> bendpoints = new ArrayList<Bendpoint>();
-		if ( targetWire != null ) {
-			for ( Point point : targetWire.getBendpoints()  ) {
-				bendpoints.add(new AbsoluteBendpoint(point));
-			}
-			connectionRouter.setConstraint(connection, bendpoints);
-		}
+		getConnectionFigure().setRoutingConstraint(figureConstraint);
 	}
 	
 	//============================================================
@@ -163,27 +156,17 @@ public class FDWireEditPart extends AbstractConnectionEditPart implements FDWire
 	
 	@Override
 	public void bendpointAdded(int locationIndex, Point location) {
-		List<Bendpoint> bendpoints = getBendpoints();
-		AbsoluteBendpoint bp = new AbsoluteBendpoint(location);
-		bendpoints.add(locationIndex, bp);
-		
-		refresh();
+		refreshBendpoints();
 	}
 
 	@Override
 	public void bendpointRemoved(int locationIndex) {
-		List<Bendpoint> bendpoints = getBendpoints();
-		bendpoints.remove(locationIndex);
-
-		refresh();
+		refreshBendpoints();
 	}
 	
 	@Override
 	public void bendpointMoved(int locationIndex, Point newPoint) {
-		AbsoluteBendpoint newBendpoint = new AbsoluteBendpoint(newPoint);
-		getBendpoints().set(locationIndex, newBendpoint);
-		
-		refresh();
+		refreshBendpoints();
 	}
 	
 	@Override
@@ -192,7 +175,6 @@ public class FDWireEditPart extends AbstractConnectionEditPart implements FDWire
 		if ( rgbColor != null ) {
 			color = ContextManager.getInstance().getColorManager().get(rgbColor);
 			getFigure().setForegroundColor(color);
-			refresh();
 		}
 	}
 
@@ -209,5 +191,27 @@ public class FDWireEditPart extends AbstractConnectionEditPart implements FDWire
 	public void removeNotify() {
 		getModel().removeListener(this);
 		super.removeNotify();
+	}
+	
+	@Override
+	public void activateFigure() {
+		super.activateFigure();
+		getFigure().addPropertyChangeListener(Connection.PROPERTY_CONNECTION_ROUTER, this);
+	}
+	
+	@Override
+	public void deactivateFigure() {
+		getFigure().removePropertyChangeListener(Connection.PROPERTY_CONNECTION_ROUTER, this);
+		super.deactivateFigure();
+	}
+
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		String property = evt.getPropertyName();
+		if (Connection.PROPERTY_CONNECTION_ROUTER.equals(property)) {
+			refreshBendpoints();
+			// TODO
+			// refreshBendpointEditPolicy();
+		}
 	}
 }

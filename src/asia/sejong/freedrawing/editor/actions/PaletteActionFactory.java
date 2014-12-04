@@ -48,6 +48,19 @@ public abstract class PaletteActionFactory extends LocalActionFactory {
 			return action;
 		}
 	};
+	
+	public static final PaletteActionFactory CREATE_LABEL = new PaletteActionFactory("CREATE_LABEL") {
+		public PaletteAction create(FreedrawingEditor editor) {
+			AbstractTool tool = FDToolFactory.LABEL_CREATION_TOOL.createTool(editor);
+			PaletteAction action = new PaletteAction(editor, null);
+			action.setId(getId());
+			action.setTool(tool);
+			action.setImageDescriptor(null);
+			action.setText("라벨");
+			
+			return action;
+		}
+	};
 
 	public static final PaletteActionFactory TOGGLE_MARQUEE = new PaletteActionFactory("TOGGLE_MARQUEE") {
 		public PaletteAction create(FreedrawingEditor editor) {

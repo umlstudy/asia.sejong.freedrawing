@@ -21,6 +21,7 @@ import org.eclipse.gef.requests.GroupRequest;
 import org.eclipse.swt.graphics.RGB;
 
 import asia.sejong.freedrawing.debug.ForEditPart;
+import asia.sejong.freedrawing.figures.FDElementFigure;
 import asia.sejong.freedrawing.model.FDRoot;
 import asia.sejong.freedrawing.model.FDShape;
 import asia.sejong.freedrawing.model.FDWire;
@@ -54,7 +55,9 @@ public abstract class FDShapeEditPart extends AbstractGraphicalEditPart implemen
 		super.refreshVisuals();
 	}
 	
-	protected abstract void setBorderColor(RGB rgbColor);
+	private void setBorderColor(RGB rgbColor) {
+		((FDElementFigure)getFigure()).setBorderColor(rgbColor);
+	}
 
 	protected String getEditPolicyName(String name) {
 		return String.format("%s.%s", this.getClass().getSimpleName(), name);

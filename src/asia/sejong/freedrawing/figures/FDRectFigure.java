@@ -9,9 +9,14 @@ import org.eclipse.draw2d.MarginBorder;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 
-public class FDRectFigure extends Label {
+import asia.sejong.freedrawing.model.FontInfo;
+import asia.sejong.freedrawing.resources.ContextManager;
+
+public class FDRectFigure extends Label implements FDTextShapeFigure {
 
 	private LineBorder lineBorder;
 	
@@ -53,8 +58,12 @@ public class FDRectFigure extends Label {
 //		return super.getBounds();
 //	}
 
-	public void setBorderColor(Color color) {
-		getLineBorder().setColor(color);
+	public void setBorderColor(RGB rgbColor) {
+		Color color = null;
+		if ( rgbColor != null ) {
+			color = ContextManager.getInstance().getColorManager().get(rgbColor);
+			getLineBorder().setColor(color);
+		}
 	}
 	
 //
@@ -72,5 +81,14 @@ public class FDRectFigure extends Label {
 
 	public LineBorder getLineBorder() {
 		return lineBorder;
+	}
+
+	@Override
+	public void setFont(FontInfo fontInfo) {
+		Font font = null;
+		if ( fontInfo != null ) {
+			font = ContextManager.getInstance().getFontManager().get(fontInfo);
+		}
+		setFont(font);
 	}
 }

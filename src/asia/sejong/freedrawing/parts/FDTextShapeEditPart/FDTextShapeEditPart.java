@@ -17,7 +17,7 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
-import asia.sejong.freedrawing.figures.FDRectFigure;
+import asia.sejong.freedrawing.figures.FDTextShapeFigure;
 import asia.sejong.freedrawing.model.FDTextShape;
 import asia.sejong.freedrawing.model.FontInfo;
 import asia.sejong.freedrawing.model.listener.TextShapeListener;
@@ -27,10 +27,12 @@ import asia.sejong.freedrawing.resources.ContextManager;
 
 public abstract class FDTextShapeEditPart extends FDShapeEditPart implements TextShapeListener {
 	
+	@Override
 	public FDTextShape getModel() {
 		return (FDTextShape) super.getModel();
 	}
 	
+	@Override
 	protected void refreshVisuals() {
 		FDTextShape m = (FDTextShape) getModel();
 		
@@ -62,15 +64,19 @@ public abstract class FDTextShapeEditPart extends FDShapeEditPart implements Tex
 		});
 	}
 	
+	@Override
 	public void performRequest(Request req) {
 		if ( req != null && req.getType().equals(RequestConstants.REQ_DIRECT_EDIT) ) {
 			
 			DirectEditManager dem = new DirectEditManager(this, null, null) {
+				
 				@Override
 				protected void initCellEditor() {
-					String text = ((FDRectFigure) getFigure()).getText();
+					String text = ((FDTextShapeFigure) getFigure()).getText();
 					getCellEditor().setValue(text);
 				}
+				
+				@Override
 				protected CellEditor createCellEditorOn(Composite parent) {
 					TextCellEditor cellEditor = new TextCellEditor(parent, SWT.MULTI | SWT.CENTER);
 					Text text = (Text)cellEditor.getControl();
@@ -84,7 +90,9 @@ public abstract class FDTextShapeEditPart extends FDShapeEditPart implements Tex
 					return cellEditor;
 				}
 			};
+			
 			dem.setLocator(new CellEditorLocator() {
+				
 				@Override
 				public void relocate(final CellEditor celleditor) {
 					final IFigure figure = getFigure();
@@ -107,8 +115,13 @@ public abstract class FDTextShapeEditPart extends FDShapeEditPart implements Tex
 		}
 	}
 	
-	protected abstract void setFont(FontInfo fontInfo);
-	protected abstract void setText(String newText);
+	protected final void setFont(FontInfo fontInfo) {
+		((FDTextShapeFigure)getFigure()).setFont(fontInfo);
+	}
+	
+	private void setText(String newText) {
+		((FDTextShapeFigure)getFigure()).setText(newText);
+	}
 	
 	// ==========================================================================
 	// FDTextShapeListener

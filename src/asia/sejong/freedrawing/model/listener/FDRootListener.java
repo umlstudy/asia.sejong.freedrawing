@@ -7,4 +7,5 @@ public interface FDRootListener extends FDContainerListener {
 	
 	void wireAdded(FDWire wire);
 	void wireRemoved(FDWire wire);
+	void routerChanged(Integer newConnectionRouter);
 }
