@@ -8,7 +8,7 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import asia.sejong.freedrawing.model.listener.FDElementListener;
 import asia.sejong.freedrawing.model.listener.FDShapeListener;
 
-public abstract class FDShape extends FDElement {
+public abstract class FDShape extends FDElement implements FDWireEndPoint {
 	
 	private ArrayList<FDWire> incommingWires;
 	private ArrayList<FDWire> outgoingWires;
@@ -85,12 +85,12 @@ public abstract class FDShape extends FDElement {
 		setSize(rect.width, rect.height);
 	}
 	
-
-	public boolean containsTarget(FDShape target) {
+	@Override
+	public boolean containsTarget(FDWireEndPoint target) {
 		return getOutgoingWire(target) != null;
 	}
 	
-	private FDWire getOutgoingWire(FDShape target) {
+	private FDWire getOutgoingWire(FDWireEndPoint target) {
 		for ( FDWire wire : getOutgoingWires() ) {
 			if ( wire.getTarget().equals(target ) ) {
 				return wire;
@@ -99,20 +99,28 @@ public abstract class FDShape extends FDElement {
 		return null;
 	}
 	
+	@Override
 	public void addWire(FDWire wire) {
 		Assert.isTrue(!containsTarget(wire.getTarget()));
 		
-		FDShape target = wire.getTarget();
+		FDWireEndPoint target = wire.getTarget();
 		getOutgoingWires().add(wire);
-		target.getIncommingWires().add(wire);
+		
+		if ( target.getIncommingWires() != null ) {
+			target.getIncommingWires().add(wire);
+		}
 	}
 	
+	@Override
 	public void removeWire(FDWire wire) {
 		Assert.isTrue(containsTarget(wire.getTarget()));
 		
-		FDShape target = wire.getTarget();
+		FDWireEndPoint target = wire.getTarget();
 		getOutgoingWires().remove(wire);
-		target.getIncommingWires().remove(wire);
+		
+		if ( target.getIncommingWires() != null ) {
+			target.getIncommingWires().remove(wire);
+		}
 	}
 	
 	public FDWire removeTarget(FDRect target) {

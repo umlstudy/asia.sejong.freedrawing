@@ -8,6 +8,7 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.draw2d.Animation;
 import org.eclipse.draw2d.AutomaticRouter;
 import org.eclipse.draw2d.BendpointConnectionRouter;
+import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.ConnectionLayer;
 import org.eclipse.draw2d.FanRouter;
 import org.eclipse.draw2d.Figure;
@@ -16,11 +17,14 @@ import org.eclipse.draw2d.FreeformLayout;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.MarginBorder;
 import org.eclipse.draw2d.ShortestPathConnectionRouter;
+import org.eclipse.draw2d.XYAnchor;
 import org.eclipse.gef.CompoundSnapToHelper;
+import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.LayerConstants;
+import org.eclipse.gef.NodeEditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.SnapToGeometry;
 import org.eclipse.gef.SnapToGrid;
@@ -29,23 +33,27 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.gef.editpolicies.RootComponentEditPolicy;
 import org.eclipse.gef.editpolicies.SnapFeedbackPolicy;
+import org.eclipse.gef.requests.DropRequest;
 import org.eclipse.swt.SWT;
 
 import asia.sejong.freedrawing.debug.ForEditPart;
 import asia.sejong.freedrawing.model.FDRoot;
 import asia.sejong.freedrawing.model.FDShape;
 import asia.sejong.freedrawing.model.FDWire;
+import asia.sejong.freedrawing.model.FDWireEndPoint;
+import asia.sejong.freedrawing.model.FDWireTerminalPoint;
 import asia.sejong.freedrawing.model.listener.FDRootListener;
 import asia.sejong.freedrawing.parts.FDContainerEditPart.FDContainerXYLayoutEditPolicy;
-import asia.sejong.freedrawing.parts.FDShapeEditPart.FDShapeEditPart;
 import asia.sejong.freedrawing.parts.FDWireEditPart.FDWireEditPart;
+import asia.sejong.freedrawing.parts.FDWireEditPart.FDWireEditPolicy;
+import asia.sejong.freedrawing.parts.FDWireEditPart.FDWireableEditPart;
 
 /**
  * The {@link EditPart} for the {@link GenealogyGraph} model object. This EditPart is
  * responsible for creating the layer in which all other figures are placed and for
  * returning the collection of top level model objects to be displayed in that layer.
  */
-public class FDRootEditPart extends AbstractGraphicalEditPart implements FDRootListener {
+public class FDRootEditPart extends AbstractGraphicalEditPart implements FDWireableEditPart, NodeEditPart, FDRootListener {
 	
 	public FDRootEditPart(FDRoot nodeRoot) {
 		setModel(nodeRoot);
@@ -68,11 +76,59 @@ public class FDRootEditPart extends AbstractGraphicalEditPart implements FDRootL
 		// Disallows the removal of this edit part from its parent
 		installEditPolicy(EditPolicy.COMPONENT_ROLE, new RootComponentEditPolicy());
 		
+		installEditPolicy(EditPolicy.GRAPHICAL_NODE_ROLE, new FDWireEditPolicy());
+		
 		// Handles constraint changes (e.g. moving and/or resizing) of model elements
 		// and creation of new model elements
 		installEditPolicy(EditPolicy.LAYOUT_ROLE, new FDContainerXYLayoutEditPolicy());
 		
 		installEditPolicy("Snap Feedback", new SnapFeedbackPolicy()); //$NON-NLS-1$
+	}
+	
+	//============================================================
+	// FDWireableEditPart
+	
+	public void addSourceConnection(FDWireEditPart wireEditPart) {
+		addSourceConnection(wireEditPart, 0);
+	}
+
+	public void addTargetConnection(FDWireEditPart wireEditPart) {
+		addTargetConnection(wireEditPart, 0);
+	}
+	
+	public void removeSourceConnection_(FDWireEditPart wireEditPart) {
+		removeSourceConnection(wireEditPart);
+	}
+
+	public void removeTargetConnection_(FDWireEditPart wireEditPart) {
+		removeTargetConnection(wireEditPart);
+	}
+	
+	// ==========================================================================
+	// NodeEditPart
+	
+	@Override
+	public ConnectionAnchor getSourceConnectionAnchor(Request request) {
+		return new XYAnchor(((DropRequest)request).getLocation());
+	}
+
+	@Override
+	public ConnectionAnchor getTargetConnectionAnchor(Request request) {
+		return new XYAnchor(((DropRequest)request).getLocation());
+	}
+	
+	@Override
+	public ConnectionAnchor getSourceConnectionAnchor(ConnectionEditPart connection) {
+		FDWire wire = (FDWire)connection.getModel();
+		FDWireTerminalPoint source = (FDWireTerminalPoint)wire.getSource();
+		return new XYAnchor(source);
+	}
+
+	@Override
+	public ConnectionAnchor getTargetConnectionAnchor(ConnectionEditPart connection) {
+		FDWire wire = (FDWire)connection.getModel();
+		FDWireTerminalPoint target = (FDWireTerminalPoint)wire.getTarget();
+		return new XYAnchor(target);
 	}
 	
 	// ==========================================================================
@@ -89,17 +145,31 @@ public class FDRootEditPart extends AbstractGraphicalEditPart implements FDRootL
 	
 	@Override
 	public void wireAdded(FDWire wire) {
-		FDShape source = wire.getSource();
-		FDShape target = wire.getTarget();
+		FDWireEndPoint source = wire.getSource();
+		FDWireEndPoint target = wire.getTarget();
 		
 		FDWireEditPart wireEditPart = (FDWireEditPart)findEditPart(wire);
 		Assert.isTrue(wireEditPart == null);
 		wireEditPart = (FDWireEditPart)createConnection(wire);
 		
-		FDShapeEditPart sourceEditPart = (FDShapeEditPart)findEditPart(source);
+		// source edit part
+		FDWireableEditPart sourceEditPart = null;
+		if ( source instanceof FDShape ) {
+			sourceEditPart = (FDWireableEditPart)findEditPart(source);
+		} else {
+			sourceEditPart = this;
+		}
+		Assert.isTrue(sourceEditPart != null);
 		sourceEditPart.addSourceConnection(wireEditPart);
 		
-		FDShapeEditPart targetEditPart = (FDShapeEditPart)findEditPart(target);
+		// target edit part
+		FDWireableEditPart targetEditPart = null;
+		if ( target instanceof FDShape ) {
+			targetEditPart = (FDWireableEditPart)findEditPart(target);
+		} else {
+			targetEditPart = this;
+		}
+		Assert.isTrue(targetEditPart != null);
 		targetEditPart.addTargetConnection(wireEditPart);
 		
 		for ( int idx=0; idx<wire.getBendpoints().size(); idx++ ) {
@@ -109,16 +179,30 @@ public class FDRootEditPart extends AbstractGraphicalEditPart implements FDRootL
 
 	@Override
 	public void wireRemoved(FDWire wire) {
-		FDShape source = wire.getSource();
-		FDShape target = wire.getTarget();
+		FDWireEndPoint source = wire.getSource();
+		FDWireEndPoint target = wire.getTarget();
 		
 		FDWireEditPart wireEditPart = (FDWireEditPart)findEditPart(wire);
 		Assert.isTrue(wireEditPart != null);
 		
-		FDShapeEditPart sourceEditPart = (FDShapeEditPart)findEditPart(source);
+		// source edit part
+		FDWireableEditPart sourceEditPart = null;
+		if ( source instanceof FDShape ) {
+			sourceEditPart = (FDWireableEditPart)findEditPart(source);
+		} else {
+			sourceEditPart = this;
+		}
+		Assert.isTrue(sourceEditPart != null);
 		sourceEditPart.removeSourceConnection_(wireEditPart);
 		
-		FDShapeEditPart targetEditPart = (FDShapeEditPart)findEditPart(target);
+		// target edit part
+		FDWireableEditPart targetEditPart = null;
+		if ( target instanceof FDShape ) {
+			targetEditPart = (FDWireableEditPart)findEditPart(target);
+		} else {
+			targetEditPart = this;
+		}
+		Assert.isTrue(targetEditPart != null);
 		targetEditPart.removeTargetConnection_(wireEditPart);
 		
 		removeChild(wireEditPart);

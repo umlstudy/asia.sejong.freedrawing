@@ -13,33 +13,33 @@ public class FDWire extends FDElement {
 
 	private final List<FDWireBendpoint> bendpoints = new ArrayList<FDWireBendpoint>();
 	
-	private FDShape source;
-	private FDShape target;
+	private FDWireEndPoint source;
+	private FDWireEndPoint target;
 	
 	private FDWire() {}
 
-	public static FDWire newInstance__(FDShape source, FDShape target) {
+	public static FDWire newInstance__(FDWireEndPoint source, FDWireEndPoint target) {
 		return new FDWire(source, target);
 	}
 	
-	private FDWire(FDShape source, FDShape target) {
+	private FDWire(FDWireEndPoint source, FDWireEndPoint target) {
 		setSource(source);
 		setTarget(target);
 	}
 	
-	public FDShape getSource() {
+	public FDWireEndPoint getSource() {
 		return source;
 	}
 
-	public void setSource(FDShape source) {
+	public void setSource(FDWireEndPoint source) {
 		this.source = source;
 	}
 
-	public FDShape getTarget() {
+	public FDWireEndPoint getTarget() {
 		return target;
 	}
 
-	public void setTarget(FDShape target) {
+	public void setTarget(FDWireEndPoint target) {
 		this.target = target;
 	}
 	

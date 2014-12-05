@@ -29,8 +29,10 @@ import asia.sejong.freedrawing.model.listener.FDShapeListener;
 import asia.sejong.freedrawing.parts.FDRectEditPart.FDRectEditPart;
 import asia.sejong.freedrawing.parts.FDShapeEditPart.command.FDShapeDeleteCommand;
 import asia.sejong.freedrawing.parts.FDWireEditPart.FDWireEditPart;
+import asia.sejong.freedrawing.parts.FDWireEditPart.FDWireEditPolicy;
+import asia.sejong.freedrawing.parts.FDWireEditPart.FDWireableEditPart;
 
-public abstract class FDShapeEditPart extends AbstractGraphicalEditPart implements NodeEditPart, FDShapeListener {
+public abstract class FDShapeEditPart extends AbstractGraphicalEditPart implements FDWireableEditPart, NodeEditPart, FDShapeListener {
 
 	protected final EditPart findEditPart(Object model) {
 		if (model == null) {
@@ -65,7 +67,7 @@ public abstract class FDShapeEditPart extends AbstractGraphicalEditPart implemen
 	
 	@Override
 	protected void createEditPolicies() {
-		installEditPolicy(getEditPolicyName(EditPolicy.GRAPHICAL_NODE_ROLE), new FDShapeEditPolicy());
+		installEditPolicy(getEditPolicyName(EditPolicy.GRAPHICAL_NODE_ROLE), new FDWireEditPolicy());
 		
 		installEditPolicy(getEditPolicyName(EditPolicy.LAYOUT_ROLE), new FDShapeOrderedLayoutEditPolicy());
 		
@@ -92,27 +94,6 @@ public abstract class FDShapeEditPart extends AbstractGraphicalEditPart implemen
 		});
 		*/
 	}
-	
-	@Override
-	public ConnectionAnchor getSourceConnectionAnchor(ConnectionEditPart connection) {
-		return new ChopboxAnchor(getFigure());
-	}
-
-	@Override
-	public ConnectionAnchor getSourceConnectionAnchor(Request request) {
-		return new ChopboxAnchor(getFigure());
-	}
-
-	@Override
-	public ConnectionAnchor getTargetConnectionAnchor(ConnectionEditPart connection) {
-		return new ChopboxAnchor(getFigure());
-	}
-
-	@Override
-	public ConnectionAnchor getTargetConnectionAnchor(Request request) {
-		return new ChopboxAnchor(getFigure());
-		// create 와 recreate 에 따른 화살표 모양 생성 가능
-	}
 
 	@Override
 	protected List<FDWire> getModelSourceConnections() {
@@ -137,9 +118,33 @@ public abstract class FDShapeEditPart extends AbstractGraphicalEditPart implemen
 		}
 		return targetEditPart;
 	}
+	
+	// ==========================================================================
+	// NodeEditPart
+	
+	@Override
+	public ConnectionAnchor getSourceConnectionAnchor(ConnectionEditPart connection) {
+		return new ChopboxAnchor(getFigure());
+	}
+
+	@Override
+	public ConnectionAnchor getSourceConnectionAnchor(Request request) {
+		return new ChopboxAnchor(getFigure());
+	}
+
+	@Override
+	public ConnectionAnchor getTargetConnectionAnchor(ConnectionEditPart connection) {
+		return new ChopboxAnchor(getFigure());
+	}
+
+	@Override
+	public ConnectionAnchor getTargetConnectionAnchor(Request request) {
+		return new ChopboxAnchor(getFigure());
+		// create 와 recreate 에 따른 화살표 모양 생성 가능
+	}
 
 	//============================================================
-	// protected method adapter
+	// FDWireableEditPart
 	
 	public void addSourceConnection(FDWireEditPart wireEditPart) {
 		addSourceConnection(wireEditPart, 0);

@@ -32,7 +32,7 @@ import asia.sejong.freedrawing.model.FDRoot;
 import asia.sejong.freedrawing.model.FDWire;
 import asia.sejong.freedrawing.model.FDWireBendpoint;
 import asia.sejong.freedrawing.model.listener.FDWireListener;
-import asia.sejong.freedrawing.parts.FDShapeEditPart.command.FDWireDeleteCommand;
+import asia.sejong.freedrawing.parts.FDWireEditPart.command.FDWireDeleteCommand;
 import asia.sejong.freedrawing.resources.ContextManager;
 
 public class FDWireEditPart extends AbstractConnectionEditPart implements FDWireListener, PropertyChangeListener {

@@ -1,4 +1,4 @@
-package asia.sejong.freedrawing.parts.FDShapeEditPart.command;
+package asia.sejong.freedrawing.parts.FDWireEditPart.command;
 
 import asia.sejong.freedrawing.model.FDRoot;
 import asia.sejong.freedrawing.model.FDWire;

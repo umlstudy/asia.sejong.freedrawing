@@ -11,7 +11,7 @@ import org.eclipse.draw2d.geometry.Point;
 import asia.sejong.freedrawing.model.listener.FDContainerListener;
 import asia.sejong.freedrawing.model.listener.FDRootListener;
 
-public class FDRoot implements FDContainer {
+public class FDRoot implements FDContainer, FDWireEndPoint {
 	
 	public static Integer ROUTER_MANUAL = new Integer(0);
 	public static Integer ROUTER_SHORTEST_PATH = new Integer(12);
@@ -147,5 +147,20 @@ public class FDRoot implements FDContainer {
 	
 	public void removeNodeRootListener(FDRootListener l) {
 		listeners.remove(l);
+	}
+	
+	//============================================================
+	// FDWireEndPoint
+
+	@Override
+	public ArrayList<FDWire> getIncommingWires() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean containsTarget(FDWireEndPoint target) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

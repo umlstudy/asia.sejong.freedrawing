@@ -63,7 +63,9 @@ public class PaletteAction extends Action implements PaletteIconChangable {
 			type = newType;
 			Image icon = getIcon(type);
 			if ( icon != null ) {
-				setImageDescriptor(ImageDescriptor.createFromImage(getIcon(type)));
+				if ( !icon.isDisposed() ) {
+					setImageDescriptor(ImageDescriptor.createFromImage(getIcon(type)));
+				}
 			} else {
 				setImageDescriptor(null);
 			}

@@ -1,13 +1,13 @@
-package asia.sejong.freedrawing.parts.FDShapeEditPart.command;
+package asia.sejong.freedrawing.parts.FDWireEditPart.command;
 
 import asia.sejong.freedrawing.model.FDRoot;
-import asia.sejong.freedrawing.model.FDShape;
 import asia.sejong.freedrawing.model.FDWire;
+import asia.sejong.freedrawing.model.FDWireEndPoint;
 
 public class FDWireCreateCommand extends FDWireCommand {
 
-	protected FDShape source;
-	protected FDShape target;
+	protected FDWireEndPoint source;
+	protected FDWireEndPoint target;
 	
 	private FDWire createdWire;
 	
@@ -45,32 +45,32 @@ public class FDWireCreateCommand extends FDWireCommand {
 	}
 	
 	public static boolean isValidSource__(Object source) {
-		if ( source instanceof FDShape ) {
+		if ( source instanceof FDWireEndPoint ) {
 			return true;
 		}
 		return false;
 	}
 
 	public static boolean isValidTarget__(Object target) {
-		if ( target instanceof FDShape ) {
+		if ( target instanceof FDWireEndPoint ) {
 			return true;
 		}
 		return false;
 	}
 
 	public void setSource(Object source) {
-		this.source = (FDShape)source;
+		this.source = (FDWireEndPoint)source;
 	}
 
 	public void setTarget(Object target) {
-		this.target = (FDShape)target;
+		this.target = (FDWireEndPoint)target;
 	}
 
-	public FDShape getSource() {
+	public FDWireEndPoint getSource() {
 		return source;
 	}
 
-	public FDShape getTarget() {
+	public FDWireEndPoint getTarget() {
 		return target;
 	}
 }

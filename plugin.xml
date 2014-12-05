@@ -11,6 +11,23 @@
 			contributorClass="asia.sejong.freedrawing.editor.FreedrawingEditorActionBarContributor">
 		</editor>
 	</extension>
+ <extension
+       point="org.eclipse.ui.startup">
+    <startup
+          class="asia.sejong.freedrawing.startup.FreedrawingStartup">
+    </startup>
+ </extension>
+ <extension
+       point="org.eclipse.ui.statusHandlers">
+    <statusHandler
+          class="asia.sejong.freedrawing.util.FreedrawingStatusHandler"
+          id="asia.sejong.freedrawing.statusHandler">
+    </statusHandler>
+    <statusHandlerProductBinding
+          handlerId="asia.sejong.freedrawing.statusHandler"
+          productId="org.eclipse.platform.ide">
+    </statusHandlerProductBinding>
+ </extension>
 	
 <!--
  <extension

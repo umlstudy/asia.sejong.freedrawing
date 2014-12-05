@@ -1,20 +1,23 @@
-package asia.sejong.freedrawing.parts.FDShapeEditPart;
+package asia.sejong.freedrawing.parts.FDWireEditPart;
 
 import org.eclipse.draw2d.Connection;
+import org.eclipse.draw2d.ConnectionAnchor;
+import org.eclipse.gef.EditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.GraphicalNodeEditPolicy;
 import org.eclipse.gef.requests.CreateConnectionRequest;
 import org.eclipse.gef.requests.ReconnectRequest;
 
-import asia.sejong.freedrawing.model.FDRect;
 import asia.sejong.freedrawing.model.FDRoot;
 import asia.sejong.freedrawing.model.FDWire;
-import asia.sejong.freedrawing.parts.FDShapeEditPart.command.FDWireCreateCommand;
-import asia.sejong.freedrawing.parts.FDShapeEditPart.command.FDWireRecreateCommand;
-import asia.sejong.freedrawing.parts.FDWireEditPart.FDWireEditPart;
+import asia.sejong.freedrawing.model.FDWireTerminalPoint;
+import asia.sejong.freedrawing.parts.FDRootEditPart.FDRootEditPart;
+import asia.sejong.freedrawing.parts.FDShapeEditPart.FDShapeEditPart;
+import asia.sejong.freedrawing.parts.FDWireEditPart.command.FDWireCreateCommand;
+import asia.sejong.freedrawing.parts.FDWireEditPart.command.FDWireRecreateCommand;
 
-public class FDShapeEditPolicy extends GraphicalNodeEditPolicy {
+public class FDWireEditPolicy extends GraphicalNodeEditPolicy {
 	
 	private FDRoot getRoot() {
 		return (FDRoot)getHost().getViewer().getContents().getModel();
@@ -26,6 +29,9 @@ public class FDShapeEditPolicy extends GraphicalNodeEditPolicy {
 		}
 		FDWireCreateCommand wireCreateCommand = (FDWireCreateCommand)request.getStartCommand();
 		Object target = request.getTargetEditPart().getModel();
+		if ( target instanceof FDRoot ) {
+			target = FDWireTerminalPoint.newInstance(request.getLocation());
+		}
 		if (!FDWireCreateCommand.isValidTarget__(target)) {
 			return null;
 		}
@@ -40,6 +46,9 @@ public class FDShapeEditPolicy extends GraphicalNodeEditPolicy {
 
 	protected Command getConnectionCreateCommand(CreateConnectionRequest request) {
 		Object source = request.getTargetEditPart().getModel();
+		if ( source instanceof FDRoot ) {
+			source = FDWireTerminalPoint.newInstance(request.getLocation());
+		}
 		if (!FDWireCreateCommand.isValidSource__(source)) {
 			return null;
 		}
@@ -56,7 +65,10 @@ public class FDShapeEditPolicy extends GraphicalNodeEditPolicy {
 	}
 	
 	protected Command getReconnectSourceCommand(ReconnectRequest request) {
-		FDRect source = (FDRect)request.getTarget().getModel();
+		Object source = request.getTarget().getModel();
+		if ( source instanceof FDRoot ) {
+			source = FDWireTerminalPoint.newInstance(request.getLocation());
+		}
 		if (!FDWireRecreateCommand.isValidSource__(source) ) {
 			return null;
 		}
@@ -74,7 +86,10 @@ public class FDShapeEditPolicy extends GraphicalNodeEditPolicy {
 	}
 
 	protected Command getReconnectTargetCommand(ReconnectRequest request) {
-		FDRect target = (FDRect)request.getTarget().getModel();
+		Object target = request.getTarget().getModel();
+		if ( target instanceof FDRoot ) {
+			target = FDWireTerminalPoint.newInstance(request.getLocation());
+		}
 		if (!FDWireRecreateCommand.isValidTarget__(target) ) {
 			return null;
 		}
@@ -89,5 +104,33 @@ public class FDShapeEditPolicy extends GraphicalNodeEditPolicy {
 			return null;
 		}
 		return wireRecreateCommand;
+	}
+	
+	@Override
+	protected ConnectionAnchor getSourceConnectionAnchor(CreateConnectionRequest request) {
+		EditPart source = request.getSourceEditPart();
+		
+		if ( source instanceof FDShapeEditPart ) {
+			return ((FDShapeEditPart) source).getSourceConnectionAnchor(request);
+		}
+		if ( source instanceof FDRootEditPart ) {
+			return ((FDRootEditPart) source).getSourceConnectionAnchor(request);
+		}
+		
+		return null;
+	}
+	
+	@Override
+	protected ConnectionAnchor getTargetConnectionAnchor(CreateConnectionRequest request) {
+		EditPart target = request.getTargetEditPart();
+		
+		if ( target instanceof FDShapeEditPart ) {
+			return ((FDShapeEditPart) target).getTargetConnectionAnchor(request);
+		}
+		if ( target instanceof FDRootEditPart ) {
+			return ((FDRootEditPart) target).getTargetConnectionAnchor(request);
+		}
+		
+		return null;
 	}
 }
