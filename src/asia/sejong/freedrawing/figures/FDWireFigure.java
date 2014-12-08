@@ -14,6 +14,16 @@ import asia.sejong.freedrawing.resources.ContextManager;
 
 public class FDWireFigure extends PolylineConnection implements FDElementFigure {
 	
+	private boolean roundedCorner = false;
+	
+	private boolean isRoundedCorner() {
+		return roundedCorner;
+	}
+
+	public void setRoundedCorner(boolean roundedCorner) {
+		this.roundedCorner = roundedCorner;
+	}
+	
 	public void paintFigure(Graphics graphics) {
 		super.paintFigure(graphics);
 	}
@@ -23,25 +33,36 @@ public class FDWireFigure extends PolylineConnection implements FDElementFigure 
 		Path path = new Path(display);
 		PointList pointList = getPoints();
 		
-		// TODO
-		if ( pointList == null || pointList.size() < 1 ) {
-			super.outlineShape(g);
-			return;
+		g.setAntialias(SWT.ON);
+		
+		if ( getForegroundColor() != null ) {
+			g.setForegroundColor(getForegroundColor());
 		}
-		Point firstPoint = pointList.getFirstPoint();
-		path.moveTo(firstPoint.x, firstPoint.y);
-		for ( int i=1;i<pointList.size(); i++ ) {
-			Point currPoint = pointList.getPoint(i);
+		g.setLineWidth(getLineWidth());
+		g.setAlpha(getAlpha());
+		g.setInterpolation(SWT.HIGH);
+		
+		// TODO
+		if ( isRoundedCorner() ) {
 			
-			if ( (i+1) < pointList.size() ) {
-				Point startPoint = pointList.getPoint(i-1);
-				Point endPoint = pointList.getPoint(i+1);
-				Point startBezierPoint1 = getBezierPoint(startPoint, currPoint, 20, 0.5f);
-				Point endBezierPoint1 = getBezierPoint(endPoint, currPoint, 20, 0.5f);
+			if ( pointList == null || pointList.size() < 1 ) {
+				super.outlineShape(g);
+				return;
+			}
+			Point firstPoint = pointList.getFirstPoint();
+			path.moveTo(firstPoint.x, firstPoint.y);
+			for ( int i=1;i<pointList.size(); i++ ) {
+				Point currPoint = pointList.getPoint(i);
 				
-				Point startBezierPoint2 = getBezierPoint(startPoint, currPoint, 10, 0.25f);
-				Point endBezierPoint2 = getBezierPoint(endPoint, currPoint, 10, 0.25f);
-				
+				if ( (i+1) < pointList.size() ) {
+					Point startPoint = pointList.getPoint(i-1);
+					Point endPoint = pointList.getPoint(i+1);
+					Point startBezierPoint1 = getBezierPoint(startPoint, currPoint, 20, 0.5f);
+					Point endBezierPoint1 = getBezierPoint(endPoint, currPoint, 20, 0.5f);
+					
+					Point startBezierPoint2 = getBezierPoint(startPoint, currPoint, 10, 0.25f);
+					Point endBezierPoint2 = getBezierPoint(endPoint, currPoint, 10, 0.25f);
+					
 //				System.out.println("-----------------------");
 //				System.out.println("SP : " + startPoint);
 //				System.out.println("MP : " + currPoint);
@@ -54,25 +75,21 @@ public class FDWireFigure extends PolylineConnection implements FDElementFigure 
 //				g.drawText(String.format("S2,%d",startBezierPoint2.y), startBezierPoint2);
 //				g.drawText("E2", endBezierPoint2);
 //				g.drawText("E1", endBezierPoint1);
-				if ( startBezierPoint1 == null || endBezierPoint1 == null || startBezierPoint2 == null || endBezierPoint2 == null) {
-					path.lineTo(currPoint.x, currPoint.y);
+					if ( startBezierPoint1 == null || endBezierPoint1 == null || startBezierPoint2 == null || endBezierPoint2 == null) {
+						path.lineTo(currPoint.x, currPoint.y);
+					} else {
+						path.lineTo(startBezierPoint1.x, startBezierPoint1.y);
+						path.cubicTo(startBezierPoint2.x, startBezierPoint2.y, endBezierPoint2.x, endBezierPoint2.y, endBezierPoint1.x, endBezierPoint1.y);
+					}
 				} else {
-					path.lineTo(startBezierPoint1.x, startBezierPoint1.y);
-					path.cubicTo(startBezierPoint2.x, startBezierPoint2.y, endBezierPoint2.x, endBezierPoint2.y, endBezierPoint1.x, endBezierPoint1.y);
+					path.lineTo(currPoint.x, currPoint.y);
 				}
-			} else {
-				path.lineTo(currPoint.x, currPoint.y);
 			}
+			
+			g.drawPath(path);
+		} else {
+			super.outlineShape(g);
 		}
-		g.setAntialias(SWT.ON);
-		
-		if ( getForegroundColor() != null ) {
-			g.setForegroundColor(getForegroundColor());
-		}
-		g.setLineWidth(2);
-		g.setAlpha(180);
-		g.setInterpolation(SWT.HIGH);
-		g.drawPath(path);
 	}
 
 	protected static int getIntercept(float slope, int x, int y) {

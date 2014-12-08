@@ -130,6 +130,9 @@ public class FDWireEndPoint extends FDElement {
 		point.setOutgoingWires(new ArrayList<FDWire>());
 		point.setIncommingWires(new ArrayList<FDWire>());
 		
+		point.x = this.x;
+		point.y = this.y;
+		
 		return point;
 	}
 	

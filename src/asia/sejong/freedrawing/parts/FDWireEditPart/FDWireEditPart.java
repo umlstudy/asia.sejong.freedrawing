@@ -65,7 +65,8 @@ public class FDWireEditPart extends AbstractConnectionEditPart implements FDWire
 		if ( custom ) {
 			wireFigure = new FDWireFigure();
 			wireFigure.setLineWidth(3);
-			wireFigure.setAntialias(1);
+			wireFigure.setAlpha(180);
+			wireFigure.setAntialias(SWT.ON);
 		} else {
 			wireFigure = new FDWireFigure();
 			wireFigure.setLineStyle(SWT.LINE_DASH);
