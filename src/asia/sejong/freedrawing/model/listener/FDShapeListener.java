@@ -2,8 +2,7 @@ package asia.sejong.freedrawing.model.listener;
 
 
 
-public interface FDShapeListener extends FDElementListener {
+public interface FDShapeListener extends FDWireEndPointListener {
 
-	void locationChanged(int newX, int newY);
 	void sizeChanged(int newWidth, int newHeight);
 }

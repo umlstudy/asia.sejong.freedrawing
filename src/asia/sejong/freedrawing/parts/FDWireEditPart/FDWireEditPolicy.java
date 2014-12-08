@@ -11,7 +11,7 @@ import org.eclipse.gef.requests.ReconnectRequest;
 
 import asia.sejong.freedrawing.model.FDRoot;
 import asia.sejong.freedrawing.model.FDWire;
-import asia.sejong.freedrawing.model.FDWireTerminalPoint;
+import asia.sejong.freedrawing.model.FDWireEndPoint;
 import asia.sejong.freedrawing.parts.FDRootEditPart.FDRootEditPart;
 import asia.sejong.freedrawing.parts.FDShapeEditPart.FDShapeEditPart;
 import asia.sejong.freedrawing.parts.FDWireEditPart.command.FDWireCreateCommand;
@@ -30,7 +30,7 @@ public class FDWireEditPolicy extends GraphicalNodeEditPolicy {
 		FDWireCreateCommand wireCreateCommand = (FDWireCreateCommand)request.getStartCommand();
 		Object target = request.getTargetEditPart().getModel();
 		if ( target instanceof FDRoot ) {
-			target = FDWireTerminalPoint.newInstance(request.getLocation());
+			target = FDWireEndPoint.newInstance(request.getLocation());
 		}
 		if (!FDWireCreateCommand.isValidTarget__(target)) {
 			return null;
@@ -47,7 +47,7 @@ public class FDWireEditPolicy extends GraphicalNodeEditPolicy {
 	protected Command getConnectionCreateCommand(CreateConnectionRequest request) {
 		Object source = request.getTargetEditPart().getModel();
 		if ( source instanceof FDRoot ) {
-			source = FDWireTerminalPoint.newInstance(request.getLocation());
+			source = FDWireEndPoint.newInstance(request.getLocation());
 		}
 		if (!FDWireCreateCommand.isValidSource__(source)) {
 			return null;
@@ -67,7 +67,7 @@ public class FDWireEditPolicy extends GraphicalNodeEditPolicy {
 	protected Command getReconnectSourceCommand(ReconnectRequest request) {
 		Object source = request.getTarget().getModel();
 		if ( source instanceof FDRoot ) {
-			source = FDWireTerminalPoint.newInstance(request.getLocation());
+			source = FDWireEndPoint.newInstance(request.getLocation());
 		}
 		if (!FDWireRecreateCommand.isValidSource__(source) ) {
 			return null;
@@ -88,7 +88,7 @@ public class FDWireEditPolicy extends GraphicalNodeEditPolicy {
 	protected Command getReconnectTargetCommand(ReconnectRequest request) {
 		Object target = request.getTarget().getModel();
 		if ( target instanceof FDRoot ) {
-			target = FDWireTerminalPoint.newInstance(request.getLocation());
+			target = FDWireEndPoint.newInstance(request.getLocation());
 		}
 		if (!FDWireRecreateCommand.isValidTarget__(target) ) {
 			return null;

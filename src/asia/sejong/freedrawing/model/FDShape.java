@@ -2,25 +2,16 @@ package asia.sejong.freedrawing.model;
 
 import java.util.ArrayList;
 
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.draw2d.geometry.Rectangle;
 
 import asia.sejong.freedrawing.model.listener.FDElementListener;
 import asia.sejong.freedrawing.model.listener.FDShapeListener;
 
-public abstract class FDShape extends FDElement implements FDWireEndPoint {
+public abstract class FDShape extends FDWireEndPoint {
 	
-	private ArrayList<FDWire> incommingWires;
-	private ArrayList<FDWire> outgoingWires;
-	
-	private int x, y, width, height;
+	private int width, height;
 	
 	transient private FDContainer parent;
-	
-	public FDShape() {
-		setOutgoingWires(new ArrayList<FDWire>());
-		setIncommingWires(new ArrayList<FDWire>());
-	}
 	
 	public FDContainer getParent() {
 		return parent;
@@ -28,39 +19,6 @@ public abstract class FDShape extends FDElement implements FDWireEndPoint {
 
 	void setParent(FDContainer parent) {
 		this.parent = parent;
-	}
-
-	public ArrayList<FDWire> getIncommingWires() {
-		return incommingWires;
-	}
-
-	public void setIncommingWires(ArrayList<FDWire> incommingWires) {
-		this.incommingWires = incommingWires;
-	}
-
-	public ArrayList<FDWire> getOutgoingWires() {
-		return outgoingWires;
-	}
-
-	public void setOutgoingWires(ArrayList<FDWire> outgoingWires) {
-		this.outgoingWires = outgoingWires;
-	}
-
-	public int getX() {
-		return x;
-	}
-
-	public int getY() {
-		return y;
-	}
-
-	public boolean setLocation(int newX, int newY) {
-		if (x == newX && y == newY)
-			return false;
-		x = newX;
-		y = newY;
-		fireLocationChanged(x, y);
-		return true;
 	}
 
 	public int getWidth() {
@@ -84,68 +42,9 @@ public abstract class FDShape extends FDElement implements FDWireEndPoint {
 		setLocation(rect.x, rect.y);
 		setSize(rect.width, rect.height);
 	}
-	
-	@Override
-	public boolean containsTarget(FDWireEndPoint target) {
-		return getOutgoingWire(target) != null;
-	}
-	
-	private FDWire getOutgoingWire(FDWireEndPoint target) {
-		for ( FDWire wire : getOutgoingWires() ) {
-			if ( wire.getTarget().equals(target ) ) {
-				return wire;
-			}
-		}
-		return null;
-	}
-	
-	@Override
-	public void addWire(FDWire wire) {
-		Assert.isTrue(!containsTarget(wire.getTarget()));
-		
-		FDWireEndPoint target = wire.getTarget();
-		getOutgoingWires().add(wire);
-		
-		if ( target.getIncommingWires() != null ) {
-			target.getIncommingWires().add(wire);
-		}
-	}
-	
-	@Override
-	public void removeWire(FDWire wire) {
-		Assert.isTrue(containsTarget(wire.getTarget()));
-		
-		FDWireEndPoint target = wire.getTarget();
-		getOutgoingWires().remove(wire);
-		
-		if ( target.getIncommingWires() != null ) {
-			target.getIncommingWires().remove(wire);
-		}
-	}
-	
-	public FDWire removeTarget(FDRect target) {
-		
-		FDWire removingWire = null;
-		for ( FDWire wire : getOutgoingWires() ) {
-			if ( wire.getSource().equals(this) && wire.getTarget().equals(target) ) {
-				removingWire = wire;
-				break;
-			}
-		}
-		
-		if ( removingWire == null ) {
-			// not exist
-			return null;
-		}
-		
-		getOutgoingWires().remove(removingWire);
-		target.getIncommingWires().remove(removingWire);
-		
-		return removingWire;
-	}
 
 	//============================================================
-	// Clonable
+	// Cloneable
 	
 	@Override
 	public FDShape clone() {
@@ -155,8 +54,6 @@ public abstract class FDShape extends FDElement implements FDWireEndPoint {
 		shape.setOutgoingWires(new ArrayList<FDWire>());
 		shape.setIncommingWires(new ArrayList<FDWire>());
 		
-		shape.x = x;
-		shape.y = y;
 		shape.width = width;
 		shape.height = height;
 		
@@ -166,12 +63,6 @@ public abstract class FDShape extends FDElement implements FDWireEndPoint {
 	//============================================================
 	// FDShapeListener
 	
-	protected void fireLocationChanged(int newX, int newY) {
-		for (FDElementListener l : listeners) {
-			((FDShapeListener)l).locationChanged(newX, newY);
-		}
-	}
-
 	protected void fireSizeChanged(int newWidth, int newHeight) {
 		for (FDElementListener l : listeners) {
 			((FDShapeListener)l).sizeChanged(newWidth, newHeight);

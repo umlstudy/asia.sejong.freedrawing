@@ -41,7 +41,6 @@ import asia.sejong.freedrawing.model.FDRoot;
 import asia.sejong.freedrawing.model.FDShape;
 import asia.sejong.freedrawing.model.FDWire;
 import asia.sejong.freedrawing.model.FDWireEndPoint;
-import asia.sejong.freedrawing.model.FDWireTerminalPoint;
 import asia.sejong.freedrawing.model.listener.FDRootListener;
 import asia.sejong.freedrawing.parts.FDContainerEditPart.FDContainerXYLayoutEditPolicy;
 import asia.sejong.freedrawing.parts.FDWireEditPart.FDWireEditPart;
@@ -120,15 +119,15 @@ public class FDRootEditPart extends AbstractGraphicalEditPart implements FDWirea
 	@Override
 	public ConnectionAnchor getSourceConnectionAnchor(ConnectionEditPart connection) {
 		FDWire wire = (FDWire)connection.getModel();
-		FDWireTerminalPoint source = (FDWireTerminalPoint)wire.getSource();
-		return new XYAnchor(source);
+		FDWireEndPoint source = (FDWireEndPoint)wire.getSource();
+		return new XYAnchor(source.getLocation());
 	}
 
 	@Override
 	public ConnectionAnchor getTargetConnectionAnchor(ConnectionEditPart connection) {
 		FDWire wire = (FDWire)connection.getModel();
-		FDWireTerminalPoint target = (FDWireTerminalPoint)wire.getTarget();
-		return new XYAnchor(target);
+		FDWireEndPoint target = (FDWireEndPoint)wire.getTarget();
+		return new XYAnchor(target.getLocation());
 	}
 	
 	// ==========================================================================
