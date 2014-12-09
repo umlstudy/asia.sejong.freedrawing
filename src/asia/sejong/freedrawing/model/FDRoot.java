@@ -1,17 +1,19 @@
 package asia.sejong.freedrawing.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.draw2d.geometry.Point;
 
+import asia.sejong.freedrawing.model.listener.FDBaseListener;
 import asia.sejong.freedrawing.model.listener.FDContainerListener;
 import asia.sejong.freedrawing.model.listener.FDRootListener;
 
-public class FDRoot implements FDContainer {
+public class FDRoot extends FDBase implements FDContainer, Serializable {
+	
+	private static final long serialVersionUID = -260607307684628124L;
 	
 	public static Integer ROUTER_MANUAL = new Integer(0);
 	public static Integer ROUTER_SHORTEST_PATH = new Integer(12);
@@ -20,19 +22,41 @@ public class FDRoot implements FDContainer {
 	private final List<FDWire> wires = new ArrayList<FDWire>();
 	private Integer router = ROUTER_MANUAL;
 	
-	private final Collection<FDRootListener> listeners = new HashSet<FDRootListener>();
-	
 	public FDRoot() {}
 
 	public Integer getConnectionRouter() {
 		return router;
 	}
 	
+	public List<FDShape> getChildren() {
+		return childElements;
+	}
+	
+	public List<FDWire> getOutgoingWires() {
+		List<FDWire> outgoingWires = new ArrayList<FDWire>();
+		for ( FDWire wire : wires ) {
+			if ( wire.getSource().getClass() == FDWireEndPoint.class ) {
+				outgoingWires.add(wire);
+			}
+		}
+		return outgoingWires;
+	}
+
+	public List<FDWire> getIncommingWires() {
+		List<FDWire> incommingWires = new ArrayList<FDWire>();
+		for ( FDWire wire : wires ) {
+			if ( wire.getTarget().getClass() == FDWireEndPoint.class ) {
+				incommingWires.add(wire);
+			}
+		}
+		return incommingWires;
+	}
+	
 	public void setConnectionRouter(Integer router) {
 		if ( this.router != router ) {
 			this.router = router;
-			for (FDRootListener l : listeners) {
-				l.routerChanged(router);
+			for (FDBaseListener l : listeners) {
+				((FDRootListener)l).routerChanged(router);
 			}
 		}
 	}
@@ -64,8 +88,8 @@ public class FDRoot implements FDContainer {
 		
 		wire.getSource().addWire(wire);
 		
-		for (FDRootListener l : listeners) {
-			l.wireAdded(wire);
+		for (FDBaseListener l : listeners) {
+			((FDRootListener)l).wireAdded(wire);
 		}
 	}
 
@@ -76,8 +100,8 @@ public class FDRoot implements FDContainer {
 		
 		wire.getSource().removeWire(wire);
 		
-		for (FDRootListener l : listeners) {
-			l.wireRemoved(wire);
+		for (FDBaseListener l : listeners) {
+			((FDRootListener)l).wireRemoved(wire);
 		}
 	}
 	
@@ -91,8 +115,8 @@ public class FDRoot implements FDContainer {
 		childElements.add(target);
 		target.setParent(this);
 		
-		for (FDRootListener l : listeners) {
-			l.childShapeAdded(target);
+		for (FDBaseListener l : listeners) {
+			((FDRootListener)l).childShapeAdded(target);
 		}
 	}
 	
@@ -114,8 +138,8 @@ public class FDRoot implements FDContainer {
 		childElements.remove(target);
 		target.setParent(null);
 		
-		for (FDRootListener l : listeners) {
-			l.childShapeRemoved(target);
+		for (FDBaseListener l : listeners) {
+			((FDRootListener)l).childShapeRemoved(target);
 		}
 	}
 	
@@ -131,8 +155,8 @@ public class FDRoot implements FDContainer {
 		}
 		childElements.add(newPosition, target);
 		
-		for (FDContainerListener l : listeners) {
-			l.positionChanged(newPosition, target);
+		for (FDBaseListener l : listeners) {
+			((FDContainerListener)l).positionChanged(newPosition, target);
 		}
 		
 		return oldPosition;

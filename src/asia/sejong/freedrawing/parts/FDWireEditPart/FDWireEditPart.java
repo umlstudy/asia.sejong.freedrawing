@@ -215,4 +215,12 @@ public class FDWireEditPart extends AbstractConnectionEditPart implements FDWire
 			// refreshBendpointEditPolicy();
 		}
 	}
+	
+	protected void refreshVisuals() {
+		refreshBendpoints();
+//		if (getWire().getValue())
+//			getWireFigure().setForegroundColor(alive);
+//		else
+//			getWireFigure().setForegroundColor(dead);
+	}
 }

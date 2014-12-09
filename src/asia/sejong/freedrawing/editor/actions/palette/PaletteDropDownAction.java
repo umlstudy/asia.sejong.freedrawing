@@ -110,7 +110,7 @@ public class PaletteDropDownAction extends Action implements IMenuCreator, Palet
 
 	@Override
 	public void iconChange(Tool tool, IconType newType) {
-		if ( selectedAction != null ) {
+		if ( selectedAction != null && tool != null ) {
 			if ( type != newType || tool != selectedAction.getTool() ) {
 				type = newType;
 				Image icon = selectedAction.getIcon(type);

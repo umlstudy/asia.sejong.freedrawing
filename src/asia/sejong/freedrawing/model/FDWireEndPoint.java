@@ -5,11 +5,13 @@ import java.util.ArrayList;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.draw2d.geometry.Point;
 
-import asia.sejong.freedrawing.model.listener.FDElementListener;
+import asia.sejong.freedrawing.model.listener.FDBaseListener;
 import asia.sejong.freedrawing.model.listener.FDWireEndPointListener;
 
 public class FDWireEndPoint extends FDElement {
 
+	private static final long serialVersionUID = 5198536774268019990L;
+	
 	private ArrayList<FDWire> incommingWires;
 	private ArrayList<FDWire> outgoingWires;
 	
@@ -140,7 +142,7 @@ public class FDWireEndPoint extends FDElement {
 	// FDWireEndPointListener
 	
 	protected void fireLocationChanged(int newX, int newY) {
-		for (FDElementListener l : listeners) {
+		for (FDBaseListener l : listeners) {
 			((FDWireEndPointListener)l).locationChanged(newX, newY);
 		}
 	}

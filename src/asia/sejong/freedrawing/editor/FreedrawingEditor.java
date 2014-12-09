@@ -1,16 +1,26 @@
 package asia.sejong.freedrawing.editor;
 
 import java.io.ByteArrayInputStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.util.EventObject;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResourceChangeEvent;
+import org.eclipse.core.resources.IResourceChangeListener;
+import org.eclipse.core.resources.IResourceDelta;
+import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartViewer;
@@ -24,35 +34,44 @@ import org.eclipse.gef.ui.parts.GraphicalEditor;
 import org.eclipse.gef.ui.parts.ScrollingGraphicalViewer;
 import org.eclipse.gef.ui.rulers.RulerComposite;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.dialogs.SaveAsDialog;
 import org.eclipse.ui.part.FileEditorInput;
 
 import asia.sejong.freedrawing.editor.actions.PaletteActionFactory;
 import asia.sejong.freedrawing.model.FDRoot;
-import asia.sejong.freedrawing.model.io.FreedrawingModelWriter;
 import asia.sejong.freedrawing.parts.common.FDEditPartFactory;
 import asia.sejong.freedrawing.resources.ContextManager;
 
 public class FreedrawingEditor extends GraphicalEditor implements MouseWheelHandler {
 
-	private final FDRoot nodeRoot = new FDRoot();
+	private FDRoot nodeRoot = null;
 	
 	private ContextManager contextManager;
 	
 	private FreedrawingEditorActionManager actionManager;
 	
+	private boolean editorSaving = false;
+	
+	private ResourceTracker resourceListener = new ResourceTracker();
+	
 	/* 
 	 * protected -> public
 	 * @see org.eclipse.gef.ui.parts.GraphicalEditor#getEditDomain()
 	 */
+	@Override
 	public FreedrawingEditDomain getEditDomain() {
 		return (FreedrawingEditDomain)super.getEditDomain();
 	}
@@ -65,6 +84,7 @@ public class FreedrawingEditor extends GraphicalEditor implements MouseWheelHand
 		actionManager = FreedrawingEditorActionManager.newInstance(this, (List<Object>)getSelectionActions());
 	}
 
+	@Override
 	public void createPartControl(Composite parent) {
 		
 		parent.setBackground(getSite().getShell().getDisplay().getSystemColor(SWT.COLOR_BLACK));
@@ -89,6 +109,7 @@ public class FreedrawingEditor extends GraphicalEditor implements MouseWheelHand
 		}
 	}
 	
+	@Override
 	protected void createGraphicalViewer(Composite parent) {
 		RulerComposite rulerComp = new RulerComposite(parent, SWT.NONE);
 		super.createGraphicalViewer(rulerComp);
@@ -98,6 +119,7 @@ public class FreedrawingEditor extends GraphicalEditor implements MouseWheelHand
 	/**
 	 * freedrawingData를 뷰에 표시하기 위한 설정
 	 */
+	@Override
 	protected void configureGraphicalViewer() {
 		super.configureGraphicalViewer();
 		final GraphicalViewer viewer = getGraphicalViewer();
@@ -145,13 +167,16 @@ public class FreedrawingEditor extends GraphicalEditor implements MouseWheelHand
 	/**
 	 * 화면에 표시하기 위해 초기화 작업 수행
 	 */
+	@Override
 	protected void initializeGraphicalViewer() {
 //		super.initializeGraphicalViewer();
+		
 		getGraphicalViewer().setContents(nodeRoot);
 		
 		actionManager.initializeKeyHandler(getGraphicalViewer());
 	}
 
+	@Override
 	public void dispose() {
 		if ( contextManager != null ) {
 			contextManager.dispose();
@@ -161,32 +186,82 @@ public class FreedrawingEditor extends GraphicalEditor implements MouseWheelHand
 			actionManager.dispose();
 		}
 		
+		((IFileEditorInput) getEditorInput()).getFile().getWorkspace().removeResourceChangeListener(resourceListener);
+		
 		super.dispose();
 	}
 
 	/**
 	 * 지정한 파일로부터 모델을 읽음
 	 */
+	@Override
 	protected void setInput(IEditorInput input) {
-		super.setInput(input);
-		IFile file = ((IFileEditorInput) input).getFile();
-		setPartName(file.getName());
+		superSetInput(input);
 
-		// FIXME TEST
+		IFile file = ((IFileEditorInput) input).getFile();
+		try {
+			InputStream is = file.getContents(false);
+			ObjectInputStream ois = new ObjectInputStream(is);
+			nodeRoot = (FDRoot)ois.readObject();
+			ois.close();
+		} catch (Exception e) {
+			//handleException("An exception occurred while reading the file", e);
+			nodeRoot = new FDRoot();
+		}
+		
 		this.contextManager = ContextManager.newInstance(getSite().getShell().getDisplay()); // must dispose, run before creating EditDomain
 		this.setEditDomain(new FreedrawingEditDomain(this));
 
-		try {
-			readFile(file);
-		} catch ( Exception e ) {
-			handleException("An exception occurred while reading the file", e);
-			return;
+		if (!editorSaving) {
+			if (getGraphicalViewer() != null) {
+				getGraphicalViewer().setContents(nodeRoot);
+				loadProperties();
+			}
 		}
-		
 	}
 
-	private void readFile(IFile file) {
+	protected void superSetInput(IEditorInput input) {
+		// The workspace never changes for an editor. So, removing and re-adding
+		// the
+		// resourceListener is not necessary. But it is being done here for the
+		// sake
+		// of proper implementation. Plus, the resourceListener needs to be
+		// added
+		// to the workspace the first time around.
+		if (getEditorInput() != null) {
+			IFile file = ((IFileEditorInput) getEditorInput()).getFile();
+			file.getWorkspace().removeResourceChangeListener(resourceListener);
+		}
+
+		super.setInput(input);
+
+		if (getEditorInput() != null) {
+			IFile file = ((IFileEditorInput) getEditorInput()).getFile();
+			file.getWorkspace().addResourceChangeListener(resourceListener);
+			setPartName(file.getName());
+		}
 	}
+	
+//	protected void setInput(IEditorInput input) {
+//		super.setInput(input);
+//		IFile file = ((IFileEditorInput) input).getFile();
+//		setPartName(file.getName());
+//
+//		// FIXME TEST
+//		this.contextManager = ContextManager.newInstance(getSite().getShell().getDisplay()); // must dispose, run before creating EditDomain
+//		this.setEditDomain(new FreedrawingEditDomain(this));
+//
+//		try {
+//			readFile(file);
+//		} catch ( Exception e ) {
+//			handleException("An exception occurred while reading the file", e);
+//			return;
+//		}
+//		
+//	}
+//
+//	private void readFile(IFile file) {
+//	}
 
 	/**
 	 * 편집중에 에디터 내용을 파일로 저장한다.
@@ -194,29 +269,109 @@ public class FreedrawingEditor extends GraphicalEditor implements MouseWheelHand
 	 * 
 	 * @param monitor 진행 모니터
 	 */
-	public void doSave(IProgressMonitor monitor) {
-
-		// 모델 직렬화
-		StringWriter writer = new StringWriter(5000);
-		FreedrawingModelWriter freedrawingDataWriter = FreedrawingModelWriter.newInstance(nodeRoot);
-		freedrawingDataWriter.write(new PrintWriter(writer));
-		ByteArrayInputStream stream = new ByteArrayInputStream(writer.toString().getBytes());
-
-		// 직렬화 모델을 파이로 저장함
-		IFile file = ((IFileEditorInput) getEditorInput()).getFile();
-		try {
-			if (file.exists())
-				file.setContents(stream, false, true, monitor);
-			else
-				file.create(stream, false, monitor);
-		} catch (CoreException e) {
-			handleException("An exception occurred while saving the file", e);
-			return;
-		}
-
-		// 에디터 상태를 모델이 저장된 상태로 변경 후 리스너에 통지함
-		getCommandStack().markSaveLocation();
-		firePropertyChange(PROP_DIRTY);
+	@Override
+	public void doSave(final IProgressMonitor progressMonitor) {
+		editorSaving = true;
+		SafeRunner.run(new SafeRunnable() {
+			public void run() throws Exception {
+				saveProperties();
+				ByteArrayOutputStream out = new ByteArrayOutputStream();
+				writeToOutputStream(out);
+				IFile file = ((IFileEditorInput) getEditorInput()).getFile();
+				file.setContents(new ByteArrayInputStream(out.toByteArray()), true, false, progressMonitor);
+				getCommandStack().markSaveLocation();
+			}
+		});
+		editorSaving = false;
+	}
+//	public void doSave(IProgressMonitor monitor) {
+//
+//		// 모델 직렬화
+//		StringWriter writer = new StringWriter(5000);
+//		FreedrawingModelWriter freedrawingDataWriter = FreedrawingModelWriter.newInstance(nodeRoot);
+//		freedrawingDataWriter.write(new PrintWriter(writer));
+//		ByteArrayInputStream stream = new ByteArrayInputStream(writer.toString().getBytes());
+//
+//		// 직렬화 모델을 파이로 저장함
+//		IFile file = ((IFileEditorInput) getEditorInput()).getFile();
+//		try {
+//			if (file.exists())
+//				file.setContents(stream, false, true, monitor);
+//			else
+//				file.create(stream, false, monitor);
+//		} catch (CoreException e) {
+//			handleException("An exception occurred while saving the file", e);
+//			return;
+//		}
+//
+//		// 에디터 상태를 모델이 저장된 상태로 변경 후 리스너에 통지함
+//		getCommandStack().markSaveLocation();
+//		firePropertyChange(PROP_DIRTY);
+//	}
+	
+	protected void writeToOutputStream(OutputStream os) throws IOException {
+		ObjectOutputStream out = new ObjectOutputStream(os);
+		out.writeObject(nodeRoot);
+		out.close();
+	}
+	
+	protected void loadProperties() {
+//		// Ruler properties
+//		LogicRuler ruler = getLogicDiagram().getRuler(PositionConstants.WEST);
+//		RulerProvider provider = null;
+//		if (ruler != null) {
+//			provider = new LogicRulerProvider(ruler);
+//		}
+//		getGraphicalViewer().setProperty(RulerProvider.PROPERTY_VERTICAL_RULER,
+//				provider);
+//		ruler = getLogicDiagram().getRuler(PositionConstants.NORTH);
+//		provider = null;
+//		if (ruler != null) {
+//			provider = new LogicRulerProvider(ruler);
+//		}
+//		getGraphicalViewer().setProperty(
+//				RulerProvider.PROPERTY_HORIZONTAL_RULER, provider);
+//		getGraphicalViewer().setProperty(
+//				RulerProvider.PROPERTY_RULER_VISIBILITY,
+//				new Boolean(getLogicDiagram().getRulerVisibility()));
+//
+//		// Snap to Geometry property
+//		getGraphicalViewer().setProperty(SnapToGeometry.PROPERTY_SNAP_ENABLED,
+//				new Boolean(getLogicDiagram().isSnapToGeometryEnabled()));
+//
+//		// Grid properties
+//		getGraphicalViewer().setProperty(SnapToGrid.PROPERTY_GRID_ENABLED,
+//				new Boolean(getLogicDiagram().isGridEnabled()));
+//		// We keep grid visibility and enablement in sync
+//		getGraphicalViewer().setProperty(SnapToGrid.PROPERTY_GRID_VISIBLE,
+//				new Boolean(getLogicDiagram().isGridEnabled()));
+//
+//		// Zoom
+//		ZoomManager manager = (ZoomManager) getGraphicalViewer().getProperty(
+//				ZoomManager.class.toString());
+//		if (manager != null)
+//			manager.setZoom(getLogicDiagram().getZoom());
+//		// Scroll-wheel Zoom
+//		getGraphicalViewer().setProperty(
+//				MouseWheelHandler.KeyGenerator.getKey(SWT.MOD1),
+//				MouseWheelZoomHandler.SINGLETON);
+	}
+	
+	protected void saveProperties() {
+//		getLogicDiagram().setRulerVisibility(
+//				((Boolean) getGraphicalViewer().getProperty(
+//						RulerProvider.PROPERTY_RULER_VISIBILITY))
+//						.booleanValue());
+//		getLogicDiagram().setGridEnabled(
+//				((Boolean) getGraphicalViewer().getProperty(
+//						SnapToGrid.PROPERTY_GRID_ENABLED)).booleanValue());
+//		getLogicDiagram().setSnapToGeometry(
+//				((Boolean) getGraphicalViewer().getProperty(
+//						SnapToGeometry.PROPERTY_SNAP_ENABLED)).booleanValue());
+//		ZoomManager manager = (ZoomManager) getGraphicalViewer().getProperty(
+//				ZoomManager.class.toString());
+//		if (manager != null)
+//			getLogicDiagram().setZoom(manager.getZoom());
 	}
 
 	/**
@@ -233,6 +388,7 @@ public class FreedrawingEditor extends GraphicalEditor implements MouseWheelHand
 	/**
 	 * 파일과 에디터의 콘텐츠의 내용이 다를 때 호출 됨
 	 */
+	@Override
 	public boolean isSaveAsAllowed() {
 		return true;
 	}
@@ -240,31 +396,83 @@ public class FreedrawingEditor extends GraphicalEditor implements MouseWheelHand
 	/**
 	 * 새로운 파일로 저장
 	 */
+	@Override
 	public void doSaveAs() {
-
+		performSaveAs();
+	}
+//	public void doSaveAs() {
+//
+//		// 새 파일정보를 선택하기 위한 다이얼로그
+//		SaveAsDialog dialog = new SaveAsDialog(getSite().getShell());
+//		dialog.setOriginalFile(((IFileEditorInput) getEditorInput()).getFile());
+//		dialog.open();
+//
+//		// 캔슬 클릭시 경로는 널임
+//		IPath path = dialog.getResult();
+//		if (path == null)
+//			return;
+//
+//		// 선택한 파일로 변경 및 저장 및 통지
+//		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+//		super.setInput(new FileEditorInput(file));
+//		doSave(null);
+//		setPartName(file.getName());
+//		firePropertyChange(PROP_INPUT);
+//	}
+	
+	protected boolean performSaveAs() {
 		// 새 파일정보를 선택하기 위한 다이얼로그
-		SaveAsDialog dialog = new SaveAsDialog(getSite().getShell());
+		SaveAsDialog dialog = new SaveAsDialog(getSite().getWorkbenchWindow().getShell());
 		dialog.setOriginalFile(((IFileEditorInput) getEditorInput()).getFile());
 		dialog.open();
 
 		// 캔슬 클릭시 경로는 널임
 		IPath path = dialog.getResult();
-		if (path == null)
-			return;
+		if (path == null) {
+			return false;
+		}
 
 		// 선택한 파일로 변경 및 저장 및 통지
-		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
-		super.setInput(new FileEditorInput(file));
-		doSave(null);
-		setPartName(file.getName());
-		firePropertyChange(PROP_INPUT);
+		final IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+
+		if (!file.exists()) {
+			WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
+				public void execute(final IProgressMonitor monitor) {
+					saveProperties();
+					try {
+						ByteArrayOutputStream out = new ByteArrayOutputStream();
+						writeToOutputStream(out);
+						file.create(new ByteArrayInputStream(out.toByteArray()), true, monitor);
+						out.close();
+					} catch (Exception e) {
+						handleException("performSaveAs", e);
+					}
+				}
+			};
+			
+			try {
+				new ProgressMonitorDialog(getSite().getWorkbenchWindow().getShell()).run(false, true, op);
+			} catch (Exception e) {
+				handleException("performSaveAs", e);
+			}
+		}
+
+		try {
+			superSetInput(new FileEditorInput(file));
+			getCommandStack().markSaveLocation();
+		} catch (Exception e) {
+			handleException("performSaveAs", e);
+		}
+		
+		return true;
 	}
 
-//	public void commandStackChanged(EventObject event) {
-//		firePropertyChange(IEditorPart.PROP_DIRTY);
-//		super.commandStackChanged(event);
-//	}
-//
+	@Override
+	public void commandStackChanged(EventObject event) {
+		firePropertyChange(IEditorPart.PROP_DIRTY);
+		super.commandStackChanged(event);
+	}
+
 //	/**
 //	 * 아뎁터 취득
 //	 */
@@ -328,6 +536,76 @@ public class FreedrawingEditor extends GraphicalEditor implements MouseWheelHand
 			} else if ( event.count < 0 ) {
 				actionManager.setScalePrevious();
 			}
+		}
+	}
+	
+	protected void closeEditor(boolean save) {
+		getSite().getPage().closeEditor(this, save);
+	}
+	
+	// This class listens to changes to the file system in the workspace, and
+	// makes changes accordingly.
+	// 1) An open, saved file gets deleted -> close the editor
+	// 2) An open file gets renamed or moved -> change the editor's input
+	// accordingly
+	class ResourceTracker implements IResourceChangeListener, IResourceDeltaVisitor {
+		public void resourceChanged(IResourceChangeEvent event) {
+			IResourceDelta delta = event.getDelta();
+			try {
+				if (delta != null) {
+					delta.accept(this);
+				}
+			} catch (CoreException exception) {
+				// What should be done here?
+			}
+		}
+
+		public boolean visit(IResourceDelta delta) {
+			if (delta == null || !delta.getResource().equals(((IFileEditorInput) getEditorInput()).getFile())) {
+				return true;
+			}
+
+			System.out.println("DELTA.KIND ? "+ delta.getKind());
+			
+			if (delta.getKind() == IResourceDelta.REMOVED) {
+				Display display = getSite().getShell().getDisplay();
+				if ((IResourceDelta.MOVED_TO & delta.getFlags()) == 0) { 
+					// 파일이 삭제되었을 경우
+					// NOTE: The case where an open, unsaved file is deleted is
+					// being handled by the
+					// PartListener added to the Workbench in the initialize()
+					// method.
+					display.asyncExec(new Runnable() {
+						public void run() {
+							if (!isDirty())
+								closeEditor(false);
+						}
+					});
+				} else { 
+					// 파일이 옮겨졌거나 이름이 변경되었을 때
+					final IFile newFile = ResourcesPlugin.getWorkspace().getRoot().getFile(delta.getMovedToPath());
+					display.asyncExec(new Runnable() {
+						public void run() {
+							superSetInput(new FileEditorInput(newFile));
+						}
+					});
+				}
+			} else if (delta.getKind() == IResourceDelta.CHANGED) {
+				if (!editorSaving) {
+					// the file was overwritten somehow (could have been
+					// replaced by another
+					// version in the respository)
+					final IFile newFile = ResourcesPlugin.getWorkspace().getRoot().getFile(delta.getFullPath());
+					Display display = getSite().getShell().getDisplay();
+					display.asyncExec(new Runnable() {
+						public void run() {
+							setInput(new FileEditorInput(newFile));
+							getCommandStack().flush();
+						}
+					});
+				}
+			}
+			return false;
 		}
 	}
 }

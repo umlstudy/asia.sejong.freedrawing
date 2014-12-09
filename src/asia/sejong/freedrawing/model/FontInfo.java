@@ -1,9 +1,13 @@
 package asia.sejong.freedrawing.model;
 
+import java.io.Serializable;
+
 import org.eclipse.swt.graphics.FontData;
 
-public class FontInfo implements Cloneable {
+public class FontInfo implements Cloneable, Serializable {
 
+	private static final long serialVersionUID = -9098716567818460239L;
+	
 	private String name;
 	private int height;
 	private int style;

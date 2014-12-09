@@ -1,17 +1,17 @@
 package asia.sejong.freedrawing.model;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.io.Serializable;
 
 import org.eclipse.swt.graphics.RGB;
 
+import asia.sejong.freedrawing.model.listener.FDBaseListener;
 import asia.sejong.freedrawing.model.listener.FDElementListener;
 
-public abstract class FDElement implements Cloneable {
+public abstract class FDElement extends FDBase implements Cloneable, Serializable {
 	
+	private static final long serialVersionUID = 1785663272619287600L;
+
 	private RGB borderColor;
-	
-	transient protected Set<FDElementListener> listeners = new HashSet<FDElementListener>();
 
 	public RGB getBorderColor() {
 		return borderColor;
@@ -25,8 +25,8 @@ public abstract class FDElement implements Cloneable {
 	}
 
 	protected void fireBorderColorChanged(RGB rgbColor) {
-		for (FDElementListener l : listeners) {
-			l.borderColorChanged(rgbColor);
+		for (FDBaseListener l : listeners) {
+			((FDElementListener)l).borderColorChanged(rgbColor);
 		}
 	}
 	
@@ -67,6 +67,8 @@ public abstract class FDElement implements Cloneable {
 	public static void main(String[] args) {
 		FDElement ele = new FDElement() {
 			
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			protected void fireBorderColorChanged(RGB borderColor) {
 				

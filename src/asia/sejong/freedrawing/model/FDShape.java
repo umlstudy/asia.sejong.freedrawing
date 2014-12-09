@@ -4,14 +4,16 @@ import java.util.ArrayList;
 
 import org.eclipse.draw2d.geometry.Rectangle;
 
-import asia.sejong.freedrawing.model.listener.FDElementListener;
+import asia.sejong.freedrawing.model.listener.FDBaseListener;
 import asia.sejong.freedrawing.model.listener.FDShapeListener;
 
 public abstract class FDShape extends FDWireEndPoint {
 	
+	private static final long serialVersionUID = 8663834668559415982L;
+
 	private int width, height;
 	
-	transient private FDContainer parent;
+	private FDContainer parent;
 	
 	public FDContainer getParent() {
 		return parent;
@@ -64,7 +66,7 @@ public abstract class FDShape extends FDWireEndPoint {
 	// FDShapeListener
 	
 	protected void fireSizeChanged(int newWidth, int newHeight) {
-		for (FDElementListener l : listeners) {
+		for (FDBaseListener l : listeners) {
 			((FDShapeListener)l).sizeChanged(newWidth, newHeight);
 		}
 	}

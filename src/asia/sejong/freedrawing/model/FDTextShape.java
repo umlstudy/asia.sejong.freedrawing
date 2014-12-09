@@ -1,10 +1,12 @@
 package asia.sejong.freedrawing.model;
 
-import asia.sejong.freedrawing.model.listener.FDElementListener;
+import asia.sejong.freedrawing.model.listener.FDBaseListener;
 import asia.sejong.freedrawing.model.listener.TextShapeListener;
 
 
 public abstract class FDTextShape extends FDShape {
+	
+	private static final long serialVersionUID = 5724530676305174820L;
 	
 	private String text;
 	private FontInfo fontInfo;
@@ -57,13 +59,13 @@ public abstract class FDTextShape extends FDShape {
 	//============================================================
 	// FDShapeListener
 	protected void fireTextChanged(String text) {
-		for ( FDElementListener l : listeners ) {
+		for ( FDBaseListener l : listeners ) {
 			((TextShapeListener)l).textChanged(text);
 		}
 	}
 
 	protected void fireFontChanged(FontInfo fontInfo) {
-		for (FDElementListener l : listeners) {
+		for (FDBaseListener l : listeners) {
 			((TextShapeListener)l).fontChanged(fontInfo);
 		}
 	}

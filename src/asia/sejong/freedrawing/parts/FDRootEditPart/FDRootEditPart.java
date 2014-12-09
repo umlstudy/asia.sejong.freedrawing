@@ -84,6 +84,23 @@ public class FDRootEditPart extends AbstractGraphicalEditPart implements FDWirea
 		installEditPolicy("Snap Feedback", new SnapFeedbackPolicy()); //$NON-NLS-1$
 	}
 	
+	@Override
+	protected List<FDShape> getModelChildren() {
+		return getModel().getChildren();
+	}
+	
+	@Override
+	protected List<FDWire> getModelSourceConnections() {
+		// this model is source
+		return getModel().getOutgoingWires();
+	}
+
+	@Override
+	protected List<FDWire> getModelTargetConnections() {
+		// this model is target
+		return getModel().getIncommingWires();
+	}
+	
 	//============================================================
 	// FDWireableEditPart
 	

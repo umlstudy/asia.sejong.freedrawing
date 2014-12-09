@@ -2,7 +2,7 @@ package asia.sejong.freedrawing.model.listener;
 
 import asia.sejong.freedrawing.model.FDShape;
 
-public interface FDContainerListener {
+public interface FDContainerListener extends FDBaseListener {
 	
 	void childShapeAdded(FDShape child);
 

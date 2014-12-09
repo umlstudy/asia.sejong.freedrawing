@@ -6,10 +6,12 @@ import java.util.List;
 
 import org.eclipse.draw2d.geometry.Point;
 
-import asia.sejong.freedrawing.model.listener.FDElementListener;
+import asia.sejong.freedrawing.model.listener.FDBaseListener;
 import asia.sejong.freedrawing.model.listener.FDWireListener;
 
 public class FDWire extends FDElement {
+
+	private static final long serialVersionUID = 6588011474926567950L;
 
 	private final List<FDWireBendpoint> bendpoints = new ArrayList<FDWireBendpoint>();
 	
@@ -98,19 +100,19 @@ public class FDWire extends FDElement {
 	// FDWireListener
 
 	protected void fireBendpointAdded(int locationIndex, Point location) {
-		for (FDElementListener l : listeners) {
+		for (FDBaseListener l : listeners) {
 			((FDWireListener)l).bendpointAdded(locationIndex, location);
 		}
 	}
 	
 	protected void fireBendpointRemoved(int locationIndex) {
-		for (FDElementListener l : listeners) {
+		for (FDBaseListener l : listeners) {
 			((FDWireListener)l).bendpointRemoved(locationIndex);
 		}
 	}
 	
 	protected void fireBendpointMoved(int locationIndex, Point newPoint) {
-		for (FDElementListener l : listeners) {
+		for (FDBaseListener l : listeners) {
 			((FDWireListener)l).bendpointMoved(locationIndex, newPoint);
 		}
 	}
