@@ -13,10 +13,10 @@ public abstract class PaletteActionFactory extends LocalActionFactory {
 	public static final PaletteActionFactory TOGGLE_PANNING = new PaletteActionFactory("TOGGLE_PANNING") {
 		public PaletteAction create(FreedrawingEditor editor) {
 			AbstractTool tool = FDToolFactory.PANNING_SELECTION_TOOL.createTool(editor);
-			PaletteAction action = new PaletteAction(editor, ContextManager.getInstance().getImageManager().getSelectImages());
+			PaletteAction action = new PaletteAction(editor, ContextManager.getInstance().getIconManager().getSelectImages());
 			action.setId(getId());
 			action.setTool(tool);
-			action.setImageDescriptor(ContextManager.getInstance().getImageManager().getSelectImageDescriptor(IconType.NORMAL));
+			action.setImageDescriptor(ContextManager.getInstance().getIconManager().getSelectImageDescriptor(IconType.NORMAL));
 			action.setText("선택");
 			
 			return action;
@@ -26,10 +26,10 @@ public abstract class PaletteActionFactory extends LocalActionFactory {
 	public static final PaletteActionFactory TOGGLE_RECTANGLE = new PaletteActionFactory("TOGGLE_RECTANGLE") {
 		public PaletteAction create(FreedrawingEditor editor) {
 			AbstractTool tool = FDToolFactory.RECT_CREATION_TOOL.createTool(editor);
-			PaletteAction action = new PaletteAction(editor, ContextManager.getInstance().getImageManager().getRectangleImages());
+			PaletteAction action = new PaletteAction(editor, ContextManager.getInstance().getIconManager().getRectangleImages());
 			action.setId(getId());
 			action.setTool(tool);
-			action.setImageDescriptor(ContextManager.getInstance().getImageManager().getRectangleImageDescriptor(IconType.NORMAL));
+			action.setImageDescriptor(ContextManager.getInstance().getIconManager().getRectangleImageDescriptor(IconType.NORMAL));
 			action.setText("사각형");
 			
 			return action;
@@ -44,6 +44,19 @@ public abstract class PaletteActionFactory extends LocalActionFactory {
 			action.setTool(tool);
 			action.setImageDescriptor(null);
 			action.setText("원");
+			
+			return action;
+		}
+	};
+	
+	public static final PaletteActionFactory CREATE_IMAGE = new PaletteActionFactory("CREATE_IMAGE") {
+		public PaletteAction create(FreedrawingEditor editor) {
+			AbstractTool tool = FDToolFactory.IMAGE_CREATION_TOOL.createTool(editor);
+			PaletteAction action = new PaletteAction(editor, null);
+			action.setId(getId());
+			action.setTool(tool);
+			action.setImageDescriptor(null);
+			action.setText("이미지");
 			
 			return action;
 		}
@@ -65,10 +78,10 @@ public abstract class PaletteActionFactory extends LocalActionFactory {
 	public static final PaletteActionFactory TOGGLE_MARQUEE = new PaletteActionFactory("TOGGLE_MARQUEE") {
 		public PaletteAction create(FreedrawingEditor editor) {
 			AbstractTool tool = FDToolFactory.MARQUEE_SELECTION_TOOL.createTool(editor);
-			PaletteAction action = new PaletteAction(editor, ContextManager.getInstance().getImageManager().getMarqueeImages());
+			PaletteAction action = new PaletteAction(editor, ContextManager.getInstance().getIconManager().getMarqueeImages());
 			action.setId(getId());
 			action.setTool(tool);
-			action.setImageDescriptor(ContextManager.getInstance().getImageManager().getMarqueeImageDescriptor(IconType.NORMAL));
+			action.setImageDescriptor(ContextManager.getInstance().getIconManager().getMarqueeImageDescriptor(IconType.NORMAL));
 			action.setText("마큐");
 			
 			return action;
@@ -78,10 +91,10 @@ public abstract class PaletteActionFactory extends LocalActionFactory {
 	public static final PaletteActionFactory TOGGLE_CONNECTION = new PaletteActionFactory("TOGGLE_CONNECTION") {
 		public PaletteAction create(FreedrawingEditor editor) {
 			AbstractTool tool = FDToolFactory.CONNECTION_CREATION_TOOL.createTool(editor);
-			PaletteAction action = new PaletteAction(editor, ContextManager.getInstance().getImageManager().getConnectionImages());
+			PaletteAction action = new PaletteAction(editor, ContextManager.getInstance().getIconManager().getConnectionImages());
 			action.setId(getId());
 			action.setTool(tool);
-			action.setImageDescriptor(ContextManager.getInstance().getImageManager().getConnectionImageDescriptor(IconType.NORMAL));
+			action.setImageDescriptor(ContextManager.getInstance().getIconManager().getConnectionImageDescriptor(IconType.NORMAL));
 			action.setText("연결");
 			
 			return action;

@@ -10,7 +10,7 @@ public abstract class PaletteDropDownActionFactory extends LocalActionFactory {
 		public PaletteDropDownAction create() {
 			PaletteDropDownAction action = new PaletteDropDownAction();
 			action.setId(getId());
-			action.setImageDescriptor(ContextManager.getInstance().getImageManager().getRectangleImageDescriptor(IconType.NORMAL));
+			action.setImageDescriptor(ContextManager.getInstance().getIconManager().getRectangleImageDescriptor(IconType.NORMAL));
 			
 			return action;
 		}

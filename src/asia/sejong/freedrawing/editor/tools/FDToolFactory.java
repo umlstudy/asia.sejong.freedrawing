@@ -1,13 +1,20 @@
 package asia.sejong.freedrawing.editor.tools;
 
+import java.io.ByteArrayInputStream;
+
 import org.eclipse.gef.requests.CreationFactory;
 import org.eclipse.gef.tools.AbstractTool;
 import org.eclipse.gef.tools.CreationTool;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.FileDialog;
 
 import asia.sejong.freedrawing.editor.FreedrawingEditor;
 import asia.sejong.freedrawing.model.FDEllipse;
+import asia.sejong.freedrawing.model.FDImage;
 import asia.sejong.freedrawing.model.FDLabel;
 import asia.sejong.freedrawing.model.FDRect;
+import asia.sejong.freedrawing.util.IOUtil;
 
 public abstract class FDToolFactory {
 
@@ -63,6 +70,38 @@ public abstract class FDToolFactory {
 				@Override
 				public Object getNewObject() {
 					return new FDEllipse();
+				}
+			});
+		}
+	};
+	
+	public static FDToolFactory IMAGE_CREATION_TOOL = new FDToolFactory() {
+		@Override
+		public AbstractTool createTool(final FreedrawingEditor editor) {
+			return new CreationTool(new CreationFactory() {
+				
+				@Override
+				public Object getObjectType() {
+					return FDImage.class;
+				}
+				
+				@Override
+				public Object getNewObject() {
+					FileDialog fileDialog = new FileDialog(Display.getCurrent().getActiveShell());
+					fileDialog.setFilterExtensions(new String[] {"*.png"});
+					String fileLocation = fileDialog.open();
+					byte[] readBytes = IOUtil.readAll(fileLocation);
+					
+					Display display = editor.getSite().getShell().getDisplay();
+
+					// image validation test
+					Image image = new Image(display, new ByteArrayInputStream(readBytes));
+					image.dispose();
+					
+					FDImage imageModel = new FDImage();
+					imageModel.setImageBytes(readBytes);
+					
+					return imageModel;
 				}
 			});
 		}

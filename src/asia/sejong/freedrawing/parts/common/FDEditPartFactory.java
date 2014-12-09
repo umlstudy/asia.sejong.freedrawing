@@ -4,11 +4,13 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartFactory;
 
 import asia.sejong.freedrawing.model.FDEllipse;
+import asia.sejong.freedrawing.model.FDImage;
 import asia.sejong.freedrawing.model.FDLabel;
 import asia.sejong.freedrawing.model.FDRect;
 import asia.sejong.freedrawing.model.FDRoot;
 import asia.sejong.freedrawing.model.FDWire;
 import asia.sejong.freedrawing.parts.FDEllipseEditPart.FDEllipseEditPart;
+import asia.sejong.freedrawing.parts.FDImageEditPart.FDImageEditPart;
 import asia.sejong.freedrawing.parts.FDLabelEditPart.FDLabelEditPart;
 import asia.sejong.freedrawing.parts.FDRectEditPart.FDRectEditPart;
 import asia.sejong.freedrawing.parts.FDRootEditPart.FDRootEditPart;
@@ -28,6 +30,8 @@ public class FDEditPartFactory implements EditPartFactory {
 			return new FDWireEditPart((FDWire) model);
 		} else if (model instanceof FDLabel ) {
 			return new FDLabelEditPart((FDLabel) model);
+		} else if (model instanceof FDImage ) {
+			return new FDImageEditPart((FDImage) model);
 		}
 		throw new IllegalStateException("No EditPart for " + model.getClass());
 	}

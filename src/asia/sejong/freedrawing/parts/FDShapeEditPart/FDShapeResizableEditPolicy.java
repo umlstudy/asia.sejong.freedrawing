@@ -16,11 +16,13 @@ import org.eclipse.gef.tools.ResizeTracker;
 
 import asia.sejong.freedrawing.figures.FDElementFigure;
 import asia.sejong.freedrawing.figures.FDEllipseFigure;
+import asia.sejong.freedrawing.figures.FDImageFigure;
 import asia.sejong.freedrawing.figures.FDLabelFigure;
 import asia.sejong.freedrawing.figures.FDRectFigure;
 import asia.sejong.freedrawing.figures.FDTextShapeFigure;
 import asia.sejong.freedrawing.model.FDElement;
 import asia.sejong.freedrawing.model.FDEllipse;
+import asia.sejong.freedrawing.model.FDImage;
 import asia.sejong.freedrawing.model.FDLabel;
 import asia.sejong.freedrawing.model.FDRect;
 import asia.sejong.freedrawing.model.FDShape;
@@ -79,6 +81,12 @@ public class FDShapeResizableEditPolicy extends ResizableEditPolicy {
 			figure = realFigure;
 		} else if (model instanceof FDLabel ) {
 			FDLabelFigure realFigure = new FDLabelFigure();
+			
+//			FDEllipse ellipse = (FDEllipse)model;
+//			realFigure.setText(ellipse.getText());
+			figure = realFigure;
+		} else if (model instanceof FDImage ) {
+			FDImageFigure realFigure = new FDImageFigure();
 			
 //			FDEllipse ellipse = (FDEllipse)model;
 //			realFigure.setText(ellipse.getText());

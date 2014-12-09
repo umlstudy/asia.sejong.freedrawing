@@ -38,22 +38,22 @@ public class IconManager {
 		Image selectedImageBg  = createBackgroundImage(display, point, arc, SWT.COLOR_BLUE);
 		Image mouseOverImageBg = createBackgroundImage(display, point, arc, SWT.COLOR_DARK_GRAY);
 
-		Image image = new Image(display, getClass().getResourceAsStream("image/connection.png"));
+		Image image = new Image(display, getClass().getResourceAsStream("icons/connection.png"));
 		createImages(connectionImage, image, selectedImageBg, mouseOverImageBg, point);
 		
-		image = new Image(display, getClass().getResourceAsStream("image/rectangle.png"));
+		image = new Image(display, getClass().getResourceAsStream("icons/rectangle.png"));
 		createImages(rectangleImage, image, selectedImageBg, mouseOverImageBg, point);
 		
-		image = new Image(display, getClass().getResourceAsStream("image/select.png"));
+		image = new Image(display, getClass().getResourceAsStream("icons/select.png"));
 		createImages(selectImage, image, selectedImageBg, mouseOverImageBg, point);
 		
-		image = new Image(display, getClass().getResourceAsStream("image/marquee.png"));
+		image = new Image(display, getClass().getResourceAsStream("icons/marquee.png"));
 		createImages(marqueeImage, image, selectedImageBg, mouseOverImageBg, point);
 		
-		image = new Image(display, getClass().getResourceAsStream("image/colorpick.png"));
+		image = new Image(display, getClass().getResourceAsStream("icons/colorpick.png"));
 		createImages(colorPickImage, image, selectedImageBg, mouseOverImageBg, point);
 		
-		image = new Image(display, getClass().getResourceAsStream("image/fontpick.png"));
+		image = new Image(display, getClass().getResourceAsStream("icons/fontpick.png"));
 		createImages(fontPickImage, image, selectedImageBg, mouseOverImageBg, point);
 		
 		selectedImageBg.dispose();

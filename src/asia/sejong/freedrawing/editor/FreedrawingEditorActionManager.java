@@ -109,13 +109,18 @@ public class FreedrawingEditorActionManager implements FreedrawingEditDomainList
 		registry.registerAction(action);
 		paletteIconChangables.add(action);
 		
-		// RECTANGLE_SELECTION
+		// CREATE_ELLIPSE
 		action = PaletteActionFactory.CREATE_ELLIPSE.create(editor);
 		registry.registerAction(action);
 		paletteIconChangables.add(action);
 		
-		// RECTANGLE_SELECTION
+		// CREATE_LABEL
 		action = PaletteActionFactory.CREATE_LABEL.create(editor);
+		registry.registerAction(action);
+		paletteIconChangables.add(action);
+		
+		// CREATE_IMAGE
+		action = PaletteActionFactory.CREATE_IMAGE.create(editor);
 		registry.registerAction(action);
 		paletteIconChangables.add(action);
 
@@ -228,6 +233,7 @@ public class FreedrawingEditorActionManager implements FreedrawingEditDomainList
 		toolbarManager.add(registry.getAction(PaletteActionFactory.TOGGLE_RECTANGLE.getId()));
 		toolbarManager.add(registry.getAction(PaletteActionFactory.CREATE_ELLIPSE.getId()));
 		toolbarManager.add(registry.getAction(PaletteActionFactory.CREATE_LABEL.getId()));
+		toolbarManager.add(registry.getAction(PaletteActionFactory.CREATE_IMAGE.getId()));
 		toolbarManager.add(registry.getAction(PaletteActionFactory.TOGGLE_CONNECTION.getId()));
 		toolbarManager.add(new Separator());
 		toolbarManager.add(registry.getAction(SelectionActionFactory.FONT_PICK.getId()));

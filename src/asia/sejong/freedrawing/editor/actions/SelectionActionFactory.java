@@ -156,7 +156,7 @@ public abstract class SelectionActionFactory extends LocalActionFactory {
 			
 			ColorPickAction action = new ColorPickAction(part);
 			action.setId(getId());
-			action.setImageDescriptor(ContextManager.getInstance().getImageManager().getColorPickImageDescriptor(IconType.NORMAL));
+			action.setImageDescriptor(ContextManager.getInstance().getIconManager().getColorPickImageDescriptor(IconType.NORMAL));
 			action.setText("칼라선택");
 			
 			return action;
@@ -168,7 +168,7 @@ public abstract class SelectionActionFactory extends LocalActionFactory {
 			
 			FontPickAction action = new FontPickAction(part);
 			action.setId(getId());
-			action.setImageDescriptor(ContextManager.getInstance().getImageManager().getFontPickImageDescriptor(IconType.NORMAL));
+			action.setImageDescriptor(ContextManager.getInstance().getIconManager().getFontPickImageDescriptor(IconType.NORMAL));
 			action.setText("폰트선택");
 			
 			return action;

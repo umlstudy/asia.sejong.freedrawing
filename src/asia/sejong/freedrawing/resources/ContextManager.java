@@ -7,15 +7,17 @@ public class ContextManager {
 	private static ContextManager instance;
 	
 	private ColorManager colorManager;
-	private IconManager imageManager;
+	private IconManager iconManager;
 	private FontManager fontManager;
+	private ImageManager imageManager;
 	
 	private static int referenceCount = 0;
 	
 	private ContextManager(Device device) {
 		setColorManager(new ColorManager(device));
-		setImageManager(new IconManager());
+		setIconManager(new IconManager());
 		setFontManager(new FontManager(device));
+		setImageManager(new ImageManager(device));
 	}
 	
 	public void dispose() {
@@ -25,12 +27,16 @@ public class ContextManager {
 					colorManager.dispose();
 				}
 
-				if ( imageManager != null ) {
-					imageManager.dispose();
+				if ( iconManager != null ) {
+					iconManager.dispose();
 				}
 				
 				if ( fontManager != null ) {
 					fontManager.dispose();
+				}
+				
+				if ( imageManager != null ) {
+					imageManager.dispose();
 				}
 			}
 			
@@ -74,12 +80,12 @@ public class ContextManager {
 		this.colorManager = colorManager;
 	}
 
-	public IconManager getImageManager() {
-		return imageManager;
+	public IconManager getIconManager() {
+		return iconManager;
 	}
 
-	public void setImageManager(IconManager imageManager) {
-		this.imageManager = imageManager;
+	public void setIconManager(IconManager iconManager) {
+		this.iconManager = iconManager;
 	}
 
 	public FontManager getFontManager() {
@@ -88,5 +94,13 @@ public class ContextManager {
 
 	public void setFontManager(FontManager fontManager) {
 		this.fontManager = fontManager;
+	}
+
+	public ImageManager getImageManager() {
+		return imageManager;
+	}
+
+	public void setImageManager(ImageManager imageManager) {
+		this.imageManager = imageManager;
 	}
 }
