@@ -10,19 +10,17 @@ public class ContextManager {
 	private IconManager imageManager;
 	private FontManager fontManager;
 	
-	private static Integer refCount = 0;
+	private static int referenceCount = 0;
 	
 	private ContextManager(Device device) {
 		setColorManager(new ColorManager(device));
 		setImageManager(new IconManager());
 		setFontManager(new FontManager(device));
-		
-		refCount++;
 	}
 	
 	public void dispose() {
 		synchronized ( ContextManager.class ) {
-			if ( refCount == 1 ) {
+			if ( referenceCount == 1 ) {
 				if ( colorManager != null ) {
 					colorManager.dispose();
 				}
@@ -36,15 +34,15 @@ public class ContextManager {
 				}
 			}
 			
-			if ( refCount >= 1 ) {
-				refCount --;
+			if ( referenceCount >= 1 ) {
+				referenceCount --;
 			}
 			
-			if ( refCount == 0 ) {
+			if ( referenceCount == 0 ) {
 				instance = null;
 			}
 			
-			if ( refCount < 0 ) {
+			if ( referenceCount < 0 ) {
 				throw new RuntimeException();
 			}
 		}
@@ -58,6 +56,9 @@ public class ContextManager {
 				}
 			}
 		}
+		
+		referenceCount++;
+		
 		return instance;
 	}
 	
