@@ -2,7 +2,9 @@ package asia.sejong.freedrawing.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.draw2d.geometry.Point;
@@ -10,6 +12,7 @@ import org.eclipse.draw2d.geometry.Point;
 import asia.sejong.freedrawing.model.listener.FDBaseListener;
 import asia.sejong.freedrawing.model.listener.FDContainerListener;
 import asia.sejong.freedrawing.model.listener.FDRootListener;
+import asia.sejong.freedrawing.util.IOUtil;
 
 public class FDRoot extends FDBase implements FDContainer, Serializable {
 	
@@ -21,6 +24,7 @@ public class FDRoot extends FDBase implements FDContainer, Serializable {
 	private final List<FDShape> childElements = new ArrayList<FDShape>();
 	private final List<FDWire> wires = new ArrayList<FDWire>();
 	private Integer router = ROUTER_MANUAL;
+	private Map<String, byte[]> imageBytesMap;
 	
 	public FDRoot() {}
 
@@ -30,6 +34,28 @@ public class FDRoot extends FDBase implements FDContainer, Serializable {
 	
 	public List<FDShape> getChildren() {
 		return childElements;
+	}
+
+	/**
+	 * 복수개의 모델에서 하나의 이미지 모델을 사용토록 하기 위함
+	 * (메모리 절약)
+	 * @param imageBytes
+	 * @return
+	 */
+	public byte[] getSavedImageBytes(byte[] imageBytes) {
+		if ( imageBytesMap == null ) {
+			imageBytesMap = new HashMap<String, byte[]>();
+		}
+		
+		String checksum = IOUtil.checksum(imageBytes);
+		byte[] savedImageBytes = imageBytesMap.get(checksum);
+		
+		if ( savedImageBytes == null) {
+			savedImageBytes = imageBytes;
+			imageBytesMap.put(checksum, savedImageBytes);
+		}
+		
+		return savedImageBytes;
 	}
 	
 	public List<FDWire> getOutgoingWires() {

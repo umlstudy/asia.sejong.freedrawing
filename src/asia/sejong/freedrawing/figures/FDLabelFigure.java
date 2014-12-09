@@ -11,6 +11,8 @@ import asia.sejong.freedrawing.resources.ContextManager;
 
 public class FDLabelFigure extends Label implements FDTextShapeFigure {
 
+	private Integer alpha = 0xff;
+
 	public FDLabelFigure() {
 		setPreferredSize(100, 100);
 	}
@@ -42,5 +44,15 @@ public class FDLabelFigure extends Label implements FDTextShapeFigure {
 		}
 		setFont(font);
 		
+	}
+
+	@Override
+	public Integer getAlpha() {
+		return alpha;
+	}
+
+	@Override
+	public void setAlpha(int alpha) {
+		this.alpha = alpha;
 	}
 }

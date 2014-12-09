@@ -10,6 +10,8 @@ import asia.sejong.freedrawing.resources.ContextManager;
 
 public class FDImageFigure extends ImageFigure implements FDShapeFigure {
 
+	private Integer alpha = 0xff;
+	
 	public FDImageFigure() {
 		setPreferredSize(100, 100);
 	}
@@ -22,6 +24,7 @@ public class FDImageFigure extends ImageFigure implements FDShapeFigure {
 //		graphics.setForegroundColor(getForegroundColor());
 //		graphics.setBackgroundColor(new Color(null, 31, 31, 31));
 		
+		graphics.setAlpha(alpha);
 		super.paintFigure(graphics);
 	}
 
@@ -38,5 +41,15 @@ public class FDImageFigure extends ImageFigure implements FDShapeFigure {
 			color = ContextManager.getInstance().getColorManager().get(rgbColor);
 			setBackgroundColor(color);
 		}
+	}
+
+	@Override
+	public Integer getAlpha() {
+		return alpha;
+	}
+
+	@Override
+	public void setAlpha(int alpha) {
+		this.alpha = alpha;
 	}
 }

@@ -13,6 +13,7 @@ import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.LayerConstants;
 import org.eclipse.gef.editpolicies.ResizableEditPolicy;
 import org.eclipse.gef.tools.ResizeTracker;
+import org.eclipse.swt.graphics.Image;
 
 import asia.sejong.freedrawing.figures.FDElementFigure;
 import asia.sejong.freedrawing.figures.FDEllipseFigure;
@@ -28,6 +29,7 @@ import asia.sejong.freedrawing.model.FDRect;
 import asia.sejong.freedrawing.model.FDShape;
 import asia.sejong.freedrawing.model.FDTextShape;
 import asia.sejong.freedrawing.parts.common.FDShapeResizeTracker;
+import asia.sejong.freedrawing.resources.ContextManager;
 
 public class FDShapeResizableEditPolicy extends ResizableEditPolicy {
 
@@ -87,6 +89,10 @@ public class FDShapeResizableEditPolicy extends ResizableEditPolicy {
 			figure = realFigure;
 		} else if (model instanceof FDImage ) {
 			FDImageFigure realFigure = new FDImageFigure();
+			FDImage imageModel = (FDImage)model;
+			Image image = ContextManager.getInstance().getImageManager().get(imageModel.getImageBytes());
+			realFigure.setImage(image);
+			realFigure.setAlpha(128);
 			
 //			FDEllipse ellipse = (FDEllipse)model;
 //			realFigure.setText(ellipse.getText());

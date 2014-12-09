@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.MessageDigest;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 
 public class IOUtil {
@@ -26,10 +27,9 @@ public class IOUtil {
 		try {
 			md = MessageDigest.getInstance("MD5");
 			byte[] checksum = md.digest(bytes);
-			return IOUtils.toString(checksum, "UTF-8");
+			return Base64.encodeBase64String(checksum);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
-		} finally {
 		}
 	}
 	
@@ -40,6 +40,14 @@ public class IOUtil {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+		}
+	}
+
+	public static void throwException(Exception e) {
+		if ( e instanceof RuntimeException ) {
+			throw (RuntimeException)e;
+		} else {
+			throw new RuntimeException(e);
 		}
 	}
 }

@@ -33,8 +33,10 @@ public class FDContainerXYLayoutEditPolicy extends XYLayoutEditPolicy {
 		//Object type = request.getNewObjectType();
 		Rectangle box = (Rectangle) getConstraintFor(request);
 		FDContainer container = (FDContainer)getHost().getModel();
-		if ( FDShape.class.isInstance(request.getNewObject()) ) {
-			FDShape element = (FDShape) request.getNewObject();
+
+		Object newObject = request.getNewObject();
+		if ( FDShape.class.isInstance(newObject) ) {
+			FDShape element = (FDShape) newObject;
 			element.setRectangle(box);
 			return new FDShapeCreateCommand(container, element);
 		}

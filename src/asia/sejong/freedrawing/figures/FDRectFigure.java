@@ -19,6 +19,7 @@ import asia.sejong.freedrawing.resources.ContextManager;
 public class FDRectFigure extends Label implements FDTextShapeFigure {
 
 	private LineBorder lineBorder;
+	private Integer alpha = 0xff;
 	
 	public FDRectFigure() {
 		setPreferredSize(100, 100);
@@ -90,5 +91,15 @@ public class FDRectFigure extends Label implements FDTextShapeFigure {
 			font = ContextManager.getInstance().getFontManager().get(fontInfo);
 		}
 		setFont(font);
+	}
+	
+	@Override
+	public Integer getAlpha() {
+		return alpha;
+	}
+
+	@Override
+	public void setAlpha(int alpha) {
+		this.alpha = alpha;
 	}
 }

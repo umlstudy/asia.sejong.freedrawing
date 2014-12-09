@@ -90,18 +90,25 @@ public abstract class FDToolFactory {
 					FileDialog fileDialog = new FileDialog(Display.getCurrent().getActiveShell());
 					fileDialog.setFilterExtensions(new String[] {"*.png"});
 					String fileLocation = fileDialog.open();
-					byte[] readBytes = IOUtil.readAll(fileLocation);
-					
-					Display display = editor.getSite().getShell().getDisplay();
+					if ( fileLocation == null ) {
+						return null;
+					}
 
-					// image validation test
-					Image image = new Image(display, new ByteArrayInputStream(readBytes));
-					image.dispose();
-					
+					byte[] readBytes = null;
+					try {
+						readBytes = IOUtil.readAll(fileLocation);
+						Display display = editor.getSite().getShell().getDisplay();
+						// image validation test
+						Image image = new Image(display, new ByteArrayInputStream(readBytes));
+						image.dispose();
+					} catch ( Exception e ) {
+						IOUtil.throwException(e);
+					}
+						
 					FDImage imageModel = new FDImage();
 					imageModel.setImageBytes(readBytes);
-					
 					return imageModel;
+						
 				}
 			});
 		}

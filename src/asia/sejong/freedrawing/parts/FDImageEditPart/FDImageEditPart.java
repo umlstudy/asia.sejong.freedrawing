@@ -4,6 +4,7 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.SWTGraphics;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.gef.EditPart;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
@@ -23,6 +24,16 @@ public class FDImageEditPart extends FDShapeEditPart implements FDImageListener 
 	
 	private Image extractImage(byte[] imageBytes) {
 		return ContextManager.getInstance().getImageManager().get(imageBytes);
+	}
+	
+	public void setParent(EditPart parent) {
+		super.setParent(parent);
+		
+		// 복수개의 모델에서 하나의 이미지 모델을 사용토록 하기 위해
+		// FDRoot에 저장한 후 이를 참조한다.
+		FDImage model = (FDImage)getModel();
+		byte[] savedImageBytes = getRootModel().getSavedImageBytes(model.getImageBytes());
+		model.setImageBytes(savedImageBytes);
 	}
 	
 	private void setImage(Image image) {
