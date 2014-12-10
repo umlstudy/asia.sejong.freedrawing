@@ -3,6 +3,7 @@ package asia.sejong.freedrawing.model;
 import java.util.ArrayList;
 
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.swt.graphics.RGB;
 
 import asia.sejong.freedrawing.model.listener.FDBaseListener;
 import asia.sejong.freedrawing.model.listener.FDShapeListener;
@@ -13,6 +14,8 @@ public abstract class FDShape extends FDWireEndPoint {
 
 	private int width, height;
 	
+	private RGB backgroundColor;
+	
 	private FDContainer parent;
 	
 	public FDContainer getParent() {
@@ -21,6 +24,17 @@ public abstract class FDShape extends FDWireEndPoint {
 
 	void setParent(FDContainer parent) {
 		this.parent = parent;
+	}
+
+	public RGB getBackgroundColor() {
+		return backgroundColor;
+	}
+
+	public void setBackgroundColor(RGB backgroundColor) {
+		this.backgroundColor = backgroundColor;
+		
+		// send event
+		fireBackgroundColorChanged(backgroundColor);
 	}
 
 	public int getWidth() {
@@ -58,6 +72,7 @@ public abstract class FDShape extends FDWireEndPoint {
 		
 		shape.width = width;
 		shape.height = height;
+		shape.backgroundColor = backgroundColor;
 		
 		return shape;
 	}
@@ -68,6 +83,12 @@ public abstract class FDShape extends FDWireEndPoint {
 	protected void fireSizeChanged(int newWidth, int newHeight) {
 		for (FDBaseListener l : listeners) {
 			((FDShapeListener)l).sizeChanged(newWidth, newHeight);
+		}
+	}
+
+	protected void fireBackgroundColorChanged(RGB rgbColor) {
+		for (FDBaseListener l : listeners) {
+			((FDShapeListener)l).backgroundColorChanged(rgbColor);
 		}
 	}
 }

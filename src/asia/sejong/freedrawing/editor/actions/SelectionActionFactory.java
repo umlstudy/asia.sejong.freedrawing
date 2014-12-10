@@ -5,11 +5,13 @@ import org.eclipse.gef.ui.actions.SelectionAction;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.actions.ActionFactory;
 
+import asia.sejong.freedrawing.editor.actions.selection.ChangeBackgroundColorAction;
+import asia.sejong.freedrawing.editor.actions.selection.ChangeFontAction;
+import asia.sejong.freedrawing.editor.actions.selection.ChangeFontColorAction;
+import asia.sejong.freedrawing.editor.actions.selection.ChangeLineColorAction;
+import asia.sejong.freedrawing.editor.actions.selection.ChangeRouterAction;
 import asia.sejong.freedrawing.editor.actions.selection.ChangeZOrderAction;
 import asia.sejong.freedrawing.editor.actions.selection.ChangeZOrderAction.ZOrderDirection;
-import asia.sejong.freedrawing.editor.actions.selection.ChangeRouterAction;
-import asia.sejong.freedrawing.editor.actions.selection.ColorPickAction;
-import asia.sejong.freedrawing.editor.actions.selection.FontPickAction;
 import asia.sejong.freedrawing.editor.actions.selection.MoveAction;
 import asia.sejong.freedrawing.editor.actions.selection.MoveAction.Direction;
 import asia.sejong.freedrawing.resources.ContextManager;
@@ -151,10 +153,10 @@ public abstract class SelectionActionFactory extends LocalActionFactory {
 		}
 	};
 	
-	public static final SelectionActionFactory COLOR_PICK = new SelectionActionFactory("COLOR_PICK") {
+	public static final SelectionActionFactory CHANGE_LINE_COLOR = new SelectionActionFactory("CHANGE_LINE_COLOR") {
 		public SelectionAction create(IEditorPart part) {
 			
-			ColorPickAction action = new ColorPickAction(part);
+			ChangeLineColorAction action = new ChangeLineColorAction(part);
 			action.setId(getId());
 			action.setImageDescriptor(ContextManager.getInstance().getIconManager().getColorPickImageDescriptor(IconType.NORMAL));
 			action.setText("칼라선택");
@@ -163,13 +165,35 @@ public abstract class SelectionActionFactory extends LocalActionFactory {
 		}
 	};
 	
-	public static final SelectionActionFactory FONT_PICK = new SelectionActionFactory("FONT_PICK") {
+	public static final SelectionActionFactory CHANGE_BACKGROUND_COLOR = new SelectionActionFactory("CHANGE_BACKGROUND_COLOR") {
 		public SelectionAction create(IEditorPart part) {
 			
-			FontPickAction action = new FontPickAction(part);
+			ChangeBackgroundColorAction action = new ChangeBackgroundColorAction(part);
+			action.setId(getId());
+			action.setText("배경색");
+			
+			return action;
+		}
+	};
+	
+	public static final SelectionActionFactory CHANGE_FONT = new SelectionActionFactory("CHANGE_FONT") {
+		public SelectionAction create(IEditorPart part) {
+			
+			ChangeFontAction action = new ChangeFontAction(part);
 			action.setId(getId());
 			action.setImageDescriptor(ContextManager.getInstance().getIconManager().getFontPickImageDescriptor(IconType.NORMAL));
 			action.setText("폰트선택");
+			
+			return action;
+		}
+	};
+	
+	public static final SelectionActionFactory CHANGE_FONT_COLOR = new SelectionActionFactory("CHANGE_FONT_COLOR") {
+		public SelectionAction create(IEditorPart part) {
+			
+			ChangeFontColorAction action = new ChangeFontColorAction(part);
+			action.setId(getId());
+			action.setText("폰트칼라선택");
 			
 			return action;
 		}

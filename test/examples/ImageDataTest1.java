@@ -57,6 +57,7 @@ public class ImageDataTest1 {
 				imageDataArray = loader.load(fileName);
 				if (imageDataArray.length > 1) {
 					animateThread = new Thread("Animation") {
+						@SuppressWarnings("unused")
 						@Override
 						public void run() {
 							/* Create an off-screen image to draw on, and fill it with the shell background. */

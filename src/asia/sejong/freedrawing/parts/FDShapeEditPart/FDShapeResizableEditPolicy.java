@@ -125,12 +125,12 @@ public class FDShapeResizableEditPolicy extends ResizableEditPolicy {
 		
 		if (model instanceof FDElement ) {
 			FDElementFigure f = (FDElementFigure)figure;
-			f.setBorderColor(((FDElement)model).getBorderColor());
+			f.setBorderColor(((FDElement)model).getLineColor());
 		}
 		
 		if (model instanceof FDElement ) {
 			FDElementFigure f = (FDElementFigure)figure;
-			f.setBorderColor(((FDElement)model).getBorderColor());
+			f.setBorderColor(((FDElement)model).getLineColor());
 		}
 		
 		if (figure instanceof Shape ) {

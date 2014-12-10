@@ -93,19 +93,19 @@ public class FreedrawingEditorActionManager implements FreedrawingEditDomainList
 		// PaletteActionFactory
 		
 		// PANNING_SELECTION
-		action = PaletteActionFactory.TOGGLE_PANNING.create(editor);
+		action = PaletteActionFactory.SELECT_PANNING.create(editor);
 		registry.registerAction(action);
 		// set default tool
 		editDomain.setDefaultTool(action.getTool());
 		paletteIconChangables.add(action);
 		
 		// MARQUEE_SELECTION
-		action = PaletteActionFactory.TOGGLE_MARQUEE.create(editor);
+		action = PaletteActionFactory.SELECT_MARQUEE.create(editor);
 		registry.registerAction(action);
 		paletteIconChangables.add(action);
 
 		// RECTANGLE_SELECTION
-		action = PaletteActionFactory.TOGGLE_RECTANGLE.create(editor);
+		action = PaletteActionFactory.CREATE_RECTANGLE.create(editor);
 		registry.registerAction(action);
 		paletteIconChangables.add(action);
 		
@@ -125,7 +125,7 @@ public class FreedrawingEditorActionManager implements FreedrawingEditDomainList
 		paletteIconChangables.add(action);
 
 		// CONNECTION_SELECTION
-		action = PaletteActionFactory.TOGGLE_CONNECTION.create(editor);
+		action = PaletteActionFactory.CREATE_CONNECTION.create(editor);
 		registry.registerAction(action);
 		paletteIconChangables.add(action);
 	}
@@ -143,13 +143,23 @@ public class FreedrawingEditorActionManager implements FreedrawingEditDomainList
 		registry.registerAction(action);
 		selectionActions.add(action.getId());
 
-		// FONT_PICK
-		action = SelectionActionFactory.FONT_PICK.create(editor);
+		// CHANGE_FONT
+		action = SelectionActionFactory.CHANGE_FONT.create(editor);
 		registry.registerAction(action);
 		selectionActions.add(action.getId());
 		
-		// COLOR_PICK
-		action = SelectionActionFactory.COLOR_PICK.create(editor);
+		// CHANGE_FONT_COLOR
+		action = SelectionActionFactory.CHANGE_FONT_COLOR.create(editor);
+		registry.registerAction(action);
+		selectionActions.add(action.getId());
+		
+		// CHANGE_LINE_COLOR
+		action = SelectionActionFactory.CHANGE_LINE_COLOR.create(editor);
+		registry.registerAction(action);
+		selectionActions.add(action.getId());
+		
+		// CHANGE_BACKGROUND_COLOR
+		action = SelectionActionFactory.CHANGE_BACKGROUND_COLOR.create(editor);
 		registry.registerAction(action);
 		selectionActions.add(action.getId());
 		
@@ -227,17 +237,19 @@ public class FreedrawingEditorActionManager implements FreedrawingEditDomainList
 		
 		// add actions to ToolBar
 		toolbarManager = new ToolBarManager(toolbar);
-		toolbarManager.add(registry.getAction(PaletteActionFactory.TOGGLE_PANNING.getId()));
-		toolbarManager.add(registry.getAction(PaletteActionFactory.TOGGLE_MARQUEE.getId()));
+		toolbarManager.add(registry.getAction(PaletteActionFactory.SELECT_PANNING.getId()));
+		toolbarManager.add(registry.getAction(PaletteActionFactory.SELECT_MARQUEE.getId()));
 		toolbarManager.add(new Separator());
-		toolbarManager.add(registry.getAction(PaletteActionFactory.TOGGLE_RECTANGLE.getId()));
+		toolbarManager.add(registry.getAction(PaletteActionFactory.CREATE_RECTANGLE.getId()));
 		toolbarManager.add(registry.getAction(PaletteActionFactory.CREATE_ELLIPSE.getId()));
 		toolbarManager.add(registry.getAction(PaletteActionFactory.CREATE_LABEL.getId()));
 		toolbarManager.add(registry.getAction(PaletteActionFactory.CREATE_IMAGE.getId()));
-		toolbarManager.add(registry.getAction(PaletteActionFactory.TOGGLE_CONNECTION.getId()));
+		toolbarManager.add(registry.getAction(PaletteActionFactory.CREATE_CONNECTION.getId()));
 		toolbarManager.add(new Separator());
-		toolbarManager.add(registry.getAction(SelectionActionFactory.FONT_PICK.getId()));
-		toolbarManager.add(registry.getAction(SelectionActionFactory.COLOR_PICK.getId()));
+		toolbarManager.add(registry.getAction(SelectionActionFactory.CHANGE_FONT.getId()));
+		toolbarManager.add(registry.getAction(SelectionActionFactory.CHANGE_FONT_COLOR.getId()));
+		toolbarManager.add(registry.getAction(SelectionActionFactory.CHANGE_LINE_COLOR.getId()));
+		toolbarManager.add(registry.getAction(SelectionActionFactory.CHANGE_BACKGROUND_COLOR.getId()));
 		
 		toolbarManager.add(new Separator());
 		// TODO TEST
@@ -245,7 +257,7 @@ public class FreedrawingEditorActionManager implements FreedrawingEditDomainList
 			PaletteDropDownAction paletteDropDownAction = PaletteDropDownActionFactory.PALETTE_DROP_DOWN.create();
 			paletteIconChangables.add(paletteDropDownAction);
 			
-			PaletteAction action = (PaletteAction)registry.getAction(PaletteActionFactory.TOGGLE_RECTANGLE.getId());
+			PaletteAction action = (PaletteAction)registry.getAction(PaletteActionFactory.CREATE_RECTANGLE.getId());
 			paletteDropDownAction.addAction(action, true);
 			action.setPaletteActionChangeListener(paletteDropDownAction);
 			
@@ -257,7 +269,7 @@ public class FreedrawingEditorActionManager implements FreedrawingEditDomainList
 			paletteDropDownAction.addAction(action, true);
 			action.setPaletteActionChangeListener(paletteDropDownAction);
 
-			action = (PaletteAction)registry.getAction(PaletteActionFactory.TOGGLE_CONNECTION.getId());
+			action = (PaletteAction)registry.getAction(PaletteActionFactory.CREATE_CONNECTION.getId());
 			paletteDropDownAction.addAction(action, false);
 			action.setPaletteActionChangeListener(paletteDropDownAction);
 			
@@ -350,11 +362,12 @@ public class FreedrawingEditorActionManager implements FreedrawingEditDomainList
 		
 		if ( editDomain.getActiveTool() instanceof FDPanningSelectionTool ) {
 			if ( targetEditPart instanceof FDShapeEditPart ) {
-				contextMenuManger.add(registry.getAction(SelectionActionFactory.FONT_PICK.getId()));
+				contextMenuManger.add(registry.getAction(SelectionActionFactory.CHANGE_FONT.getId()));
+				contextMenuManger.add(registry.getAction(SelectionActionFactory.CHANGE_FONT_COLOR.getId()));
 				contextMenuManger.add(registry.getAction(SelectionActionFactory.ZORDER_TO_FRONT.getId()));
 				contextMenuManger.add(registry.getAction(SelectionActionFactory.ZORDER_TO_BACK.getId()));
 			} else {
-				contextMenuManger.add(registry.getAction(PaletteActionFactory.TOGGLE_RECTANGLE.getId()));
+				contextMenuManger.add(registry.getAction(PaletteActionFactory.CREATE_RECTANGLE.getId()));
 			}
 			
 			contextMenuManger.add(registry.getAction(GEFActionConstants.TOGGLE_RULER_VISIBILITY));

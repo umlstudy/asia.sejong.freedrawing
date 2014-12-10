@@ -21,13 +21,13 @@ import org.eclipse.gef.requests.GroupRequest;
 import org.eclipse.swt.graphics.RGB;
 
 import asia.sejong.freedrawing.debug.ForEditPart;
-import asia.sejong.freedrawing.figures.FDElementFigure;
+import asia.sejong.freedrawing.figures.FDShapeFigure;
 import asia.sejong.freedrawing.model.FDRoot;
 import asia.sejong.freedrawing.model.FDShape;
 import asia.sejong.freedrawing.model.FDWire;
 import asia.sejong.freedrawing.model.listener.FDShapeListener;
 import asia.sejong.freedrawing.parts.FDRectEditPart.FDRectEditPart;
-import asia.sejong.freedrawing.parts.FDShapeEditPart.command.FDShapeDeleteCommand;
+import asia.sejong.freedrawing.parts.FDShapeEditPart.command.DeleteShapeCommand;
 import asia.sejong.freedrawing.parts.FDWireEditPart.FDWireEditPart;
 import asia.sejong.freedrawing.parts.FDWireEditPart.FDWireEditPolicy;
 import asia.sejong.freedrawing.parts.FDWireEditPart.FDWireableEditPart;
@@ -42,6 +42,16 @@ public abstract class FDShapeEditPart extends AbstractGraphicalEditPart implemen
 		return (EditPart)registry.get(model);
 	}
 	
+	@Override
+	protected void refreshVisuals() {
+		FDShape m = (FDShape) getModel();
+		
+		((FDShapeFigure)getFigure()).setBorderColor(m.getLineColor());
+		((FDShapeFigure)getFigure()).setBackgroundColor(m.getBackgroundColor());
+		
+		super.refreshVisuals();
+	}
+	
 	protected final FDRoot getRootModel() {
 		return (FDRoot)getViewer().getContents().getModel();
 	}
@@ -50,17 +60,6 @@ public abstract class FDShapeEditPart extends AbstractGraphicalEditPart implemen
 		return (FDShape) super.getModel();
 	}
 	
-	protected void refreshVisuals() {
-		
-		setBorderColor(getModel().getBorderColor());
-		
-		super.refreshVisuals();
-	}
-	
-	private void setBorderColor(RGB rgbColor) {
-		((FDElementFigure)getFigure()).setBorderColor(rgbColor);
-	}
-
 	protected String getEditPolicyName(String name) {
 		return String.format("%s.%s", this.getClass().getSimpleName(), name);
 	}
@@ -75,7 +74,7 @@ public abstract class FDShapeEditPart extends AbstractGraphicalEditPart implemen
 		
 		installEditPolicy(EditPolicy.COMPONENT_ROLE, new ComponentEditPolicy() {
 			protected Command createDeleteCommand(GroupRequest request) {
-				return new FDShapeDeleteCommand(getRootModel(), getModel());
+				return new DeleteShapeCommand(getRootModel(), getModel());
 			}
 		});
 		
@@ -212,8 +211,14 @@ public abstract class FDShapeEditPart extends AbstractGraphicalEditPart implemen
 	}
 
 	@Override
-	public final void borderColorChanged(RGB rgbColor) {
-		setBorderColor(rgbColor);
-		getFigure().repaint();
+	public final void lineColorChanged(RGB rgbColor) {
+		((FDShapeFigure)getFigure()).setBorderColor(rgbColor);
+		refreshVisuals();
+	}
+	
+	@Override
+	public final void backgroundColorChanged(RGB rgbColor) {
+		((FDShapeFigure)getFigure()).setBackgroundColor(rgbColor);
+		refreshVisuals();
 	}
 }

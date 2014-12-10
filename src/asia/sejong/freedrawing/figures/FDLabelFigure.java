@@ -3,6 +3,7 @@ package asia.sejong.freedrawing.figures;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.LineBorder;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.RGB;
 
@@ -54,5 +55,23 @@ public class FDLabelFigure extends Label implements FDTextShapeFigure {
 	@Override
 	public void setAlpha(int alpha) {
 		this.alpha = alpha;
+	}
+	
+	@Override
+	public void setBackgroundColor(RGB rgbColor) {
+		Color color = null;
+		if ( rgbColor != null ) {
+			color = ContextManager.getInstance().getColorManager().get(rgbColor);
+			super.setBackgroundColor(color);
+		}	
+	}
+	
+	@Override
+	public void setFontColor(RGB rgbColor) {
+		Color color = null;
+		if ( rgbColor != null ) {
+			color = ContextManager.getInstance().getColorManager().get(rgbColor);
+			super.setForegroundColor(color);
+		}	
 	}
 }

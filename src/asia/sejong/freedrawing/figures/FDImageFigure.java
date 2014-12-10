@@ -52,4 +52,13 @@ public class FDImageFigure extends ImageFigure implements FDShapeFigure {
 	public void setAlpha(int alpha) {
 		this.alpha = alpha;
 	}
+	
+	@Override
+	public void setBackgroundColor(RGB rgbColor) {
+		Color color = null;
+		if ( rgbColor != null ) {
+			color = ContextManager.getInstance().getColorManager().get(rgbColor);
+			super.setBackgroundColor(color);
+		}	
+	}
 }

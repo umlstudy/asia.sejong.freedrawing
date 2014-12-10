@@ -171,7 +171,7 @@ public class FDWireEditPart extends AbstractConnectionEditPart implements FDWire
 	}
 	
 	@Override
-	public void borderColorChanged(RGB rgbColor) {
+	public void lineColorChanged(RGB rgbColor) {
 		Color color = null;
 		if ( rgbColor != null ) {
 			color = ContextManager.getInstance().getColorManager().get(rgbColor);

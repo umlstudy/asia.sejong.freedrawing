@@ -24,7 +24,7 @@ public class FDImage extends FDShape {
 	public FDImage clone() {
 		FDImage object = (FDImage)super.clone();
 		
-		this.imageBytes = Arrays.copyOf(imageBytes, imageBytes.length);
+		object.imageBytes = Arrays.copyOf(imageBytes, imageBytes.length);
 		
 		return object;
 	}

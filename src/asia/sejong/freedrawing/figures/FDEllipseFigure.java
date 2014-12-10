@@ -44,10 +44,11 @@ public class FDEllipseFigure extends Ellipse implements FDTextShapeFigure {
 
 	@Override
 	public void setBorderColor(RGB rgbColor) {
-		Color color = null;
+		@SuppressWarnings("unused")
+		Color color = null; // TODO
 		if ( rgbColor != null ) {
 			color = ContextManager.getInstance().getColorManager().get(rgbColor);
-			setBackgroundColor(color);
+			//super.setBackgroundColor(color);
 		}
 	}
 
@@ -55,5 +56,23 @@ public class FDEllipseFigure extends Ellipse implements FDTextShapeFigure {
 	public void setFont(FontInfo fontInfo) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void setBackgroundColor(RGB rgbColor) {
+		Color color = null;
+		if ( rgbColor != null ) {
+			color = ContextManager.getInstance().getColorManager().get(rgbColor);
+			super.setBackgroundColor(color);
+		}	
+	}
+	
+	@Override
+	public void setFontColor(RGB rgbColor) {
+		Color color = null;
+		if ( rgbColor != null ) {
+			color = ContextManager.getInstance().getColorManager().get(rgbColor);
+			super.setForegroundColor(color);
+		}	
 	}
 }

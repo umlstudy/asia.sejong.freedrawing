@@ -512,7 +512,7 @@ public class FreedrawingEditor extends GraphicalEditor implements MouseWheelHand
 //	}
 	
 	public void setActiveTool() {
-		getActionRegistry().getAction(PaletteActionFactory.TOGGLE_PANNING.getId()).run();
+		getActionRegistry().getAction(PaletteActionFactory.SELECT_PANNING.getId()).run();
 	}
 	
 	public void setTargetEditPart(EditPart targetEditPart) {

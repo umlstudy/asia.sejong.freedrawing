@@ -4,28 +4,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.gef.EditPart;
-import org.eclipse.gef.commands.CommandStack;
 import org.eclipse.gef.ui.actions.SelectionAction;
-import org.eclipse.swt.graphics.FontData;
-import org.eclipse.swt.widgets.FontDialog;
+import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.widgets.ColorDialog;
 import org.eclipse.ui.IEditorPart;
 
-import asia.sejong.freedrawing.model.FontInfo;
 import asia.sejong.freedrawing.model.FDTextShape;
-import asia.sejong.freedrawing.parts.FDTextShapeEditPart.command.FontChangeCommand;
+import asia.sejong.freedrawing.parts.FDShapeEditPart.command.FontColorChangeCommand;
 
-public class FontPickAction extends SelectionAction {
-	
-	public FontPickAction(IEditorPart part) {
+
+public class ChangeFontColorAction extends SelectionAction {
+
+	public ChangeFontColorAction(IEditorPart part) {
 		super(part);
 	}
 	
 	public void run() {
 		
-		FontDialog dialog = new FontDialog(getWorkbenchPart().getSite().getShell());
-		FontData fontData = dialog.open();
-		
-		if ( fontData != null ) {
+		ColorDialog dialog = new ColorDialog(getWorkbenchPart().getSite().getShell());
+		RGB selectedColor = dialog.open();
+		if ( selectedColor != null ) {
 			
 			List<FDTextShape> lists = new ArrayList<FDTextShape>();
 			for ( Object item : getSelectedObjects() ) {
@@ -38,8 +36,7 @@ public class FontPickAction extends SelectionAction {
 			}
 			
 			if (lists.size()>0) {
-				CommandStack stack = (CommandStack)getWorkbenchPart().getAdapter(CommandStack.class);
-				stack.execute(new FontChangeCommand(lists, FontInfo.create(fontData)));
+				execute(new FontColorChangeCommand(lists, selectedColor));
 			} else {
 				// TODO change color
 			}
@@ -50,4 +47,5 @@ public class FontPickAction extends SelectionAction {
 	protected boolean calculateEnabled() {
 		return true;
 	}
+
 }

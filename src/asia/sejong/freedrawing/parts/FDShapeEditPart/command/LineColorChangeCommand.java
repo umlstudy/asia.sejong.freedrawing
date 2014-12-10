@@ -9,34 +9,34 @@ import org.eclipse.swt.graphics.RGB;
 
 import asia.sejong.freedrawing.model.FDElement;
 
-public class BorderColorChangeCommand extends Command {
+public class LineColorChangeCommand extends Command {
 
-	private List<FDElement> baseObjects;
+	private List<FDElement> elements;
 	private RGB newColor;
 	
 	private Map<FDElement, RGB> oldColors;
 	
-	public BorderColorChangeCommand(List<FDElement> baseObjects, RGB newColor ) {
-		this.baseObjects = baseObjects;
+	public LineColorChangeCommand(List<FDElement> elements, RGB newColor ) {
+		this.elements = elements;
 		this.newColor = newColor;
 		this.oldColors = new HashMap<FDElement, RGB>();
 	}
 	
 	public void execute() {
 		oldColors.clear();
-		for ( FDElement item : baseObjects ) {
-			oldColors.put(item, item.getBorderColor());
-			if ( item.getBorderColor() != newColor ) {
-				item.setBorderColor(newColor);
+		for ( FDElement item : elements ) {
+			oldColors.put(item, item.getLineColor());
+			if ( item.getLineColor() != newColor ) {
+				item.setLineColor(newColor);
 			}
 		}
 	}
 	
 	public void undo() {
-		for ( FDElement item : baseObjects ) {
+		for ( FDElement item : elements ) {
 			RGB oldColor = oldColors.get(item);
-			if ( !item.getBorderColor().equals(oldColor) ) {
-				item.setBorderColor(oldColor);
+			if ( !item.getLineColor().equals(oldColor) ) {
+				item.setLineColor(oldColor);
 			}
 		}
 	}

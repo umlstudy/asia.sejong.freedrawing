@@ -10,7 +10,7 @@ import asia.sejong.freedrawing.resources.IconManager.IconType;
 
 public abstract class PaletteActionFactory extends LocalActionFactory {
 
-	public static final PaletteActionFactory TOGGLE_PANNING = new PaletteActionFactory("TOGGLE_PANNING") {
+	public static final PaletteActionFactory SELECT_PANNING = new PaletteActionFactory("SELECT_PANNING") {
 		public PaletteAction create(FreedrawingEditor editor) {
 			AbstractTool tool = FDToolFactory.PANNING_SELECTION_TOOL.createTool(editor);
 			PaletteAction action = new PaletteAction(editor, ContextManager.getInstance().getIconManager().getSelectImages());
@@ -23,7 +23,20 @@ public abstract class PaletteActionFactory extends LocalActionFactory {
 		}
 	};
 	
-	public static final PaletteActionFactory TOGGLE_RECTANGLE = new PaletteActionFactory("TOGGLE_RECTANGLE") {
+	public static final PaletteActionFactory SELECT_MARQUEE = new PaletteActionFactory("SELECT_MARQUEE") {
+		public PaletteAction create(FreedrawingEditor editor) {
+			AbstractTool tool = FDToolFactory.MARQUEE_SELECTION_TOOL.createTool(editor);
+			PaletteAction action = new PaletteAction(editor, ContextManager.getInstance().getIconManager().getMarqueeImages());
+			action.setId(getId());
+			action.setTool(tool);
+			action.setImageDescriptor(ContextManager.getInstance().getIconManager().getMarqueeImageDescriptor(IconType.NORMAL));
+			action.setText("마큐");
+			
+			return action;
+		}
+	};
+	
+	public static final PaletteActionFactory CREATE_RECTANGLE = new PaletteActionFactory("CREATE_RECTANGLE") {
 		public PaletteAction create(FreedrawingEditor editor) {
 			AbstractTool tool = FDToolFactory.RECT_CREATION_TOOL.createTool(editor);
 			PaletteAction action = new PaletteAction(editor, ContextManager.getInstance().getIconManager().getRectangleImages());
@@ -74,21 +87,8 @@ public abstract class PaletteActionFactory extends LocalActionFactory {
 			return action;
 		}
 	};
-
-	public static final PaletteActionFactory TOGGLE_MARQUEE = new PaletteActionFactory("TOGGLE_MARQUEE") {
-		public PaletteAction create(FreedrawingEditor editor) {
-			AbstractTool tool = FDToolFactory.MARQUEE_SELECTION_TOOL.createTool(editor);
-			PaletteAction action = new PaletteAction(editor, ContextManager.getInstance().getIconManager().getMarqueeImages());
-			action.setId(getId());
-			action.setTool(tool);
-			action.setImageDescriptor(ContextManager.getInstance().getIconManager().getMarqueeImageDescriptor(IconType.NORMAL));
-			action.setText("마큐");
-			
-			return action;
-		}
-	};
 	
-	public static final PaletteActionFactory TOGGLE_CONNECTION = new PaletteActionFactory("TOGGLE_CONNECTION") {
+	public static final PaletteActionFactory CREATE_CONNECTION = new PaletteActionFactory("CREATE_CONNECTION") {
 		public PaletteAction create(FreedrawingEditor editor) {
 			AbstractTool tool = FDToolFactory.CONNECTION_CREATION_TOOL.createTool(editor);
 			PaletteAction action = new PaletteAction(editor, ContextManager.getInstance().getIconManager().getConnectionImages());

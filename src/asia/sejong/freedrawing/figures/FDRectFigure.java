@@ -1,6 +1,5 @@
 package asia.sejong.freedrawing.figures;
 
-import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.CompoundBorder;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.Label;
@@ -11,7 +10,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.RGB;
-import org.eclipse.swt.widgets.Display;
 
 import asia.sejong.freedrawing.model.FontInfo;
 import asia.sejong.freedrawing.resources.ContextManager;
@@ -28,7 +26,6 @@ public class FDRectFigure extends Label implements FDTextShapeFigure {
 	}
 	
 	protected void paintFigure(Graphics graphics) {
-		graphics.setBackgroundColor(ColorConstants.white);
 //		Rectangle b = getBounds();
 //		final int fold = NoteBorder.FOLD;
 //		graphics.fillRectangle(b.x + fold, b.y, b.width - fold, fold);
@@ -41,7 +38,7 @@ public class FDRectFigure extends Label implements FDTextShapeFigure {
 		
 //		Transform tr = new Transform();
 //		tr.setRotation(39f);
-		graphics.setBackgroundColor(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_CYAN));
+		graphics.setBackgroundColor(getBackgroundColor());
 		graphics.fillRectangle(r);
 		graphics.setAntialias(SWT.ON);
 //		graphics.rotate(3);
@@ -101,5 +98,23 @@ public class FDRectFigure extends Label implements FDTextShapeFigure {
 	@Override
 	public void setAlpha(int alpha) {
 		this.alpha = alpha;
+	}
+	
+	@Override
+	public void setBackgroundColor(RGB rgbColor) {
+		Color color = null;
+		if ( rgbColor != null ) {
+			color = ContextManager.getInstance().getColorManager().get(rgbColor);
+			super.setBackgroundColor(color);
+		}	
+	}
+	
+	@Override
+	public void setFontColor(RGB rgbColor) {
+		Color color = null;
+		if ( rgbColor != null ) {
+			color = ContextManager.getInstance().getColorManager().get(rgbColor);
+			super.setForegroundColor(color);
+		}	
 	}
 }

@@ -11,22 +11,22 @@ public abstract class FDElement extends FDBase implements Cloneable, Serializabl
 	
 	private static final long serialVersionUID = 1785663272619287600L;
 
-	private RGB borderColor;
+	private RGB lineColor;
 
-	public RGB getBorderColor() {
-		return borderColor;
+	public RGB getLineColor() {
+		return lineColor;
 	}
 
-	public final void setBorderColor(RGB borderColor) {
-		this.borderColor = borderColor;
+	public final void setLineColor(RGB lineColor) {
+		this.lineColor = lineColor;
 		
 		// send event
-		fireBorderColorChanged(borderColor);
+		fireLineColorChanged(lineColor);
 	}
 
-	protected void fireBorderColorChanged(RGB rgbColor) {
+	protected void fireLineColorChanged(RGB rgbColor) {
 		for (FDBaseListener l : listeners) {
-			((FDElementListener)l).borderColorChanged(rgbColor);
+			((FDElementListener)l).lineColorChanged(rgbColor);
 		}
 	}
 	
@@ -57,7 +57,7 @@ public abstract class FDElement extends FDBase implements Cloneable, Serializabl
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
-		object.setBorderColor(borderColor);
+		object.setLineColor(lineColor);
 		return object;
 	}
 	
@@ -70,12 +70,12 @@ public abstract class FDElement extends FDBase implements Cloneable, Serializabl
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void fireBorderColorChanged(RGB borderColor) {
+			protected void fireLineColorChanged(RGB borderColor) {
 				
 			}
 		};
 		
-		ele.setBorderColor(new RGB(1, 2, 3));
+		ele.setLineColor(new RGB(1, 2, 3));
 		try {
 			FDElement clone = (FDElement)ele.clone();
 			System.out.println(clone);

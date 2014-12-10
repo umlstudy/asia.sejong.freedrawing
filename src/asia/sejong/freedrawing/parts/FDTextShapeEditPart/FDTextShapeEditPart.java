@@ -14,6 +14,7 @@ import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
@@ -36,8 +37,9 @@ public abstract class FDTextShapeEditPart extends FDShapeEditPart implements Tex
 	protected void refreshVisuals() {
 		FDTextShape m = (FDTextShape) getModel();
 		
-		setText(m.getText());
-		setFont(m.getFontInfo());
+		((FDTextShapeFigure)getFigure()).setText(m.getText());
+		((FDTextShapeFigure)getFigure()).setFont(m.getFontInfo());
+		((FDTextShapeFigure)getFigure()).setFontColor(m.getFontColor());
 		
 		super.refreshVisuals();
 	}
@@ -115,25 +117,24 @@ public abstract class FDTextShapeEditPart extends FDShapeEditPart implements Tex
 		}
 	}
 	
-	protected final void setFont(FontInfo fontInfo) {
-		((FDTextShapeFigure)getFigure()).setFont(fontInfo);
-	}
-	
-	private void setText(String newText) {
-		((FDTextShapeFigure)getFigure()).setText(newText);
-	}
-	
 	// ==========================================================================
 	// FDTextShapeListener
 	
 	@Override
 	public final void textChanged(String newText) {
-		setText(newText);
+		((FDTextShapeFigure)getFigure()).setText(newText);
+		refreshVisuals();
 	}
 
 	@Override
 	public final void fontChanged(FontInfo fontInfo) {
-		setFont(fontInfo);
-		getFigure().repaint();
+		((FDTextShapeFigure)getFigure()).setFont(fontInfo);
+		refreshVisuals();
+	}
+	
+	@Override
+	public final void fontColorChanged(RGB fontColor) {
+		((FDTextShapeFigure)getFigure()).setFontColor(fontColor);
+		refreshVisuals();
 	}
 }

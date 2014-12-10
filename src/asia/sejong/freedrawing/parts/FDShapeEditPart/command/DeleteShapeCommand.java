@@ -8,7 +8,7 @@ import asia.sejong.freedrawing.model.FDRoot;
 import asia.sejong.freedrawing.model.FDShape;
 import asia.sejong.freedrawing.model.FDWire;
 
-public class FDShapeDeleteCommand extends Command
+public class DeleteShapeCommand extends Command
 {
 	private final FDRoot nodeRoot;
 	private final FDShape target;
@@ -16,7 +16,7 @@ public class FDShapeDeleteCommand extends Command
 	private ArrayList<FDWire> removedSourceWires;
 	private ArrayList<FDWire> removedTargetWires;
 
-	public FDShapeDeleteCommand(FDRoot nodeRoot, FDShape target) {
+	public DeleteShapeCommand(FDRoot nodeRoot, FDShape target) {
 		super("Delete Node");
 		this.nodeRoot = nodeRoot;
 		this.target = target;

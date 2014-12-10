@@ -29,11 +29,13 @@ public class FDImageEditPart extends FDShapeEditPart implements FDImageListener 
 	public void setParent(EditPart parent) {
 		super.setParent(parent);
 		
-		// 복수개의 모델에서 하나의 이미지 모델을 사용토록 하기 위해
-		// FDRoot에 저장한 후 이를 참조한다.
-		FDImage model = (FDImage)getModel();
-		byte[] savedImageBytes = getRootModel().getSavedImageBytes(model.getImageBytes());
-		model.setImageBytes(savedImageBytes);
+		if ( parent != null ) {
+			// 복수개의 모델에서 하나의 이미지 모델을 사용토록 하기 위해
+			// FDRoot에 저장한 후 이를 참조한다.
+			FDImage model = (FDImage)getModel();
+			byte[] savedImageBytes = getRootModel().getSavedImageBytes(model.getImageBytes());
+			model.setImageBytes(savedImageBytes);
+		}
 	}
 	
 	private void setImage(Image image) {
