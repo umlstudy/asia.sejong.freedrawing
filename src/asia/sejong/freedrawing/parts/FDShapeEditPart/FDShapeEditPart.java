@@ -46,10 +46,14 @@ public abstract class FDShapeEditPart extends AbstractGraphicalEditPart implemen
 	protected void refreshVisuals() {
 		FDShape m = (FDShape) getModel();
 		
-		((FDShapeFigure)getFigure()).setBorderColor(m.getLineColor());
-		((FDShapeFigure)getFigure()).setBackgroundColor(m.getBackgroundColor());
-		((FDShapeFigure)getFigure()).setLineWidth(m.getLineWidth());
-		((FDShapeFigure)getFigure()).setLineStyle(m.getLineStyle());
+		((FDShapeFigure)getFigure()).setLineColorEx(m.getLineColor());
+		((FDShapeFigure)getFigure()).setBackgroundColorEx(m.getBackgroundColor());
+		if ( m.getLineWidth() > 0 ) {
+			((FDShapeFigure)getFigure()).setLineWidthEx(m.getLineWidth());
+		}
+		if ( m.getLineStyle() > 0 ) {
+			((FDShapeFigure)getFigure()).setLineStyleEx(m.getLineStyle());
+		}
 		
 		super.refreshVisuals();
 	}

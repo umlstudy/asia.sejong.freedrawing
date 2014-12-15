@@ -34,7 +34,6 @@ public class ChangeLineStyleAction extends SelectionAction {
 			}
 		}
 		
-		
 		if (lists.size()>0) {
 			execute(new LineStyleChangeCommand(lists, lineStyle));
 		} else {

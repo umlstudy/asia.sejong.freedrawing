@@ -6,11 +6,11 @@ import asia.sejong.freedrawing.model.FontInfo;
 
 public interface FDTextShapeFigure extends FDShapeFigure {
 
-	void setText(String text);
+	void setTextEx(String text);
 
-	void setFont(FontInfo fontInfo);
+	void setFontInfoEx(FontInfo fontInfo);
 	
-	String getText();
+//	String getText();
 
-	void setFontColor(RGB fontColor);
+	void setFontColorEx(RGB fontColor);
 }

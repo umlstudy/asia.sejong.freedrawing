@@ -7,6 +7,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 
+import asia.sejong.freedrawing.model.FDElement;
+import asia.sejong.freedrawing.model.FDEllipse;
 import asia.sejong.freedrawing.model.FontInfo;
 import asia.sejong.freedrawing.resources.ContextManager;
 
@@ -33,17 +35,12 @@ public class FDEllipseFigure extends Ellipse implements FDTextShapeFigure {
 	}
 
 	@Override
-	public void setText(String text) {
+	public void setTextEx(String text) {
 		
 	}
 	
 	@Override
-	public String getText() {
-		return null;
-	}
-
-	@Override
-	public void setBorderColor(RGB rgbColor) {
+	public void setLineColorEx(RGB rgbColor) {
 		@SuppressWarnings("unused")
 		Color color = null; // TODO
 		if ( rgbColor != null ) {
@@ -53,13 +50,13 @@ public class FDEllipseFigure extends Ellipse implements FDTextShapeFigure {
 	}
 
 	@Override
-	public void setFont(FontInfo fontInfo) {
+	public void setFontInfoEx(FontInfo fontInfo) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void setBackgroundColor(RGB rgbColor) {
+	public void setBackgroundColorEx(RGB rgbColor) {
 		Color color = null;
 		if ( rgbColor != null ) {
 			color = ContextManager.getInstance().getColorManager().get(rgbColor);
@@ -68,11 +65,39 @@ public class FDEllipseFigure extends Ellipse implements FDTextShapeFigure {
 	}
 	
 	@Override
-	public void setFontColor(RGB rgbColor) {
+	public void setFontColorEx(RGB rgbColor) {
 		Color color = null;
 		if ( rgbColor != null ) {
 			color = ContextManager.getInstance().getColorManager().get(rgbColor);
 			super.setForegroundColor(color);
 		}	
+	}
+
+	@Override
+	public void setAlphaEx(int alpha) {
+		
+	}
+
+	@Override
+	public void setLineWidthEx(int lineWidth) {
+		
+	}
+
+	@Override
+	public void setLineStyleEx(int lineStyle) {
+		
+	}
+
+	@Override
+	public void setModelAttributes(FDElement model_) {
+		FDEllipse model = (FDEllipse)model_;
+		setTextEx(model.getText());
+		setFontInfoEx(model.getFontInfo());
+		setFontColorEx(model.getFontColor());
+		//setAlpah(model.getAlpha());
+		setBackgroundColorEx(model.getBackgroundColor());
+		setLineWidthEx(model.getLineWidth());
+		setLineStyleEx(model.getLineStyle());
+		setLineColorEx(model.getLineColor());
 	}
 }

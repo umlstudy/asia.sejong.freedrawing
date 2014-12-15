@@ -12,13 +12,12 @@ import asia.sejong.freedrawing.editor.actions.selection.ChangeFontAction;
 import asia.sejong.freedrawing.editor.actions.selection.ChangeFontColorAction;
 import asia.sejong.freedrawing.editor.actions.selection.ChangeLineColorAction;
 import asia.sejong.freedrawing.editor.actions.selection.ChangeLineStyleAction;
+import asia.sejong.freedrawing.editor.actions.selection.ChangeLineThickAction;
 import asia.sejong.freedrawing.editor.actions.selection.ChangeRouterAction;
 import asia.sejong.freedrawing.editor.actions.selection.ChangeZOrderAction;
-import asia.sejong.freedrawing.editor.actions.selection.MoveAction;
 import asia.sejong.freedrawing.editor.actions.selection.ChangeZOrderAction.ZOrderDirection;
+import asia.sejong.freedrawing.editor.actions.selection.MoveAction;
 import asia.sejong.freedrawing.editor.actions.selection.MoveAction.Direction;
-import asia.sejong.freedrawing.resources.ContextManager;
-import asia.sejong.freedrawing.resources.IconManager.IconType;
 
 public abstract class SelectionActionFactory extends LocalActionFactory {
 
@@ -174,7 +173,7 @@ public abstract class SelectionActionFactory extends LocalActionFactory {
 			
 			ChangeLineStyleAction action = new ChangeLineStyleAction(part, SWT.LINE_DASH);
 			action.setId(getId());
-			action.setImageDescriptor(ContextManager.getInstance().getIconManager().getColorPickImageDescriptor(IconType.NORMAL));
+//			action.setImageDescriptor(ContextManager.getInstance().getIconManager().getColorPickImageDescriptor(IconType.NORMAL));
 			action.setText("데쉬");
 			
 			return action;
@@ -186,7 +185,7 @@ public abstract class SelectionActionFactory extends LocalActionFactory {
 			
 			ChangeLineStyleAction action = new ChangeLineStyleAction(part, SWT.LINE_DASHDOT);
 			action.setId(getId());
-			action.setImageDescriptor(ContextManager.getInstance().getIconManager().getColorPickImageDescriptor(IconType.NORMAL));
+//			action.setImageDescriptor(ContextManager.getInstance().getIconManager().getColorPickImageDescriptor(IconType.NORMAL));
 			action.setText("데쉬점");
 			
 			return action;
@@ -198,7 +197,7 @@ public abstract class SelectionActionFactory extends LocalActionFactory {
 			
 			ChangeLineStyleAction action = new ChangeLineStyleAction(part, SWT.LINE_DASHDOTDOT);
 			action.setId(getId());
-			action.setImageDescriptor(ContextManager.getInstance().getIconManager().getColorPickImageDescriptor(IconType.NORMAL));
+//			action.setImageDescriptor(ContextManager.getInstance().getIconManager().getColorPickImageDescriptor(IconType.NORMAL));
 			action.setText("데쉬점점");
 			
 			return action;
@@ -210,7 +209,7 @@ public abstract class SelectionActionFactory extends LocalActionFactory {
 			
 			ChangeLineStyleAction action = new ChangeLineStyleAction(part, SWT.LINE_DOT);
 			action.setId(getId());
-			action.setImageDescriptor(ContextManager.getInstance().getIconManager().getColorPickImageDescriptor(IconType.NORMAL));
+//			action.setImageDescriptor(ContextManager.getInstance().getIconManager().getColorPickImageDescriptor(IconType.NORMAL));
 			action.setText("점");
 			
 			return action;
@@ -222,7 +221,7 @@ public abstract class SelectionActionFactory extends LocalActionFactory {
 			
 			ChangeLineStyleAction action = new ChangeLineStyleAction(part, SWT.LINE_SOLID);
 			action.setId(getId());
-			action.setImageDescriptor(ContextManager.getInstance().getIconManager().getColorPickImageDescriptor(IconType.NORMAL));
+//			action.setImageDescriptor(ContextManager.getInstance().getIconManager().getColorPickImageDescriptor(IconType.NORMAL));
 			action.setText("솔리드");
 			
 			return action;
@@ -237,8 +236,7 @@ public abstract class SelectionActionFactory extends LocalActionFactory {
 			
 			ChangeLineColorAction action = new ChangeLineColorAction(part);
 			action.setId(getId());
-			action.setImageDescriptor(ContextManager.getInstance().getIconManager().getColorPickImageDescriptor(IconType.NORMAL));
-			action.setText("칼라선택");
+			action.setText("선색");
 			
 			return action;
 		}
@@ -260,8 +258,8 @@ public abstract class SelectionActionFactory extends LocalActionFactory {
 			
 			ChangeFontAction action = new ChangeFontAction(part);
 			action.setId(getId());
-			action.setImageDescriptor(ContextManager.getInstance().getIconManager().getFontPickImageDescriptor(IconType.NORMAL));
-			action.setText("폰트선택");
+//			action.setImageDescriptor(ContextManager.getInstance().getIconManager().getFontPickImageDescriptor(IconType.NORMAL));
+			action.setText("글꼴");
 			
 			return action;
 		}
@@ -272,7 +270,18 @@ public abstract class SelectionActionFactory extends LocalActionFactory {
 			
 			ChangeFontColorAction action = new ChangeFontColorAction(part);
 			action.setId(getId());
-			action.setText("폰트칼라선택");
+			action.setText("글자색");
+			
+			return action;
+		}
+	};
+	
+	public static final SelectionActionFactory CHANGE_LINE_WIDTH = new SelectionActionFactory("CHANGE_LINE_WIDTH") {
+		public SelectionAction create(IEditorPart part) {
+			
+			ChangeLineThickAction action = new ChangeLineThickAction(part);
+			action.setId(getId());
+			action.setText("선두께");
 			
 			return action;
 		}

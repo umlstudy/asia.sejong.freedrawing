@@ -27,6 +27,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 
 import asia.sejong.freedrawing.debug.ForEditPart;
+import asia.sejong.freedrawing.figures.FDElementFigure;
 import asia.sejong.freedrawing.figures.FDWireFigure;
 import asia.sejong.freedrawing.model.FDRoot;
 import asia.sejong.freedrawing.model.FDWire;
@@ -219,9 +220,9 @@ public class FDWireEditPart extends AbstractConnectionEditPart implements FDWire
 	protected void refreshVisuals() {
 		FDWire m = getModel();
 		
-		((FDWireFigure)getFigure()).setBorderColor(m.getLineColor());
-		((FDWireFigure)getFigure()).setLineWidth(m.getLineWidth());
-		((FDWireFigure)getFigure()).setLineStyle(m.getLineStyle());
+		((FDElementFigure)getFigure()).setLineColorEx(m.getLineColor());
+		((FDElementFigure)getFigure()).setLineWidthEx(m.getLineWidth());
+		((FDElementFigure)getFigure()).setLineStyleEx(m.getLineStyle());
 		
 		refreshBendpoints();
 		

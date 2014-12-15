@@ -37,9 +37,9 @@ public abstract class FDTextShapeEditPart extends FDShapeEditPart implements Tex
 	protected void refreshVisuals() {
 		FDTextShape m = (FDTextShape) getModel();
 		
-		((FDTextShapeFigure)getFigure()).setText(m.getText());
-		((FDTextShapeFigure)getFigure()).setFont(m.getFontInfo());
-		((FDTextShapeFigure)getFigure()).setFontColor(m.getFontColor());
+		((FDTextShapeFigure)getFigure()).setTextEx(m.getText());
+		((FDTextShapeFigure)getFigure()).setFontInfoEx(m.getFontInfo());
+		((FDTextShapeFigure)getFigure()).setFontColorEx(m.getFontColor());
 		
 		super.refreshVisuals();
 	}
@@ -74,8 +74,10 @@ public abstract class FDTextShapeEditPart extends FDShapeEditPart implements Tex
 				
 				@Override
 				protected void initCellEditor() {
-					String text = ((FDTextShapeFigure) getFigure()).getText();
-					getCellEditor().setValue(text);
+					String text = ((FDTextShape) getModel()).getText();
+					if ( text != null ) {
+						getCellEditor().setValue(text);
+					}
 				}
 				
 				@Override
@@ -122,19 +124,19 @@ public abstract class FDTextShapeEditPart extends FDShapeEditPart implements Tex
 	
 	@Override
 	public final void textChanged(String newText) {
-		((FDTextShapeFigure)getFigure()).setText(newText);
+		((FDTextShapeFigure)getFigure()).setTextEx(newText);
 		refreshVisuals();
 	}
 
 	@Override
 	public final void fontChanged(FontInfo fontInfo) {
-		((FDTextShapeFigure)getFigure()).setFont(fontInfo);
+		((FDTextShapeFigure)getFigure()).setFontInfoEx(fontInfo);
 		refreshVisuals();
 	}
 	
 	@Override
 	public final void fontColorChanged(RGB fontColor) {
-		((FDTextShapeFigure)getFigure()).setFontColor(fontColor);
+		((FDTextShapeFigure)getFigure()).setFontColorEx(fontColor);
 		refreshVisuals();
 	}
 }

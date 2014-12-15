@@ -6,6 +6,8 @@ import org.eclipse.draw2d.LineBorder;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 
+import asia.sejong.freedrawing.model.FDElement;
+import asia.sejong.freedrawing.model.FDImage;
 import asia.sejong.freedrawing.resources.ContextManager;
 
 public class FDImageFigure extends ImageFigure implements FDShapeFigure {
@@ -23,7 +25,6 @@ public class FDImageFigure extends ImageFigure implements FDShapeFigure {
 //		graphics.setBackgroundColor(getBackgroundColor());
 //		graphics.setForegroundColor(getForegroundColor());
 //		graphics.setBackgroundColor(new Color(null, 31, 31, 31));
-		
 		graphics.setAlpha(alpha);
 		super.paintFigure(graphics);
 	}
@@ -35,26 +36,12 @@ public class FDImageFigure extends ImageFigure implements FDShapeFigure {
 	}
 
 	@Override
-	public void setBorderColor(RGB rgbColor) {
-		Color color = null;
-		if ( rgbColor != null ) {
-			color = ContextManager.getInstance().getColorManager().get(rgbColor);
-			setBackgroundColor(color);
-		}
-	}
-
-	@Override
-	public Integer getAlpha() {
-		return alpha;
-	}
-
-	@Override
-	public void setAlpha(int alpha) {
+	public void setAlphaEx(int alpha) {
 		this.alpha = alpha;
 	}
 	
 	@Override
-	public void setBackgroundColor(RGB rgbColor) {
+	public void setBackgroundColorEx(RGB rgbColor) {
 		Color color = null;
 		if ( rgbColor != null ) {
 			color = ContextManager.getInstance().getColorManager().get(rgbColor);
@@ -63,12 +50,31 @@ public class FDImageFigure extends ImageFigure implements FDShapeFigure {
 	}
 
 	@Override
-	public void setLineWidth(int lineWidth) {
-		// nothing to do
+	public void setLineWidthEx(int lineWidth) {
 	}
 
 	@Override
-	public void setLineStyle(int lineStyle) {
-		// nothing to do
+	public void setLineStyleEx(int lineStyle) {
+	}
+
+	@Override
+	public void setLineColorEx(RGB rgbColor) {
+		Color color = null;
+		if ( rgbColor != null ) {
+			color = ContextManager.getInstance().getColorManager().get(rgbColor);
+			setBackgroundColor(color);
+		}
+	}
+	
+	@Override
+	public void setModelAttributes(FDElement model_) {
+		FDImage model = (FDImage)model_;
+//		setTextEx(model.getTText());
+//		setFontInfoEx(model.getFontInfo());
+//		setFontColorEx(model.getFontColor());
+		setBackgroundColorEx(model.getBackgroundColor());
+		setLineWidthEx(model.getLineWidth());
+		setLineStyleEx(model.getLineStyle());
+		setLineColorEx(model.getLineColor());
 	}
 }

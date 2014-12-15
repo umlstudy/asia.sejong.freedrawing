@@ -2,17 +2,16 @@ package asia.sejong.freedrawing.figures;
 
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.Label;
-import org.eclipse.draw2d.LineBorder;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.RGB;
 
+import asia.sejong.freedrawing.model.FDElement;
+import asia.sejong.freedrawing.model.FDLabel;
 import asia.sejong.freedrawing.model.FontInfo;
 import asia.sejong.freedrawing.resources.ContextManager;
 
 public class FDLabelFigure extends Label implements FDTextShapeFigure {
-
-	private Integer alpha = 0xff;
 
 	public FDLabelFigure() {
 		setPreferredSize(100, 100);
@@ -23,22 +22,13 @@ public class FDLabelFigure extends Label implements FDTextShapeFigure {
 		super.paintFigure(graphics);
 	}
 
-	// TODO
-	public LineBorder getLineBorder() {
-		return null;
-	}
-
 	@Override
-	public void setText(String text) {
+	public void setTextEx(String text) {
 		super.setText(text);
 	}
 
 	@Override
-	public void setBorderColor(RGB rgbColor) {
-	}
-
-	@Override
-	public void setFont(FontInfo fontInfo) {
+	public void setFontInfoEx(FontInfo fontInfo) {
 		Font font = null;
 		if ( fontInfo != null ) {
 			font = ContextManager.getInstance().getFontManager().get(fontInfo);
@@ -48,17 +38,11 @@ public class FDLabelFigure extends Label implements FDTextShapeFigure {
 	}
 
 	@Override
-	public Integer getAlpha() {
-		return alpha;
-	}
-
-	@Override
-	public void setAlpha(int alpha) {
-		this.alpha = alpha;
+	public void setAlphaEx(int alpha) {
 	}
 	
 	@Override
-	public void setBackgroundColor(RGB rgbColor) {
+	public void setBackgroundColorEx(RGB rgbColor) {
 		Color color = null;
 		if ( rgbColor != null ) {
 			color = ContextManager.getInstance().getColorManager().get(rgbColor);
@@ -67,7 +51,7 @@ public class FDLabelFigure extends Label implements FDTextShapeFigure {
 	}
 	
 	@Override
-	public void setFontColor(RGB rgbColor) {
+	public void setFontColorEx(RGB rgbColor) {
 		Color color = null;
 		if ( rgbColor != null ) {
 			color = ContextManager.getInstance().getColorManager().get(rgbColor);
@@ -76,12 +60,32 @@ public class FDLabelFigure extends Label implements FDTextShapeFigure {
 	}
 
 	@Override
-	public void setLineWidth(int lineWidth) {
+	public void setLineWidthEx(int lineWidth) {
 		
 	}
 
 	@Override
-	public void setLineStyle(int lineStyle) {
+	public void setLineStyleEx(int lineStyle) {
+		
+	}
+
+	@Override
+	public void setLineColorEx(RGB rgbColor) {
+		
+	}
+
+	@Override
+	public void setModelAttributes(FDElement model_) {
+		FDLabel model = (FDLabel)model_;
+		
+		setTextEx(model.getText());
+		setFontInfoEx(model.getFontInfo());
+		setFontColorEx(model.getFontColor());
+		//setAlpah(model.getAlpha());
+		setBackgroundColorEx(model.getBackgroundColor());
+		setLineWidthEx(model.getLineWidth());
+		setLineStyleEx(model.getLineStyle());
+		setLineColorEx(model.getLineColor());
 		
 	}
 }

@@ -11,6 +11,8 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.RGB;
 
+import asia.sejong.freedrawing.model.FDElement;
+import asia.sejong.freedrawing.model.FDRect;
 import asia.sejong.freedrawing.model.FontInfo;
 import asia.sejong.freedrawing.resources.ContextManager;
 
@@ -82,7 +84,7 @@ public class FDRectFigure extends Label implements FDTextShapeFigure {
 	}
 
 	@Override
-	public void setFont(FontInfo fontInfo) {
+	public void setFontInfoEx(FontInfo fontInfo) {
 		Font font = null;
 		if ( fontInfo != null ) {
 			font = ContextManager.getInstance().getFontManager().get(fontInfo);
@@ -91,17 +93,12 @@ public class FDRectFigure extends Label implements FDTextShapeFigure {
 	}
 	
 	@Override
-	public Integer getAlpha() {
-		return alpha;
-	}
-
-	@Override
-	public void setAlpha(int alpha) {
+	public void setAlphaEx(int alpha) {
 		this.alpha = alpha;
 	}
 	
 	@Override
-	public void setBackgroundColor(RGB rgbColor) {
+	public void setBackgroundColorEx(RGB rgbColor) {
 		Color color = null;
 		if ( rgbColor != null ) {
 			color = ContextManager.getInstance().getColorManager().get(rgbColor);
@@ -110,7 +107,7 @@ public class FDRectFigure extends Label implements FDTextShapeFigure {
 	}
 	
 	@Override
-	public void setFontColor(RGB rgbColor) {
+	public void setFontColorEx(RGB rgbColor) {
 		Color color = null;
 		if ( rgbColor != null ) {
 			color = ContextManager.getInstance().getColorManager().get(rgbColor);
@@ -119,12 +116,41 @@ public class FDRectFigure extends Label implements FDTextShapeFigure {
 	}
 
 	@Override
-	public void setLineWidth(int lineWidth) {
+	public void setLineWidthEx(int lineWidth) {
 		lineBorder.setWidth(lineWidth);
 	}
 
 	@Override
-	public void setLineStyle(int lineStyle) {
-		lineBorder.setStyle(lineStyle);
+	public void setLineStyleEx(int lineStyle) {
+		// TODO
+		if ( lineStyle != 0 ) {
+			lineBorder.setStyle(lineStyle);
+		} else {
+			lineBorder.setStyle(SWT.LINE_DASHDOTDOT);
+		}
+	}
+
+	@Override
+	public void setLineColorEx(RGB rgbColor) {
+		
+	}
+
+	@Override
+	public void setModelAttributes(FDElement model_) {
+		FDRect model = (FDRect)model_;
+		
+		setTextEx(model.getText());
+		setFontInfoEx(model.getFontInfo());
+		setFontColorEx(model.getFontColor());
+		//setAlpah(model.getAlpha());
+		setBackgroundColorEx(model.getBackgroundColor());
+		setLineWidthEx(model.getLineWidth());
+		setLineStyleEx(model.getLineStyle());
+		setLineColorEx(model.getLineColor());
+	}
+
+	@Override
+	public void setTextEx(String text) {
+		super.setText(text);
 	}
 }

@@ -74,15 +74,22 @@ public class FDShapeResizableEditPolicy extends ResizableEditPolicy {
 		IFigure figure;
 
 		if (model instanceof FDRect) {
-			figure = new FDRectFigure();
+			FDRectFigure realFigure = new FDRectFigure();
+			realFigure.setModelAttributes((FDElement)model);
+			//realFigure.setAlpha(128);
+			
+			figure = realFigure;
 		} else if (model instanceof FDEllipse ) {
 			FDEllipseFigure realFigure = new FDEllipseFigure();
+			realFigure.setModelAttributes((FDElement)model);
+			realFigure.setAlpha(128);
 			
 //			FDEllipse ellipse = (FDEllipse)model;
 //			realFigure.setText(ellipse.getText());
 			figure = realFigure;
 		} else if (model instanceof FDLabel ) {
 			FDLabelFigure realFigure = new FDLabelFigure();
+			realFigure.setModelAttributes((FDElement)model);
 			
 //			FDEllipse ellipse = (FDEllipse)model;
 //			realFigure.setText(ellipse.getText());
@@ -92,7 +99,9 @@ public class FDShapeResizableEditPolicy extends ResizableEditPolicy {
 			FDImage imageModel = (FDImage)model;
 			Image image = ContextManager.getInstance().getImageManager().get(imageModel.getImageBytes());
 			realFigure.setImage(image);
-			realFigure.setAlpha(128);
+
+			realFigure.setModelAttributes((FDElement)model);
+			realFigure.setAlphaEx(128);
 			
 //			FDEllipse ellipse = (FDEllipse)model;
 //			realFigure.setText(ellipse.getText());
@@ -116,7 +125,7 @@ public class FDShapeResizableEditPolicy extends ResizableEditPolicy {
 		
 		if (model instanceof FDTextShape ) {
 			FDTextShapeFigure f = (FDTextShapeFigure)figure;
-			f.setText(((FDTextShape)model).getText());
+			f.setTextEx(((FDTextShape)model).getText());
 		}
 		
 		if (model instanceof FDShape ) {
@@ -125,12 +134,12 @@ public class FDShapeResizableEditPolicy extends ResizableEditPolicy {
 		
 		if (model instanceof FDElement ) {
 			FDElementFigure f = (FDElementFigure)figure;
-			f.setBorderColor(((FDElement)model).getLineColor());
+			f.setLineColorEx(((FDElement)model).getLineColor());
 		}
 		
 		if (model instanceof FDElement ) {
 			FDElementFigure f = (FDElementFigure)figure;
-			f.setBorderColor(((FDElement)model).getLineColor());
+			f.setLineColorEx(((FDElement)model).getLineColor());
 		}
 		
 		if (figure instanceof Shape ) {

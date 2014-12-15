@@ -10,6 +10,8 @@ import org.eclipse.swt.graphics.Path;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 
+import asia.sejong.freedrawing.model.FDElement;
+import asia.sejong.freedrawing.model.FDWire;
 import asia.sejong.freedrawing.resources.ContextManager;
 
 public class FDWireFigure extends PolylineConnection implements FDElementFigure {
@@ -165,7 +167,35 @@ public class FDWireFigure extends PolylineConnection implements FDElementFigure 
 		return new Point(beizerLocX, beizerLocY);
 	}
 	
-	public void setBorderColor(RGB rgbColor) {
+	@Override
+	public void setLineStyle(int lineStyle) {
+		if ( lineStyle > 0 ) {
+			super.setLineStyle(lineStyle);
+		}
+	}
+
+	@Override
+	public void setModelAttributes(FDElement model_) {
+		FDWire model = (FDWire)model_;
+		
+		//setAlpah(model.getAlpha());
+		setLineWidthEx(model.getLineWidth());
+		setLineStyleEx(model.getLineStyle());
+		setLineColorEx(model.getLineColor());
+	}
+
+	@Override
+	public void setLineWidthEx(int lineWidth) {
+		setLineWidth(lineWidth);
+	}
+
+	@Override
+	public void setLineStyleEx(int lineStyle) {
+		setLineStyle(lineStyle);
+	}
+
+	@Override
+	public void setLineColorEx(RGB rgbColor) {
 		Color color = null;
 		if ( rgbColor != null ) {
 			color = ContextManager.getInstance().getColorManager().get(rgbColor);
