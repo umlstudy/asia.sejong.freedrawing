@@ -217,10 +217,24 @@ public class FDWireEditPart extends AbstractConnectionEditPart implements FDWire
 	}
 	
 	protected void refreshVisuals() {
+		FDWire m = getModel();
+		
+		((FDWireFigure)getFigure()).setBorderColor(m.getLineColor());
+		((FDWireFigure)getFigure()).setLineWidth(m.getLineWidth());
+		((FDWireFigure)getFigure()).setLineStyle(m.getLineStyle());
+		
 		refreshBendpoints();
-//		if (getWire().getValue())
-//			getWireFigure().setForegroundColor(alive);
-//		else
-//			getWireFigure().setForegroundColor(dead);
+		
+		super.refreshVisuals();
+	}
+
+	@Override
+	public void lineStyleChanged(int lineStyle) {
+		refreshVisuals();
+	}
+
+	@Override
+	public void lineWidthChanged(int lineWidth) {
+		refreshVisuals();	
 	}
 }

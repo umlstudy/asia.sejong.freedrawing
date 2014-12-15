@@ -12,6 +12,8 @@ public abstract class FDElement extends FDBase implements Cloneable, Serializabl
 	private static final long serialVersionUID = 1785663272619287600L;
 
 	private RGB lineColor;
+	private int lineStyle;
+	private int lineWidth;
 
 	public RGB getLineColor() {
 		return lineColor;
@@ -23,10 +25,44 @@ public abstract class FDElement extends FDBase implements Cloneable, Serializabl
 		// send event
 		fireLineColorChanged(lineColor);
 	}
+	
+	public int getLineStyle() {
+		return lineStyle;
+	}
+
+	public void setLineStyle(int lineStyle) {
+		this.lineStyle = lineStyle;
+		
+		// send event
+		fireLineStyleChanged(lineStyle);
+	}
+
+	public int getLineWidth() {
+		return lineWidth;
+	}
+
+	public void setLineWidth(int lineWidth) {
+		this.lineWidth = lineWidth;
+		
+		// send event
+		fireLineWidthChanged(lineWidth);
+	}
 
 	protected void fireLineColorChanged(RGB rgbColor) {
 		for (FDBaseListener l : listeners) {
 			((FDElementListener)l).lineColorChanged(rgbColor);
+		}
+	}
+	
+	protected void fireLineStyleChanged(int lineStyle) {
+		for (FDBaseListener l : listeners) {
+			((FDElementListener)l).lineStyleChanged(lineStyle);
+		}
+	}
+	
+	protected void fireLineWidthChanged(int lineWidth) {
+		for (FDBaseListener l : listeners) {
+			((FDElementListener)l).lineWidthChanged(lineWidth);
 		}
 	}
 	

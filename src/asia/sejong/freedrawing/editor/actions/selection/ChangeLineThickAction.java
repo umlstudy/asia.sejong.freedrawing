@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.gef.EditPart;
-import org.eclipse.gef.commands.CommandStack;
 import org.eclipse.gef.ui.actions.SelectionAction;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.ColorDialog;
@@ -38,8 +37,7 @@ public class ChangeLineThickAction extends SelectionAction {
 			
 			
 			if (lists.size()>0) {
-				CommandStack stack = (CommandStack)getWorkbenchPart().getAdapter(CommandStack.class);
-				stack.execute(new LineColorChangeCommand(lists, selectedColor));
+				execute(new LineColorChangeCommand(lists, selectedColor));
 			} else {
 				// TODO change color
 			}

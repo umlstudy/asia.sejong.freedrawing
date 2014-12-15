@@ -1,8 +1,9 @@
-package asia.sejong.freedrawing.editor.actions;
+package asia.sejong.freedrawing.editor.actions.palette.factory;
 
 import org.eclipse.gef.tools.AbstractTool;
 
 import asia.sejong.freedrawing.editor.FreedrawingEditor;
+import asia.sejong.freedrawing.editor.actions.common.LocalActionFactory;
 import asia.sejong.freedrawing.editor.actions.palette.PaletteAction;
 import asia.sejong.freedrawing.editor.tools.FDToolFactory;
 import asia.sejong.freedrawing.resources.ContextManager;

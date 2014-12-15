@@ -6,4 +6,8 @@ import org.eclipse.swt.graphics.RGB;
 public interface FDElementListener extends FDBaseListener {
 
 	void lineColorChanged(RGB rgbColor);
+
+	void lineStyleChanged(int lineStyle);
+
+	void lineWidthChanged(int lineWidth);
 }

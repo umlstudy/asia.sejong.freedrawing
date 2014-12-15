@@ -9,13 +9,14 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
 
 import asia.sejong.freedrawing.editor.FreedrawingEditor;
+import asia.sejong.freedrawing.editor.actions.common.DropDownActionChangeListener;
 import asia.sejong.freedrawing.resources.IconManager.IconType;
 
-public class PaletteAction extends Action implements PaletteIconChangable {
+public class PaletteAction extends Action implements PaletteChangeListener {
 	
 	private AbstractTool tool;
 	
-	private PaletteActionChangeListener paletteActionChangeListener;
+	private DropDownActionChangeListener<PaletteAction> paletteActionChangeListener;
 	
 	private FreedrawingEditor editor;
 	
@@ -53,7 +54,7 @@ public class PaletteAction extends Action implements PaletteIconChangable {
 		this.editor = editor;
 	}
 
-	public void setPaletteActionChangeListener(PaletteActionChangeListener paletteActionChangeListener) {
+	public void setPaletteActionChangeListener(DropDownActionChangeListener<PaletteAction> paletteActionChangeListener) {
 		this.paletteActionChangeListener = paletteActionChangeListener;
 	}
 

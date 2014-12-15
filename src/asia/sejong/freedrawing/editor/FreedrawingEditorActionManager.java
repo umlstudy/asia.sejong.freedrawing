@@ -11,6 +11,7 @@ import org.eclipse.gef.Tool;
 import org.eclipse.gef.editparts.ZoomManager;
 import org.eclipse.gef.ui.actions.ActionRegistry;
 import org.eclipse.gef.ui.actions.GEFActionConstants;
+import org.eclipse.gef.ui.actions.SelectionAction;
 import org.eclipse.gef.ui.actions.ToggleGridAction;
 import org.eclipse.gef.ui.actions.ToggleRulerVisibilityAction;
 import org.eclipse.gef.ui.actions.ToggleSnapToGeometryAction;
@@ -31,14 +32,14 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Scale;
 import org.eclipse.swt.widgets.ToolBar;
 
-import asia.sejong.freedrawing.editor.actions.PaletteActionFactory;
-import asia.sejong.freedrawing.editor.actions.PaletteDropDownActionFactory;
-import asia.sejong.freedrawing.editor.actions.SelectionActionFactory;
+import asia.sejong.freedrawing.editor.actions.common.DropDownAction;
 import asia.sejong.freedrawing.editor.actions.palette.PaletteAction;
+import asia.sejong.freedrawing.editor.actions.palette.PaletteChangeListener;
 import asia.sejong.freedrawing.editor.actions.palette.PaletteDropDownAction;
-import asia.sejong.freedrawing.editor.actions.palette.PaletteIconChangable;
+import asia.sejong.freedrawing.editor.actions.palette.factory.PaletteActionFactory;
 import asia.sejong.freedrawing.editor.actions.selection.CopyToClipboardAction;
 import asia.sejong.freedrawing.editor.actions.selection.PasteFromClipboardAction;
+import asia.sejong.freedrawing.editor.actions.selection.factory.SelectionActionFactory;
 import asia.sejong.freedrawing.editor.tools.FDPanningSelectionTool;
 import asia.sejong.freedrawing.parts.FDShapeEditPart.FDShapeEditPart;
 import asia.sejong.freedrawing.resources.IconManager.IconType;
@@ -48,7 +49,7 @@ public class FreedrawingEditorActionManager implements FreedrawingEditDomainList
 	private FreedrawingEditor editor;
 	
 	// ActionManager Properties
-	private List<PaletteIconChangable> paletteIconChangables;
+	private List<PaletteChangeListener> paletteChangeListeners;
 	private ToolBarManager toolbarManager;
 	private MenuManager contextMenuManger;
 	
@@ -58,7 +59,7 @@ public class FreedrawingEditorActionManager implements FreedrawingEditDomainList
 	
 	private FreedrawingEditorActionManager(FreedrawingEditor editor, List<Object> selectionActions) {
 		this.editor = editor;
-		this.paletteIconChangables = new ArrayList<PaletteIconChangable>();
+		this.paletteChangeListeners = new ArrayList<PaletteChangeListener>();
 		
 		createPaletteActions();
 		createSelectionActions(selectionActions);
@@ -97,37 +98,37 @@ public class FreedrawingEditorActionManager implements FreedrawingEditDomainList
 		registry.registerAction(action);
 		// set default tool
 		editDomain.setDefaultTool(action.getTool());
-		paletteIconChangables.add(action);
+		paletteChangeListeners.add(action);
 		
 		// MARQUEE_SELECTION
 		action = PaletteActionFactory.SELECT_MARQUEE.create(editor);
 		registry.registerAction(action);
-		paletteIconChangables.add(action);
+		paletteChangeListeners.add(action);
 
 		// RECTANGLE_SELECTION
 		action = PaletteActionFactory.CREATE_RECTANGLE.create(editor);
 		registry.registerAction(action);
-		paletteIconChangables.add(action);
+		paletteChangeListeners.add(action);
 		
 		// CREATE_ELLIPSE
 		action = PaletteActionFactory.CREATE_ELLIPSE.create(editor);
 		registry.registerAction(action);
-		paletteIconChangables.add(action);
+		paletteChangeListeners.add(action);
 		
 		// CREATE_LABEL
 		action = PaletteActionFactory.CREATE_LABEL.create(editor);
 		registry.registerAction(action);
-		paletteIconChangables.add(action);
+		paletteChangeListeners.add(action);
 		
 		// CREATE_IMAGE
 		action = PaletteActionFactory.CREATE_IMAGE.create(editor);
 		registry.registerAction(action);
-		paletteIconChangables.add(action);
+		paletteChangeListeners.add(action);
 
 		// CONNECTION_SELECTION
 		action = PaletteActionFactory.CREATE_CONNECTION.create(editor);
 		registry.registerAction(action);
-		paletteIconChangables.add(action);
+		paletteChangeListeners.add(action);
 	}
 	
 	private void createSelectionActions(List<Object> selectionActions) {
@@ -223,8 +224,33 @@ public class FreedrawingEditorActionManager implements FreedrawingEditDomainList
 		registry.registerAction(action);
 		selectionActions.add(action.getId());
 		
-		// ZORDER_TO_BACK
+		// CHANGE_ROUTER
 		action = SelectionActionFactory.CHANGE_ROUTER.create(editor);
+		registry.registerAction(action);
+		selectionActions.add(action.getId());
+		
+		// CHANGE_LINE_STYLE_DASH
+		action = SelectionActionFactory.CHANGE_LINE_STYLE_DASH.create(editor);
+		registry.registerAction(action);
+		selectionActions.add(action.getId());
+		
+		// CHANGE_LINE_STYLE_DASHDOT
+		action = SelectionActionFactory.CHANGE_LINE_STYLE_DASHDOT.create(editor);
+		registry.registerAction(action);
+		selectionActions.add(action.getId());
+		
+		// CHANGE_LINE_STYLE_DASHDOTDOT
+		action = SelectionActionFactory.CHANGE_LINE_STYLE_DASHDOTDOT.create(editor);
+		registry.registerAction(action);
+		selectionActions.add(action.getId());
+		
+		// CHANGE_LINE_STYLE_DOT
+		action = SelectionActionFactory.CHANGE_LINE_STYLE_DOT.create(editor);
+		registry.registerAction(action);
+		selectionActions.add(action.getId());
+		
+		// CHANGE_LINE_STYLE_SOLID
+		action = SelectionActionFactory.CHANGE_LINE_STYLE_SOLID.create(editor);
 		registry.registerAction(action);
 		selectionActions.add(action.getId());
 	}
@@ -254,8 +280,8 @@ public class FreedrawingEditorActionManager implements FreedrawingEditDomainList
 		toolbarManager.add(new Separator());
 		// TODO TEST
 		{
-			PaletteDropDownAction paletteDropDownAction = PaletteDropDownActionFactory.PALETTE_DROP_DOWN.create();
-			paletteIconChangables.add(paletteDropDownAction);
+			PaletteDropDownAction paletteDropDownAction = new PaletteDropDownAction();
+			paletteChangeListeners.add(paletteDropDownAction);
 			
 			PaletteAction action = (PaletteAction)registry.getAction(PaletteActionFactory.CREATE_RECTANGLE.getId());
 			paletteDropDownAction.addAction(action, true);
@@ -277,7 +303,29 @@ public class FreedrawingEditorActionManager implements FreedrawingEditDomainList
 		}
 		
 		toolbarManager.add(new Separator());
+		{
+			DropDownAction<SelectionAction> dropDownAction = new DropDownAction<SelectionAction>();
+			
+			SelectionAction action = (SelectionAction)registry.getAction(PaletteActionFactory.CREATE_RECTANGLE.getId());
+			dropDownAction.addAction(action, true);
+			
+			action = (SelectionAction)registry.getAction(PaletteActionFactory.CREATE_RECTANGLE.getId());
+			dropDownAction.addAction(action, true);
+			
+			action = (SelectionAction)registry.getAction(PaletteActionFactory.CREATE_RECTANGLE.getId());
+			dropDownAction.addAction(action, true);
+			
+			action = (SelectionAction)registry.getAction(PaletteActionFactory.CREATE_RECTANGLE.getId());
+			dropDownAction.addAction(action, true);
+			
+			action = (SelectionAction)registry.getAction(PaletteActionFactory.CREATE_RECTANGLE.getId());
+			dropDownAction.addAction(action, true);
+			
+			toolbarManager.add(dropDownAction);
+		}
 		
+		
+		// TODO
 		toolbarManager.add(new ControlContribution("XXXX") {
 
 			@Override
@@ -405,7 +453,7 @@ public class FreedrawingEditorActionManager implements FreedrawingEditDomainList
 	
 	@Override
 	public void activeToolChanged(Tool tool) {
-		for ( PaletteIconChangable changable : paletteIconChangables ) {
+		for ( PaletteChangeListener changable : paletteChangeListeners ) {
 			if ( changable.getTool() == tool ) {
 				changable.iconChange(tool, IconType.SELECTED);
 			} else {

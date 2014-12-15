@@ -1,4 +1,4 @@
-package asia.sejong.freedrawing.editor.actions;
+package asia.sejong.freedrawing.editor.actions.common;
 
 public abstract class LocalActionFactory {
 

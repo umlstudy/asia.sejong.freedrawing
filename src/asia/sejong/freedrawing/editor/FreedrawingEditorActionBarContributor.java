@@ -9,7 +9,7 @@ import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.LabelRetargetAction;
 import org.eclipse.ui.actions.RetargetAction;
 
-import asia.sejong.freedrawing.editor.actions.SelectionActionFactory;
+import asia.sejong.freedrawing.editor.actions.selection.factory.SelectionActionFactory;
 
 public class FreedrawingEditorActionBarContributor extends ActionBarContributor {
 

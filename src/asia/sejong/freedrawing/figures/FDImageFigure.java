@@ -61,4 +61,14 @@ public class FDImageFigure extends ImageFigure implements FDShapeFigure {
 			super.setBackgroundColor(color);
 		}	
 	}
+
+	@Override
+	public void setLineWidth(int lineWidth) {
+		// nothing to do
+	}
+
+	@Override
+	public void setLineStyle(int lineStyle) {
+		// nothing to do
+	}
 }

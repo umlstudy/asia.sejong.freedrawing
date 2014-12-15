@@ -117,4 +117,14 @@ public class FDRectFigure extends Label implements FDTextShapeFigure {
 			super.setForegroundColor(color);
 		}	
 	}
+
+	@Override
+	public void setLineWidth(int lineWidth) {
+		lineBorder.setWidth(lineWidth);
+	}
+
+	@Override
+	public void setLineStyle(int lineStyle) {
+		lineBorder.setStyle(lineStyle);
+	}
 }

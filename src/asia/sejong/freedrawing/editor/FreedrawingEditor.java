@@ -50,7 +50,7 @@ import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.dialogs.SaveAsDialog;
 import org.eclipse.ui.part.FileEditorInput;
 
-import asia.sejong.freedrawing.editor.actions.PaletteActionFactory;
+import asia.sejong.freedrawing.editor.actions.palette.factory.PaletteActionFactory;
 import asia.sejong.freedrawing.model.FDRoot;
 import asia.sejong.freedrawing.parts.common.FDEditPartFactory;
 import asia.sejong.freedrawing.resources.ContextManager;

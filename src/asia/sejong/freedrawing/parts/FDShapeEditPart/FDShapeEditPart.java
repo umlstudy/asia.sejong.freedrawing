@@ -48,6 +48,8 @@ public abstract class FDShapeEditPart extends AbstractGraphicalEditPart implemen
 		
 		((FDShapeFigure)getFigure()).setBorderColor(m.getLineColor());
 		((FDShapeFigure)getFigure()).setBackgroundColor(m.getBackgroundColor());
+		((FDShapeFigure)getFigure()).setLineWidth(m.getLineWidth());
+		((FDShapeFigure)getFigure()).setLineStyle(m.getLineStyle());
 		
 		super.refreshVisuals();
 	}
@@ -212,13 +214,22 @@ public abstract class FDShapeEditPart extends AbstractGraphicalEditPart implemen
 
 	@Override
 	public final void lineColorChanged(RGB rgbColor) {
-		((FDShapeFigure)getFigure()).setBorderColor(rgbColor);
+		refreshVisuals();
+	}
+	
+
+	@Override
+	public final void lineStyleChanged(int lineStyle) {
+		refreshVisuals();
+	}
+	
+	@Override
+	public final void lineWidthChanged(int lineWidth) {
 		refreshVisuals();
 	}
 	
 	@Override
 	public final void backgroundColorChanged(RGB rgbColor) {
-		((FDShapeFigure)getFigure()).setBackgroundColor(rgbColor);
 		refreshVisuals();
 	}
 }
