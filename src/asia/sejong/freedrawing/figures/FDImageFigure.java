@@ -1,8 +1,11 @@
 package asia.sejong.freedrawing.figures;
 
+import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.ImageFigure;
 import org.eclipse.draw2d.LineBorder;
+import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 
@@ -25,8 +28,41 @@ public class FDImageFigure extends ImageFigure implements FDShapeFigure {
 //		graphics.setBackgroundColor(getBackgroundColor());
 //		graphics.setForegroundColor(getForegroundColor());
 //		graphics.setBackgroundColor(new Color(null, 31, 31, 31));
-		graphics.setAlpha(alpha);
+		
+		float angle = 0f;
+		/*
+		Dimension size = getSize();
+		Point centerLoc = getLocation().getTranslated((size.width/2), (size.height/2));
+		double targetLocX = centerLoc.x;
+		double targetLocY = centerLoc.y;
+		
+		
+		double rad = getRadius(targetLocX, targetLocY);
+		double baseX = rad;
+		double targetAngle = 90f*(targetLocY/(targetLocX+targetLocY));
+		Point baseTranslate = getTranslate(rad, targetAngle, baseX, 0.0);
+		Point translate = getTranslate(rad, targetAngle + angle, baseX, 0.0);
+		graphics.translate(translate.x - baseTranslate.x, translate.y - baseTranslate.y);
+		*/
+		graphics.rotate(angle);
+		graphics.setAlpha(255);
+		graphics.setBackgroundColor(ColorConstants.gray);
 		super.paintFigure(graphics);
+	}
+	
+	private static double getRadius(double width, double height) {
+		return Math.sqrt(width*width + height * height);
+	}
+	
+	private static Point getTranslate(double r, double angle, double targetX, double targetY) {
+		double pi = 3.1415926535;
+		double fRadian = pi / 180. * angle;
+		double newX = r * Math.cos(fRadian);
+		double newY = r * Math.sin(fRadian);
+		Point p = new Point();
+		p.x = (int) Math.round(targetX - newX);
+		p.y = (int) Math.round(targetY - newY);
+		return p;
 	}
 
 	// TODO
@@ -77,4 +113,26 @@ public class FDImageFigure extends ImageFigure implements FDShapeFigure {
 		setLineStyleEx(model.getLineStyle());
 		setLineColorEx(model.getLineColor());
 	}
+	
+	@Override
+	public void setLocationEx(Point point) {
+		setLocation(point);
+	}
+
+	@Override
+	public void setSizeEx(int width, int height) {
+		setSize(width, height);
+	}
+
+	@Override
+	public void setAngleEx(int angle) {
+		// TODO Auto-generated method stub
+		
+	}
+
+//	@Override
+//	public void setSelected(boolean selected) {
+//		// TODO Auto-generated method stub
+//		
+//	}
 }

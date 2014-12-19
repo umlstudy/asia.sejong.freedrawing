@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.eclipse.draw2d.ChopboxAnchor;
 import org.eclipse.draw2d.ConnectionAnchor;
+import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.DragTracker;
@@ -69,6 +70,17 @@ public abstract class FDShapeEditPart extends AbstractGraphicalEditPart implemen
 	protected String getEditPolicyName(String name) {
 		return String.format("%s.%s", this.getClass().getSimpleName(), name);
 	}
+	
+	public FDShapeFigure getFigureEx() {
+		return (FDShapeFigure)getFigure();
+	}
+	
+//	
+//	@Override
+//	protected void fireSelectionChanged() {
+//		((FDShapeFigure) getFigure()).setSelected(getSelected() != 0);
+//		super.fireSelectionChanged();
+//	}
 	
 	@Override
 	protected void createEditPolicies() {
@@ -206,14 +218,20 @@ public abstract class FDShapeEditPart extends AbstractGraphicalEditPart implemen
 	
 	@Override
 	public final void locationChanged(int x, int y) {
-		figure.setLocation(new Point(x, y));
-		figure.getParent().getLayoutManager().setConstraint(figure, figure.getBounds());
+		getFigureEx().setLocationEx(new Point(x, y));
+		getFigureEx().getParent().getLayoutManager().setConstraint(figure, figure.getBounds());
 	}
 
 	@Override
 	public final void sizeChanged(int width, int height) {
-		getFigure().setSize(width, height);
-		figure.getParent().getLayoutManager().setConstraint(figure, figure.getBounds());
+		getFigureEx().setSizeEx(width, height);
+		getFigureEx().getParent().getLayoutManager().setConstraint(figure, figure.getBounds());
+	}
+	
+	@Override
+	public final void angleChanged(int angle) {
+		getFigureEx().setAngleEx(angle);
+		getFigureEx().getParent().getLayoutManager().setConstraint(figure, figure.getBounds());
 	}
 
 	@Override

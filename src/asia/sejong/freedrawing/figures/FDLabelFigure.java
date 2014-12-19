@@ -2,6 +2,7 @@ package asia.sejong.freedrawing.figures;
 
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.Label;
+import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.RGB;
@@ -88,4 +89,26 @@ public class FDLabelFigure extends Label implements FDTextShapeFigure {
 		setLineColorEx(model.getLineColor());
 		
 	}
+	
+	@Override
+	public void setLocationEx(Point point) {
+		setLocation(point);
+	}
+
+	@Override
+	public void setSizeEx(int width, int height) {
+		setSizeEx(width, height);
+	}
+
+	@Override
+	public void setAngleEx(int angle) {
+		// TODO Auto-generated method stub
+		
+	}
+
+//	@Override
+//	public void setSelected(boolean selected) {
+//		// TODO Auto-generated method stub
+//		
+//	}
 }

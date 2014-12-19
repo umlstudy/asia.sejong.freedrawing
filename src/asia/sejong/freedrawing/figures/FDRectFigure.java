@@ -1,15 +1,19 @@
 package asia.sejong.freedrawing.figures;
 
+import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.CompoundBorder;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.LineBorder;
 import org.eclipse.draw2d.MarginBorder;
+import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.graphics.Transform;
+import org.eclipse.swt.widgets.Display;
 
 import asia.sejong.freedrawing.model.FDElement;
 import asia.sejong.freedrawing.model.FDRect;
@@ -20,6 +24,7 @@ public class FDRectFigure extends Label implements FDTextShapeFigure {
 
 	private LineBorder lineBorder;
 	private Integer alpha = 0xff;
+	private int angle;
 	
 	public FDRectFigure() {
 		setPreferredSize(100, 100);
@@ -33,6 +38,13 @@ public class FDRectFigure extends Label implements FDTextShapeFigure {
 //		graphics.fillRectangle(b.x + fold, b.y, b.width - fold, fold);
 //		graphics.fillRectangle(b.x, b.y + fold, b.width, b.height - fold);
 		
+//		Transform tr = new Transform (Display.getCurrent());
+//		//tr.setElements (1, 0, 0, -1, 1, 2*(y+rect.height));
+//		//tr.setElements (1, 0, 0, 0, 1, 0);
+//		tr.rotate(10f);
+//		tr.translate(100, 0);
+//		gc.setTransform (tr);
+//		
 		Rectangle r = getBounds();
 //		graphics.setBackgroundPattern(new Pattern(Display.getCurrent(), r.x,
 //				r.y, r.x + r.width, r.y + r.height, ColorConstants.white,
@@ -43,7 +55,7 @@ public class FDRectFigure extends Label implements FDTextShapeFigure {
 		graphics.setBackgroundColor(getBackgroundColor());
 		graphics.fillRectangle(r);
 		graphics.setAntialias(SWT.ON);
-//		graphics.rotate(3);
+//		graphics.rotate(30f);
 
 		super.paintFigure(graphics);
 	}
@@ -153,4 +165,26 @@ public class FDRectFigure extends Label implements FDTextShapeFigure {
 	public void setTextEx(String text) {
 		super.setText(text);
 	}
+	
+	@Override
+	public void setLocationEx(Point point) {
+		setLocation(point);
+	}
+
+	@Override
+	public void setSizeEx(int width, int height) {
+		setSize(width, height);
+	}
+
+	@Override
+	public void setAngleEx(int angle) {
+		this.angle = angle;
+	}
+
+//	@Override
+//	public void setSelected(boolean selected) {
+//		setForegroundColor(selected ? ColorConstants.blue : ColorConstants.black);
+//		setLineWidthEx(selected ? 2 : 1);
+//		erase();
+//	}
 }

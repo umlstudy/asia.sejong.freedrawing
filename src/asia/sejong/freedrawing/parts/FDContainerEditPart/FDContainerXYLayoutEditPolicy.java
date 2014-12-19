@@ -7,8 +7,12 @@ import java.util.Map;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
+import org.eclipse.gef.GraphicalEditPart;
+import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
+import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gef.editpolicies.XYLayoutEditPolicy;
+import org.eclipse.gef.requests.AlignmentRequest;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.requests.CreateRequest;
 
@@ -20,6 +24,9 @@ import asia.sejong.freedrawing.parts.FDContainerEditPart.command.FDShapeCloneCom
 import asia.sejong.freedrawing.parts.FDContainerEditPart.command.FDShapeCreateCommand;
 import asia.sejong.freedrawing.parts.FDContainerEditPart.command.FDShapeMoveAndResizeCommand;
 import asia.sejong.freedrawing.parts.FDShapeEditPart.FDShapeResizableEditPolicy;
+import asia.sejong.freedrawing.parts.FDShapeEditPart.command.RotateCommand;
+import asia.sejong.freedrawing.parts.FDShapeEditPart.request.RotateRequest;
+import asia.sejong.freedrawing.parts.common.FDShapeRotateTracker;
 
 /**
  * Handles constraint changes (e.g. moving and/or resizing) of model elements
@@ -41,6 +48,33 @@ public class FDContainerXYLayoutEditPolicy extends XYLayoutEditPolicy {
 			return new FDShapeCreateCommand(container, element);
 		}
 		return null;
+	}
+	
+	@Override
+	public Command getCommand(Request request) {
+		if (FDShapeRotateTracker.REQ_ROTATE_CHILD.equals(request.getType())) {
+			return getRotateChildrenCommand((RotateRequest) request);
+		}
+
+		return super.getCommand(request);
+	}
+	
+	protected Command getRotateChildrenCommand(RotateRequest request) {
+		CompoundCommand rotate = new CompoundCommand();
+		Command c;
+		GraphicalEditPart child;
+		List<?> children = request.getEditParts();
+
+		for (int i = 0; i < children.size(); i++) {
+			child = (GraphicalEditPart) children.get(i);
+			c = createRotateCommand(request,child);
+			rotate.add(c);
+		}
+		return rotate.unwrap();
+	}
+
+	private Command createRotateCommand(RotateRequest request, GraphicalEditPart child) {
+		return new RotateCommand((FDShape)child.getModel());
 	}
 
 	/**

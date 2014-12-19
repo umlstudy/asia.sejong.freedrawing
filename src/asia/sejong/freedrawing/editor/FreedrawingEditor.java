@@ -124,6 +124,7 @@ public class FreedrawingEditor extends GraphicalEditor implements MouseWheelHand
 		super.configureGraphicalViewer();
 		final GraphicalViewer viewer = getGraphicalViewer();
 		viewer.setEditPartFactory(new FDEditPartFactory());
+		viewer.setSelectionManager(new FreedrawingSelectionManager(viewer));
 		
 		ScalableFreeformRootEditPart rootEditPart = new ScalableFreeformRootEditPart();
 //		ScalableFreeformRootEditPart rootEditPart = new ScalableFreeformRootEditPart() {

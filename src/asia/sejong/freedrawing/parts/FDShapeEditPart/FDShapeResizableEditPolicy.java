@@ -1,18 +1,27 @@
 package asia.sejong.freedrawing.parts.FDShapeEditPart;
 
 import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.draw2d.ColorConstants;
+import org.eclipse.draw2d.Cursors;
 import org.eclipse.draw2d.FigureUtilities;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.RectangleFigure;
+import org.eclipse.draw2d.RotatableDecoration;
 import org.eclipse.draw2d.Shape;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.LayerConstants;
+import org.eclipse.gef.Request;
+import org.eclipse.gef.SharedCursors;
+import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.ResizableEditPolicy;
+import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.tools.ResizeTracker;
+import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Image;
 
 import asia.sejong.freedrawing.figures.FDElementFigure;
@@ -28,7 +37,12 @@ import asia.sejong.freedrawing.model.FDLabel;
 import asia.sejong.freedrawing.model.FDRect;
 import asia.sejong.freedrawing.model.FDShape;
 import asia.sejong.freedrawing.model.FDTextShape;
+import asia.sejong.freedrawing.parts.FDShapeEditPart.command.RotateCommand;
+import asia.sejong.freedrawing.parts.FDShapeEditPart.request.RotateRequest;
 import asia.sejong.freedrawing.parts.common.FDShapeResizeTracker;
+import asia.sejong.freedrawing.parts.common.FDShapeRotateTracker;
+import asia.sejong.freedrawing.parts.handles.RelativeHandleLocatorEx;
+import asia.sejong.freedrawing.parts.handles.ResizableHandleKitEx;
 import asia.sejong.freedrawing.resources.ContextManager;
 
 public class FDShapeResizableEditPolicy extends ResizableEditPolicy {
@@ -174,6 +188,7 @@ public class FDShapeResizableEditPolicy extends ResizableEditPolicy {
 
 	@Override
 	protected ResizeTracker getResizeTracker(int direction) {
+		// TODO member object 로? 
 		return new FDShapeResizeTracker((GraphicalEditPart) getHost(), direction);
 	}
 	
@@ -217,4 +232,66 @@ public class FDShapeResizableEditPolicy extends ResizableEditPolicy {
 ////	    image.dispose();
 //		return imageFigure;
 //	}
+	
+	@Override
+	protected void addSelectionListener() {
+//		selectionListener = new EditPartListener.Stub() {
+//			public void selectedStateChanged(EditPart part) {
+//				setSelectedState(part.getSelected());
+//				setFocus(part.hasFocus());
+//			}
+//		};
+//		getHost().addEditPartListener(selectionListener);
+		super.addSelectionListener();
+		System.out.println("addSelectionListener");
+	}
+	
+	@Override
+	protected void createResizeHandle(@SuppressWarnings("rawtypes") List handles, int direction) {
+		if ( ((getResizeDirections() & direction) == direction ) || RelativeHandleLocatorEx.ROTATION == direction ) {
+			Cursor cursor = null;
+			DragTracker dragTracker = null;
+			if ( RelativeHandleLocatorEx.ROTATION == direction ) {
+				cursor = Cursors.HAND;
+				dragTracker = new FDShapeRotateTracker((GraphicalEditPart) getHost());
+			} else if ( (getResizeDirections() & direction) == direction ) {
+				dragTracker = getResizeTracker(direction);
+				cursor = Cursors.getDirectionalCursor(direction, getHostFigure().isMirrored());
+			}
+			ResizableHandleKitEx.addHandle((GraphicalEditPart) getHost(), handles, direction, dragTracker, cursor);
+		} else {
+			// display 'resize' handle to allow dragging or indicate selection
+			// only
+			createDragHandle(handles, direction);
+		}
+	}
+	
+	@Override
+	protected void createMoveHandle(@SuppressWarnings("rawtypes") List handles) {
+		if (isDragAllowed()) {
+			// display 'move' handle to allow dragging
+			ResizableHandleKitEx.addMoveHandle((GraphicalEditPart) getHost(), handles, getDragTracker(), Cursors.SIZEALL);
+		} else {
+			// display 'move' handle only to indicate selection
+			ResizableHandleKitEx.addMoveHandle((GraphicalEditPart) getHost(), handles, getSelectTracker(), SharedCursors.ARROW);
+		}
+	}
+	
+	@SuppressWarnings("rawtypes")
+	@Override
+	protected List createSelectionHandles() {
+		List selectionHandles = super.createSelectionHandles();
+		createResizeHandle(selectionHandles, RelativeHandleLocatorEx.ROTATION);
+		return selectionHandles;
+	}
+	
+	@Override
+	public Command getCommand(Request request) {
+		if (FDShapeRotateTracker.REQ_ROTATE.equals(request.getType())) {
+			RotateRequest req = new RotateRequest(FDShapeRotateTracker.REQ_ROTATE_CHILD);
+			req.setEditParts(getHost());
+			return getHost().getParent().getCommand(req);
+		}
+		return super.getCommand(request);
+	}
 }
