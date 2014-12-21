@@ -1,6 +1,8 @@
 package examples;
 
 import org.eclipse.draw2d.ColorConstants;
+import org.eclipse.draw2d.Graphics;
+import org.eclipse.draw2d.SWTGraphics;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
@@ -9,7 +11,6 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.graphics.Transform;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Display;
@@ -17,8 +18,8 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 
-public class Rotation1 {
-	static float degree =350f;
+public class Rotation4 {
+	static float degree =0f;
 	public static void main(String[] args) {
 		final Display display = new Display();
 
@@ -48,32 +49,33 @@ public class Rotation1 {
 				}
 
 				// Original image
-				Rectangle rect = new Rectangle(100, 150, 300, 200);
+				Rectangle rect = new Rectangle(100, 100, 200, 200);
 
 				gc.setForeground(ColorConstants.green);
 				gc.setBackground(ColorConstants.gray);
 				gc.fillRectangle(rect);
 
-				Transform transform = new Transform(display);
-
+				Graphics g = new SWTGraphics(gc);
+				
 				double r = degree * 3.141592 / 180.0;
 			    float cos45 = (float)Math.cos(r);
 			    float sin45 = (float)Math.sin(r);
+				Point ocp = new Point(rect.x + rect.width/2, rect.y + rect.height/2);
+				Point centerAngled = getPoint(ocp.x,ocp.y, cos45, sin45, -sin45, cos45);
+				int dy = ocp.x - centerAngled.x;
+				int dx = ocp.y - centerAngled.y;
 				
-//				Point ocp = new Point(rect.x + rect.width/2, rect.y + rect.height/2);
-//				Point centerAngled = getPoint(ocp.x,ocp.y, cos45, sin45, -sin45, cos45);
-//				int dy = ocp.x - centerAngled.x;
-//				int dx = ocp.y - centerAngled.y;
-				
-			    Point moved = new Point(rect.x + rect.width/2, rect.y + rect.height/2);
-				transform.setElements(cos45, sin45, -sin45, cos45, moved.x, moved.y);
-				gc.setTransform(transform);
-				gc.setForeground(ColorConstants.green);
-				gc.setBackground(ColorConstants.lightGreen);
-				gc.fillRectangle(-rect.width/2, -rect.height/2, rect.width, rect.height);
-				gc.drawImage(image, rect.x, rect.y);
-
-				transform.dispose();
+				Point moved = new Point(rect.x + rect.width/2 + dx, rect.y + rect.height/2 + dy);
+//				Point moved = new Point(rect.x, rect.y);
+				g.translate(-moved.x, -moved.y);
+				g.rotate(degree);
+				g.setForegroundColor(ColorConstants.green);
+				g.setBackgroundColor(ColorConstants.lightGreen);
+				g.fillRectangle(rect.x, rect.y, rect.width, rect.height);
+				g.drawImage(image, rect.x, rect.y);
+				g.fillArc(rect.x, rect.y, 10, 10, 0, 360);
+				System.out.println("degree " + degree);
+				//g.translate(moved.x, moved.y);
 			}
 		});
 		

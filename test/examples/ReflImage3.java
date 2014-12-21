@@ -41,13 +41,16 @@ public class ReflImage3 {
 			public void handleEvent (Event e) {
 				Rectangle rect = image.getBounds ();
 				GC gc = e.gc;
-				int x = 150, y = 10;
+				int x = 0, y = 0;
 				//gc.drawImage (image, x, y);
 				Transform tr = new Transform (e.display);
-				//tr.setElements (1, 0, 0, -1, 1, 2*(y+rect.height));
-				//tr.setElements (1, 0, 0, 0, 1, 0);
-				tr.rotate(10f);
-				tr.translate(100, 0);
+				tr.setElements (1, 0, 0, -1, 0, rect.height);
+				// 150, 150
+				// 150, -150
+//				tr.setElements (1, 0, 0, -1, 0, rect.height);
+//				tr.setElements (1, 0, 0, 0, 1, 0);
+//				tr.rotate(10f);
+//				tr.translate(100, 0);
 				gc.setTransform (tr);
 				gc.drawImage (image, x, y);
 //				gc.setTransform (null);

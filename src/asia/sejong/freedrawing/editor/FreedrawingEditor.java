@@ -87,7 +87,7 @@ public class FreedrawingEditor extends GraphicalEditor implements MouseWheelHand
 	@Override
 	public void createPartControl(Composite parent) {
 		
-		parent.setBackground(getSite().getShell().getDisplay().getSystemColor(SWT.COLOR_BLACK));
+//		parent.setBackground(getSite().getShell().getDisplay().getSystemColor(SWT.COLOR_BLACK));
 		parent.setLayout(GridLayoutFactory.fillDefaults().create());
 		
 		// 에디터에 툴바 생성

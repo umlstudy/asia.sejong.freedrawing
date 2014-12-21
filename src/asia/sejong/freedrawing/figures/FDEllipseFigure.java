@@ -3,7 +3,6 @@ package asia.sejong.freedrawing.figures;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.LineBorder;
 import org.eclipse.draw2d.RectangleFigure;
-import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.SWT;
@@ -23,66 +22,54 @@ public class FDEllipseFigure extends RectangleFigure implements FDTextShapeFigur
 	
 	@Override
 	public void paintFigure(Graphics graphics) {
+//		graphics.setAntialias(SWT.ON);
+//		graphics.setXORMode(true);
+//		graphics.setBackgroundColor(getBackgroundColor());
+//		graphics.setForegroundColor(getForegroundColor());
+//		graphics.setBackgroundColor(new Color(null, 31, 31, 31));
+		float degree =120f;
+		
+////		Rectangle rect = graphics.getClip(new Rectangle());
+////		getBounds();
+//		
+//		
+//		double rad = getRadius(centerLocX, centerLocY);
+//		double targetAngle = getAngle(centerLocX, centerLocY);
+////		Point baseTranslate = getTranslate(rad, targetAngle);
+////		Point translate = getTranslate(rad, targetAngle + angle);
+////		graphics.translate(translate.x - baseTranslate.x,  translate.y - baseTranslate.y);
+////		graphics.translate(40, -70);
+//
+// 		Point translate = getTranslate(rad, angle);
+////		graphics.translate((int)rad - translate.x,  -translate.y);
+//		// graphics.translate(245, -200); // 45도 287,287
+//// 		graphics.translate(102, -122); // 22.5도  375,155  
+//		
+// 		graphics.clipRect(new Rectangle(loc.x,loc.y,500, 500));
+// 		
+// 		rect = graphics.getClip(new Rectangle());
+//		//graphics.translate(541, -200); // 22.5도  375,155 
+////		graphics.rotate(angle);
+//		float cos45 = (float) Math.cos(Math.PI / 4);
+//
+//		// float sin45 = (float)Math.sin(45);
+//		float sin45 = (float) Math.sin(Math.PI / 4);
+//
+////		graphics.set
+////		transform.setElements(cos45, sin45, -sin45, cos45, 0, 0);
+		Rectangle rectangle = new Rectangle();
+		graphics.getClip(rectangle);
+//		this.getBounds();
+//		Point translate = RotationUtil.calculateTranslate(this, degree);
 		graphics.setAntialias(SWT.ON);
 		graphics.setXORMode(true);
 		graphics.setBackgroundColor(getBackgroundColor());
-//		graphics.setForegroundColor(getForegroundColor());
-//		graphics.setBackgroundColor(new Color(null, 31, 31, 31));
-		float angle =4f;
-		
-		Dimension size = getSize();
-		Point loc = getLocation();
-		double centerLocX = Math.abs(loc.x) + (size.width>>1);
-		double centerLocY = Math.abs(loc.y) + (size.height>>1);
-		
-		Rectangle rect = graphics.getClip(new Rectangle());
-		getBounds();
-		
-		
-		double rad = getRadius(centerLocX, centerLocY);
-		double targetAngle = getAngle(centerLocX, centerLocY);
-//		Point baseTranslate = getTranslate(rad, targetAngle);
-//		Point translate = getTranslate(rad, targetAngle + angle);
-//		graphics.translate(translate.x - baseTranslate.x,  translate.y - baseTranslate.y);
-//		graphics.translate(40, -70);
 
- 		Point translate = getTranslate(rad, angle);
-//		graphics.translate((int)rad - translate.x,  -translate.y);
-		// graphics.translate(245, -200); // 45도 287,287
-// 		graphics.translate(102, -122); // 22.5도  375,155  
-		
- 		graphics.clipRect(new Rectangle(loc.x,loc.y,500, 500));
- 		
- 		rect = graphics.getClip(new Rectangle());
-		//graphics.translate(541, -200); // 22.5도  375,155 
-//		graphics.rotate(angle);
-		float cos45 = (float) Math.cos(Math.PI / 4);
+		Point moved = new Point(rectangle.x + rectangle.width/2, rectangle.y + rectangle.height/2);
+		graphics.translate(-moved.x, -moved.y);
+		graphics.rotate(degree);
 
-		// float sin45 = (float)Math.sin(45);
-		float sin45 = (float) Math.sin(Math.PI / 4);
-
-//		graphics.set
-//		transform.setElements(cos45, sin45, -sin45, cos45, 0, 0);
-		
 		super.paintFigure(graphics);
-	}
-	
-	/**
-	 * 
-	 * 삼각법
-	 * @param dx
-	 * @param dy
-	 * @return
-	 */
-	private double getAngle(double dx, double dy) {
-		// 1 radian = 180 / PI = 57.295779513082323°
-		double radian = Math.atan(dy / dx);
-		float  degree = (float) (57.295779513082323 * radian);
-		return degree;
-	}
-
-	private static double getRadius(double width, double height) {
-		return Math.sqrt(width*width + height * height);
 	}
 	
 	private static Point getTranslate(double r, double angle) {

@@ -8,6 +8,7 @@ import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.Transform;
 import org.eclipse.swt.layout.FillLayout;
@@ -17,21 +18,10 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 
-public class Rotation1 {
-	static float degree =350f;
+public class Rotation2 {
+	static float angle =45f;
 	public static void main(String[] args) {
 		final Display display = new Display();
-
-		final Image image = new Image(display, 110, 60);
-		GC gc = new GC(image);
-		Font font = new Font(display, "Times", 30, SWT.BOLD);
-		gc.setFont(font);
-		gc.setBackground(display.getSystemColor(SWT.COLOR_RED));
-		gc.fillRectangle(0, 0, 110, 60);
-		gc.setForeground(display.getSystemColor(SWT.COLOR_WHITE));
-		gc.drawText("SWT", 10, 10, true);
-		font.dispose();
-		gc.dispose();
 
 		Shell shell = new Shell(display);
 		shell.setText("Matrix Tranformations");
@@ -47,31 +37,27 @@ public class Rotation1 {
 					return;
 				}
 
-				// Original image
-				Rectangle rect = new Rectangle(100, 150, 300, 200);
-
-				gc.setForeground(ColorConstants.green);
-				gc.setBackground(ColorConstants.gray);
-				gc.fillRectangle(rect);
-
+				gc.setForeground(ColorConstants.red);
+				gc.setBackground(ColorConstants.red);
+				gc.fillArc(145, 145, 10, 10, 0, 360);
+				
 				Transform transform = new Transform(display);
-
-				double r = degree * 3.141592 / 180.0;
-			    float cos45 = (float)Math.cos(r);
-			    float sin45 = (float)Math.sin(r);
+				double r = angle * 3.141592 / 180.0;
+			    float cos45 = (float)Math.cos(r);    /* cosine 값  */
+			    float sin45 = (float)Math.sin(r);     /* sine 값  */
 				
-//				Point ocp = new Point(rect.x + rect.width/2, rect.y + rect.height/2);
-//				Point centerAngled = getPoint(ocp.x,ocp.y, cos45, sin45, -sin45, cos45);
-//				int dy = ocp.x - centerAngled.x;
-//				int dx = ocp.y - centerAngled.y;
+				Point originalCenterPoint = new Point(150,150);
+				Point centerAngled = getPoint(150,150, cos45, sin45, -sin45, cos45);
+				int dy = (originalCenterPoint.x - centerAngled.x);
+				int dx = (originalCenterPoint.y - centerAngled.y);
+				System.out.printf(" dx :%d , dy : %d\n", dx, dy);
+				transform.setElements(cos45, sin45, -sin45, cos45, dx, dy);
+				//transform.setElements(cos45, sin45, -sin45, cos45, 0, -62);
 				
-			    Point moved = new Point(rect.x + rect.width/2, rect.y + rect.height/2);
-				transform.setElements(cos45, sin45, -sin45, cos45, moved.x, moved.y);
 				gc.setTransform(transform);
 				gc.setForeground(ColorConstants.green);
 				gc.setBackground(ColorConstants.lightGreen);
-				gc.fillRectangle(-rect.width/2, -rect.height/2, rect.width, rect.height);
-				gc.drawImage(image, rect.x, rect.y);
+				gc.fillArc(145, 145, 10, 10, 0, 360);
 
 				transform.dispose();
 			}
@@ -85,12 +71,12 @@ public class Rotation1 {
 			
 			@Override
 			public void handleEvent(Event event) {
-				degree = 0;
+				angle = 0;
 				for ( int a=72; a>11; a--) {
 					Display.getCurrent().asyncExec(new Runnable() {
 						@Override
 						public void run() {
-							degree +=5;
+							angle +=5;
 							canvas.redraw();
 							System.out.println("redraw");
 							try {
@@ -108,7 +94,6 @@ public class Rotation1 {
 			if (!display.readAndDispatch())
 				display.sleep();
 		}
-		image.dispose();
 		display.dispose();
 	}
 	
@@ -162,7 +147,6 @@ public class Rotation1 {
 	}
 
 	private static Point getPoint(float x, float y, float m11, float m12, float m21, float m22) {
-		//return new Point(Math.round(m11*x+m12*y), Math.round(m21*x+m22*y));
 		return new Point(Math.round(m11*x+m12*y), Math.round(m21*x+m22*y));
 	}
 	
