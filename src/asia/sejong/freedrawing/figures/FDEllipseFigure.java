@@ -68,6 +68,7 @@ public class FDEllipseFigure extends RectangleFigure implements FDTextShapeFigur
 		Point moved = new Point(rectangle.x + rectangle.width/2, rectangle.y + rectangle.height/2);
 		graphics.translate(-moved.x, -moved.y);
 		graphics.rotate(degree);
+//		graphics.clipRect(arg0);(arg0);
 
 		super.paintFigure(graphics);
 	}

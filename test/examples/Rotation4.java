@@ -57,21 +57,22 @@ public class Rotation4 {
 
 				Graphics g = new SWTGraphics(gc);
 				
-				double r = degree * 3.141592 / 180.0;
-			    float cos45 = (float)Math.cos(r);
-			    float sin45 = (float)Math.sin(r);
-				Point ocp = new Point(rect.x + rect.width/2, rect.y + rect.height/2);
-				Point centerAngled = getPoint(ocp.x,ocp.y, cos45, sin45, -sin45, cos45);
-				int dy = ocp.x - centerAngled.x;
-				int dx = ocp.y - centerAngled.y;
+//				double r = degree * 3.141592 / 180.0;
+//			    float cos45 = (float)Math.cos(r);
+//			    float sin45 = (float)Math.sin(r);
+//				Point ocp = new Point(rect.x + rect.width/2, rect.y + rect.height/2);
+//				Point centerAngled = getPoint(ocp.x,ocp.y, cos45, sin45, -sin45, cos45);
+//				int dy = ocp.x - centerAngled.x;
+//				int dx = ocp.y - centerAngled.y;
 				
-				Point moved = new Point(rect.x + rect.width/2 + dx, rect.y + rect.height/2 + dy);
+				Point moved = new Point(rect.x + rect.width/2, rect.y + rect.height/2);
 //				Point moved = new Point(rect.x, rect.y);
-				g.translate(-moved.x, -moved.y);
+				g.translate(moved.x, moved.y);
 				g.rotate(degree);
+				
 				g.setForegroundColor(ColorConstants.green);
 				g.setBackgroundColor(ColorConstants.lightGreen);
-				g.fillRectangle(rect.x, rect.y, rect.width, rect.height);
+				g.fillRectangle(-rect.width/2, -rect.height/2, rect.width, rect.height);
 				g.drawImage(image, rect.x, rect.y);
 				g.fillArc(rect.x, rect.y, 10, 10, 0, 360);
 				System.out.println("degree " + degree);
