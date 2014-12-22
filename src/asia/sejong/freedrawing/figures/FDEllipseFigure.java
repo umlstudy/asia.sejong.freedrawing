@@ -27,7 +27,7 @@ public class FDEllipseFigure extends RectangleFigure implements FDTextShapeFigur
 //		graphics.setBackgroundColor(getBackgroundColor());
 //		graphics.setForegroundColor(getForegroundColor());
 //		graphics.setBackgroundColor(new Color(null, 31, 31, 31));
-		float degree =120f;
+		float degree =330f;
 		
 ////		Rectangle rect = graphics.getClip(new Rectangle());
 ////		getBounds();
@@ -66,11 +66,13 @@ public class FDEllipseFigure extends RectangleFigure implements FDTextShapeFigur
 		graphics.setBackgroundColor(getBackgroundColor());
 
 		Point moved = new Point(rectangle.x + rectangle.width/2, rectangle.y + rectangle.height/2);
-		graphics.translate(-moved.x, -moved.y);
+		graphics.translate(moved.x, moved.y);
+		setLocation(new Point(-rectangle.width/2, -rectangle.height/2));
 		graphics.rotate(degree);
 //		graphics.clipRect(arg0);(arg0);
-
 		super.paintFigure(graphics);
+		graphics.translate(-moved.x, -moved.y);
+		setLocation(new Point(rectangle.x, rectangle.y));
 	}
 	
 	private static Point getTranslate(double r, double angle) {
