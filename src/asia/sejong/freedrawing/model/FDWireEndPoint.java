@@ -41,8 +41,9 @@ public class FDWireEndPoint extends FDElement {
 	}
 
 	public boolean setLocation(int newX, int newY) {
-		if (x == newX && y == newY)
+		if (x == newX && y == newY) {
 			return false;
+		}
 		x = newX;
 		y = newY;
 		fireLocationChanged(x, y);

@@ -11,5 +11,5 @@ public interface FDShapeFigure extends FDElementFigure {
 //	void setSelected(boolean selected);
 	void setLocationEx(Point point);
 	void setSizeEx(int width, int height);
-	void setAngleEx(int angle);
+	void setDegreeEx(double degree);
 }

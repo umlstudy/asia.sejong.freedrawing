@@ -1,6 +1,5 @@
 package asia.sejong.freedrawing.figures;
 
-import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.CompoundBorder;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.Label;
@@ -12,8 +11,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.RGB;
-import org.eclipse.swt.graphics.Transform;
-import org.eclipse.swt.widgets.Display;
 
 import asia.sejong.freedrawing.model.FDElement;
 import asia.sejong.freedrawing.model.FDRect;
@@ -177,8 +174,8 @@ public class FDRectFigure extends Label implements FDTextShapeFigure {
 	}
 
 	@Override
-	public void setAngleEx(int angle) {
-		this.angle = angle;
+	public void setDegreeEx(double degree) {
+		
 	}
 
 //	@Override

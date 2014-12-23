@@ -7,13 +7,15 @@ import asia.sejong.freedrawing.model.FDShape;
 public class RotateCommand extends Command {
 
 	private FDShape shape;
+	private double degree;
 	
-	public RotateCommand(FDShape shape) {
+	public RotateCommand(FDShape shape, double degree) {
 		this.shape = shape;
+		this.degree = degree;
 	}
 
 	public void execute() {
-		shape.setAngle(100);
+		shape.setDegree(degree);
 	}
 	
 	public void undo() {

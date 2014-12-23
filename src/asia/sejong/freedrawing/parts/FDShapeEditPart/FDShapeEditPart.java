@@ -236,12 +236,11 @@ public abstract class FDShapeEditPart extends AbstractGraphicalEditPart implemen
 	}
 	
 	@Override
-	public final void angleChanged(int angle) {
-//		getFigureEx().setAngleEx(angle);
-//		getFigureEx().getParent().getLayoutManager().setConstraint(figure, figure.getBounds());
+	public final void degreeChanged(double degree) {
+		getFigureEx().setDegreeEx(degree);
 		refreshVisuals();
 	}
-
+	
 	@Override
 	public final void lineColorChanged(RGB rgbColor) {
 		refreshVisuals();

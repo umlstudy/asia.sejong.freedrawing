@@ -10,5 +10,5 @@ public interface FDShapeListener extends FDWireEndPointListener {
 
 	void backgroundColorChanged(RGB rgbColor);
 
-	void angleChanged(int angle);
+	void degreeChanged(double degree);
 }

@@ -6,35 +6,42 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.GraphicalEditPart;
+import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
-import org.eclipse.gef.tools.SimpleDragTracker;
+import org.eclipse.gef.tools.DragEditPartsTracker;
 
-public final class FDShapeRotateTracker extends SimpleDragTracker {
+import asia.sejong.freedrawing.parts.FDShapeEditPart.FDShapeEditPart;
+import asia.sejong.freedrawing.parts.FDShapeEditPart.request.RotateRequest;
+
+public final class FDShapeRotateTracker extends DragEditPartsTracker {
 
 	public static String REQ_ROTATE = "rotate"; //$NON-NLS-1$
 	public static String REQ_ROTATE_CHILD = "rotate_child"; //$NON-NLS-1$
 	
-	private GraphicalEditPart owner;
-	
 	public FDShapeRotateTracker(GraphicalEditPart owner) {
-		this.owner = owner;
+		super(owner);
 	}
 
-	protected Dimension getMaximumSizeFor(ChangeBoundsRequest request) {
-		// TODO
-		return IFigure.MAX_DIMENSION;
-	}
-
-	protected Dimension getMinimumSizeFor(ChangeBoundsRequest request) {
-		return IFigure.MIN_DIMENSION;
-		//return LogicPlugin.getMinimumSizeFor(getOwner().getModel().getClass());
-	}
+//	protected Dimension getMaximumSizeFor(ChangeBoundsRequest request) {
+//		// TODO
+//		return IFigure.MAX_DIMENSION;
+//	}
+//
+//	protected Dimension getMinimumSizeFor(ChangeBoundsRequest request) {
+//		return IFigure.MIN_DIMENSION;
+//		//return LogicPlugin.getMinimumSizeFor(getOwner().getModel().getClass());
+//	}
 
 	@Override
 	protected String getCommandName() {
 		return REQ_ROTATE;
+	}
+	
+	@Override
+	protected Request createTargetRequest() {
+		return new RotateRequest(FDShapeRotateTracker.REQ_ROTATE);
 	}
 	
 	@Override
@@ -45,8 +52,17 @@ public final class FDShapeRotateTracker extends SimpleDragTracker {
 		command.setDebugLabel("Rotate Handle Tracker");//$NON-NLS-1$
 		for (int i = 0; i < editparts.size(); i++) {
 			part = (EditPart) editparts.get(i);
-			command.add(part.getCommand(getSourceRequest()));
+			command.add(part.getCommand(getTargetRequest()));
 		}
 		return command.unwrap();
+	}
+
+	@Override
+	protected void updateTargetRequest() {
+		RotateRequest request = (RotateRequest) getTargetRequest();
+		request.setEditParts(getOperationSet());
+		request.getExtendedData().clear();
+		request.setLocation(getLocation());
+		request.setType(getCommandName());
 	}
 }

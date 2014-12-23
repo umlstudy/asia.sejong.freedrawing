@@ -7,8 +7,8 @@ import org.eclipse.draw2d.geometry.Rectangle;
 
 public abstract class Rotationer {
 
-	public void execute(Graphics graphics, IFigure figure, float degree) {
-		Rectangle originalBounds = rotate(graphics, figure, degree);
+	public void execute(Graphics graphics, IFigure figure, double degree) {
+		Rectangle originalBounds = rotate(graphics, figure, (float)degree);
 		paintInRotateState();
 		rotateFinished(originalBounds, figure);
 	}

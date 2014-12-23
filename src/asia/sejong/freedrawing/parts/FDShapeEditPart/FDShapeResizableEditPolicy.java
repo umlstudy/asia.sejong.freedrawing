@@ -11,11 +11,13 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.RectangleFigure;
 import org.eclipse.draw2d.RotatableDecoration;
 import org.eclipse.draw2d.Shape;
+import org.eclipse.draw2d.geometry.PrecisionRectangle;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.LayerConstants;
 import org.eclipse.gef.Request;
+import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.SharedCursors;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.ResizableEditPolicy;
@@ -29,6 +31,7 @@ import asia.sejong.freedrawing.figures.FDEllipseFigure;
 import asia.sejong.freedrawing.figures.FDImageFigure;
 import asia.sejong.freedrawing.figures.FDLabelFigure;
 import asia.sejong.freedrawing.figures.FDRectFigure;
+import asia.sejong.freedrawing.figures.FDShapeFigure;
 import asia.sejong.freedrawing.figures.FDTextShapeFigure;
 import asia.sejong.freedrawing.model.FDElement;
 import asia.sejong.freedrawing.model.FDEllipse;
@@ -83,7 +86,7 @@ public class FDShapeResizableEditPolicy extends ResizableEditPolicy {
 		
 		return feedbackFigure;
 	}
-
+	
 	protected IFigure getCustomFeedbackFigure(Object model) {
 		IFigure figure;
 
@@ -287,11 +290,44 @@ public class FDShapeResizableEditPolicy extends ResizableEditPolicy {
 	
 	@Override
 	public Command getCommand(Request request) {
-		if (FDShapeRotateTracker.REQ_ROTATE.equals(request.getType())) {
-			RotateRequest req = new RotateRequest(FDShapeRotateTracker.REQ_ROTATE_CHILD);
-			req.setEditParts(getHost());
-			return getHost().getParent().getCommand(req);
+		if (FDShapeRotateTracker.REQ_ROTATE.equals(request.getType()) && request instanceof RotateRequest) {
+			RotateRequest newReq = new RotateRequest(FDShapeRotateTracker.REQ_ROTATE_CHILD);
+			newReq.setEditParts((FDShapeEditPart)getHost());
+			
+			RotateRequest oldReq = (RotateRequest)request;
+			// TODO
+//			newReq.setLocation();
+			newReq.setLocation(oldReq.getLocation());
+			newReq.setExtendedData(oldReq.getExtendedData());
+			return getHost().getParent().getCommand(newReq);
 		}
 		return super.getCommand(request);
 	}
+	
+	@Override
+	public boolean understandsRequest(Request request) {
+		if (FDShapeRotateTracker.REQ_ROTATE.equals(request.getType())) {
+			return true;
+		}
+		return super.understandsRequest(request);
+	}
+	
+	@Override
+	public void showSourceFeedback(Request request) {
+		if ( FDShapeRotateTracker.REQ_ROTATE.equals(request.getType()) ) {
+			showRotateFeedback((RotateRequest) request);
+		} else {
+			super.showSourceFeedback(request);
+		}
+	}
+	
+	protected void showRotateFeedback(RotateRequest request) {
+		IFigure feedbackFigure = createFeedbackFigure((GraphicalEditPart) getHost(), null);
+
+		feedbackFigure.setBounds(getInitialFeedbackBounds());
+		((FDShapeFigure)feedbackFigure).setDegreeEx(request.getDegree());
+		feedbackFigure.validate();
+		addFeedback(feedbackFigure);
+	}
+
 }

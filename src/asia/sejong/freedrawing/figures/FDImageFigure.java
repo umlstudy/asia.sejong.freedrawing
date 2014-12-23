@@ -125,8 +125,7 @@ public class FDImageFigure extends ImageFigure implements FDShapeFigure {
 	}
 
 	@Override
-	public void setAngleEx(int angle) {
-		// TODO Auto-generated method stub
+	public void setDegreeEx(double degree) {
 		
 	}
 

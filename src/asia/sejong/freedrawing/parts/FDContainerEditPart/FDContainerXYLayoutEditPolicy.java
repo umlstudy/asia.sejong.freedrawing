@@ -23,6 +23,7 @@ import asia.sejong.freedrawing.model.FDWire;
 import asia.sejong.freedrawing.parts.FDContainerEditPart.command.FDShapeCloneCommand;
 import asia.sejong.freedrawing.parts.FDContainerEditPart.command.FDShapeCreateCommand;
 import asia.sejong.freedrawing.parts.FDContainerEditPart.command.FDShapeMoveAndResizeCommand;
+import asia.sejong.freedrawing.parts.FDShapeEditPart.FDShapeEditPart;
 import asia.sejong.freedrawing.parts.FDShapeEditPart.FDShapeResizableEditPolicy;
 import asia.sejong.freedrawing.parts.FDShapeEditPart.command.RotateCommand;
 import asia.sejong.freedrawing.parts.FDShapeEditPart.request.RotateRequest;
@@ -70,11 +71,12 @@ public class FDContainerXYLayoutEditPolicy extends XYLayoutEditPolicy {
 			c = createRotateCommand(request,child);
 			rotate.add(c);
 		}
+		
 		return rotate.unwrap();
 	}
 
 	private Command createRotateCommand(RotateRequest request, GraphicalEditPart child) {
-		return new RotateCommand((FDShape)child.getModel());
+		return new RotateCommand((FDShape)child.getModel(), request.getDegree());
 	}
 
 	/**

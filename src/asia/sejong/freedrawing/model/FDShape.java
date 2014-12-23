@@ -15,7 +15,7 @@ public abstract class FDShape extends FDWireEndPoint {
 
 	private int width, height;
 	
-	private int angle;
+	private double degree;
 	
 	private RGB backgroundColor;
 	
@@ -66,14 +66,12 @@ public abstract class FDShape extends FDWireEndPoint {
 		setSize(rect.width, rect.height);
 	}
 
-	public void setAngle(int angle) {
-		this.angle = angle;
+	public void setDegree(double degree) {
+		this.degree = degree;
 		
-		fireAngleChanged(angle);
-		// TODO Auto-generated method stub
-		
+		fireDegreeChanged(degree);
 	}
-
+	
 	//============================================================
 	// Cloneable
 	
@@ -88,7 +86,7 @@ public abstract class FDShape extends FDWireEndPoint {
 		shape.width = width;
 		shape.height = height;
 		shape.backgroundColor = backgroundColor;
-		shape.angle = angle;
+		shape.degree = degree;
 		
 		return shape;
 	}
@@ -108,9 +106,9 @@ public abstract class FDShape extends FDWireEndPoint {
 		}
 	}
 	
-	protected void fireAngleChanged(int angle) {
+	protected void fireDegreeChanged(double degree) {
 		for (FDBaseListener l : listeners) {
-			((FDShapeListener)l).angleChanged(angle);
+			((FDShapeListener)l).degreeChanged(degree);
 		}
 	}
 }
