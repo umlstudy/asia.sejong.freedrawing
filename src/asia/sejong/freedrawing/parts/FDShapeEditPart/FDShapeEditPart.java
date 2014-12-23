@@ -5,12 +5,12 @@ import java.util.Map;
 
 import org.eclipse.draw2d.ChopboxAnchor;
 import org.eclipse.draw2d.ConnectionAnchor;
-import org.eclipse.draw2d.IFigure;
-import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
+import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.NodeEditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
@@ -47,6 +47,11 @@ public abstract class FDShapeEditPart extends AbstractGraphicalEditPart implemen
 	protected void refreshVisuals() {
 		FDShape m = (FDShape) getModel();
 		
+		// constraint
+		Rectangle rect = new Rectangle(m.getLocation(), m.getSize());
+		((GraphicalEditPart) getParent()).setLayoutConstraint(this, getFigure(), rect);
+		
+		// 속성
 		((FDShapeFigure)getFigure()).setLineColorEx(m.getLineColor());
 		((FDShapeFigure)getFigure()).setBackgroundColorEx(m.getBackgroundColor());
 		if ( m.getLineWidth() > 0 ) {
@@ -218,20 +223,23 @@ public abstract class FDShapeEditPart extends AbstractGraphicalEditPart implemen
 	
 	@Override
 	public final void locationChanged(int x, int y) {
-		getFigureEx().setLocationEx(new Point(x, y));
-		getFigureEx().getParent().getLayoutManager().setConstraint(figure, figure.getBounds());
+//		getFigureEx().setLocationEx(new Point(x, y));
+//		getFigureEx().getParent().getLayoutManager().setConstraint(figure, figure.getBounds());
+		refreshVisuals();
 	}
 
 	@Override
 	public final void sizeChanged(int width, int height) {
-		getFigureEx().setSizeEx(width, height);
-		getFigureEx().getParent().getLayoutManager().setConstraint(figure, figure.getBounds());
+//		getFigureEx().setSizeEx(width, height);
+//		getFigureEx().getParent().getLayoutManager().setConstraint(figure, figure.getBounds());
+		refreshVisuals();
 	}
 	
 	@Override
 	public final void angleChanged(int angle) {
-		getFigureEx().setAngleEx(angle);
-		getFigureEx().getParent().getLayoutManager().setConstraint(figure, figure.getBounds());
+//		getFigureEx().setAngleEx(angle);
+//		getFigureEx().getParent().getLayoutManager().setConstraint(figure, figure.getBounds());
+		refreshVisuals();
 	}
 
 	@Override

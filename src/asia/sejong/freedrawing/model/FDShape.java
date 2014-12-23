@@ -2,6 +2,7 @@ package asia.sejong.freedrawing.model;
 
 import java.util.ArrayList;
 
+import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.graphics.RGB;
 
@@ -54,6 +55,10 @@ public abstract class FDShape extends FDWireEndPoint {
 		height = newHeight;
 		fireSizeChanged(width, height);
 		return true;
+	}
+	
+	public Dimension getSize() {
+		return new Dimension(width, height);
 	}
 	
 	public void setRectangle(Rectangle rect) {

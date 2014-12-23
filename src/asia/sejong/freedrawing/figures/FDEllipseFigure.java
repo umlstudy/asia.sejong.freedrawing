@@ -3,6 +3,7 @@ package asia.sejong.freedrawing.figures;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.LineBorder;
 import org.eclipse.draw2d.RectangleFigure;
+import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.SWT;
@@ -21,58 +22,37 @@ public class FDEllipseFigure extends RectangleFigure implements FDTextShapeFigur
 	}
 	
 	@Override
-	public void paintFigure(Graphics graphics) {
-//		graphics.setAntialias(SWT.ON);
-//		graphics.setXORMode(true);
-//		graphics.setBackgroundColor(getBackgroundColor());
-//		graphics.setForegroundColor(getForegroundColor());
-//		graphics.setBackgroundColor(new Color(null, 31, 31, 31));
-		float degree =330f;
-		
-////		Rectangle rect = graphics.getClip(new Rectangle());
-////		getBounds();
-//		
-//		
-//		double rad = getRadius(centerLocX, centerLocY);
-//		double targetAngle = getAngle(centerLocX, centerLocY);
-////		Point baseTranslate = getTranslate(rad, targetAngle);
-////		Point translate = getTranslate(rad, targetAngle + angle);
-////		graphics.translate(translate.x - baseTranslate.x,  translate.y - baseTranslate.y);
-////		graphics.translate(40, -70);
-//
-// 		Point translate = getTranslate(rad, angle);
-////		graphics.translate((int)rad - translate.x,  -translate.y);
-//		// graphics.translate(245, -200); // 45도 287,287
-//// 		graphics.translate(102, -122); // 22.5도  375,155  
-//		
-// 		graphics.clipRect(new Rectangle(loc.x,loc.y,500, 500));
-// 		
-// 		rect = graphics.getClip(new Rectangle());
-//		//graphics.translate(541, -200); // 22.5도  375,155 
-////		graphics.rotate(angle);
-//		float cos45 = (float) Math.cos(Math.PI / 4);
-//
-//		// float sin45 = (float)Math.sin(45);
-//		float sin45 = (float) Math.sin(Math.PI / 4);
-//
-////		graphics.set
-////		transform.setElements(cos45, sin45, -sin45, cos45, 0, 0);
-		Rectangle rectangle = new Rectangle();
-		graphics.getClip(rectangle);
-//		this.getBounds();
-//		Point translate = RotationUtil.calculateTranslate(this, degree);
+	public void paintFigure(final Graphics graphics) {
+		float degree =159f;
+		Rectangle bounds = new Rectangle();
+		graphics.getClip(bounds);
 		graphics.setAntialias(SWT.ON);
 		graphics.setXORMode(true);
 		graphics.setBackgroundColor(getBackgroundColor());
 
-		Point moved = new Point(rectangle.x + rectangle.width/2, rectangle.y + rectangle.height/2);
-		graphics.translate(moved.x, moved.y);
-		setLocation(new Point(-rectangle.width/2, -rectangle.height/2));
-		graphics.rotate(degree);
-//		graphics.clipRect(arg0);(arg0);
-		super.paintFigure(graphics);
-		graphics.translate(-moved.x, -moved.y);
-		setLocation(new Point(rectangle.x, rectangle.y));
+//		// 회전
+//		Point targetCenterPosition = new Point(bounds.width>>1, bounds.height>>1);
+//		Point targetCenterPositionInGraphics = new Point(bounds.x + targetCenterPosition.x, bounds.y + targetCenterPosition.y);
+//		Point targetTopLeftCenterPositionInGraphics  = new Point(-targetCenterPosition.x, -targetCenterPosition.y);
+//		graphics.translate(targetCenterPositionInGraphics.x, targetCenterPositionInGraphics.y);
+//		setLocation(targetTopLeftCenterPositionInGraphics);
+//		
+//		Dimension translateEffectArea = RotationUtil.calculateTranslateEffectArea(this, degree);
+//		graphics.setClip(new Rectangle(-((translateEffectArea.width+4)>>1), -((translateEffectArea.height+4)>>1), translateEffectArea.width+4, translateEffectArea.height+4));
+//
+//		graphics.rotate(degree);
+//
+//		super.paintFigure(graphics);
+//		
+//		// 회전원복
+//		setLocation(new Point(bounds.x, bounds.y));
+
+		new Rotationer() {
+			@Override
+			protected void paintInRotateState() {
+				FDEllipseFigure.super.paintFigure(graphics);
+			}
+		}.execute(graphics, this, degree);
 	}
 	
 	private static Point getTranslate(double r, double angle) {
