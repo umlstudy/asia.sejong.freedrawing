@@ -321,6 +321,19 @@ public class FDShapeResizableEditPolicy extends ResizableEditPolicy {
 		}
 	}
 	
+	@Override
+	public void eraseSourceFeedback(Request request) {
+		if ( FDShapeRotateTracker.REQ_ROTATE.equals(request.getType()) ) {
+			eraseRotateFeedback((RotateRequest) request);
+		} else {
+			super.eraseSourceFeedback(request);
+		}
+	}
+	
+	protected void eraseRotateFeedback(RotateRequest request) {
+		super.eraseChangeBoundsFeedback(null);
+	}
+	
 	protected void showRotateFeedback(RotateRequest request) {
 		IFigure feedbackFigure = createFeedbackFigure((GraphicalEditPart) getHost(), null);
 
