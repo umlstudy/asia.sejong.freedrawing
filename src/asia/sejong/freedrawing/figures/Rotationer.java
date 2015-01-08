@@ -42,7 +42,7 @@ public abstract class Rotationer {
 		
 		Rectangle bounds = figure.getBounds();
 		
-		double r = degree * 3.141592 / 180.0;
+		double r = degree * Math.PI / 180.0;
 	    float cosValue = (float)Math.cos(r);
 	    float sinValue = (float)Math.sin(r);
 		

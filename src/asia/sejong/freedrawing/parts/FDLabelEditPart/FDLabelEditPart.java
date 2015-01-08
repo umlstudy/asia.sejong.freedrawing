@@ -1,6 +1,5 @@
 package asia.sejong.freedrawing.parts.FDLabelEditPart;
 
-import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.GraphicalEditPart;
 
@@ -22,10 +21,6 @@ public class FDLabelEditPart extends FDTextShapeEditPart implements TextShapeLis
 		super.refreshVisuals();
 	}
 	
-	protected IFigure createFigure() {
-		return new FDLabelFigure();
-	}
-
 	protected FDLabelFigure getRectangleFigure() {
 		return (FDLabelFigure) getFigure();
 	}

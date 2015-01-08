@@ -23,7 +23,7 @@ public class FDRectFigure extends Label implements FDTextShapeFigure {
 	private Integer alpha = 0xff;
 	private int angle;
 	
-	public FDRectFigure() {
+	FDRectFigure() {
 		setPreferredSize(100, 100);
 		lineBorder = new LineBorder(1);
 		setBorder(new CompoundBorder(lineBorder, new MarginBorder(2, 2, 2, 2)));

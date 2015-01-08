@@ -29,6 +29,7 @@ import org.eclipse.swt.graphics.RGB;
 import asia.sejong.freedrawing.debug.ForEditPart;
 import asia.sejong.freedrawing.figures.FDElementFigure;
 import asia.sejong.freedrawing.figures.FDWireFigure;
+import asia.sejong.freedrawing.figures.FigureFactory;
 import asia.sejong.freedrawing.model.FDRoot;
 import asia.sejong.freedrawing.model.FDWire;
 import asia.sejong.freedrawing.model.FDWireBendpoint;
@@ -64,12 +65,12 @@ public class FDWireEditPart extends AbstractConnectionEditPart implements FDWire
 	public static FDWireFigure createWireFigure(boolean custom) {
 		FDWireFigure wireFigure = null;
 		if ( custom ) {
-			wireFigure = new FDWireFigure();
+			wireFigure = (FDWireFigure)FigureFactory.createFigure(FDWire.class);
 			wireFigure.setLineWidth(3);
 			wireFigure.setAlpha(180);
 			wireFigure.setAntialias(SWT.ON);
 		} else {
-			wireFigure = new FDWireFigure();
+			wireFigure = (FDWireFigure)FigureFactory.createFigure(FDWire.class);
 			wireFigure.setLineStyle(SWT.LINE_DASH);
 			wireFigure.setAlpha(180);
 			wireFigure.setBackgroundColor(ColorConstants.blue);

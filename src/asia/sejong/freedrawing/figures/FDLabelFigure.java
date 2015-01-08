@@ -14,7 +14,7 @@ import asia.sejong.freedrawing.resources.ContextManager;
 
 public class FDLabelFigure extends Label implements FDTextShapeFigure {
 
-	public FDLabelFigure() {
+	FDLabelFigure() {
 		setPreferredSize(100, 100);
 	}
 	

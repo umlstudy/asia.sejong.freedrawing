@@ -18,7 +18,7 @@ public class FDEllipseFigure extends RectangleFigure implements FDTextShapeFigur
 
 	private double degree;
 
-	public FDEllipseFigure() {
+	FDEllipseFigure() {
 		setPreferredSize(100, 100);
 	}
 	

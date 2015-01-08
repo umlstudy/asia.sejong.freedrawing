@@ -18,6 +18,10 @@ public class FDWireFigure extends PolylineConnection implements FDElementFigure 
 	
 	private boolean roundedCorner = false;
 	
+	FDWireFigure() {
+		super();
+	}
+	
 	private boolean isRoundedCorner() {
 		return roundedCorner;
 	}

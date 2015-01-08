@@ -12,7 +12,6 @@ import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gef.editpolicies.XYLayoutEditPolicy;
-import org.eclipse.gef.requests.AlignmentRequest;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.requests.CreateRequest;
 
@@ -23,8 +22,7 @@ import asia.sejong.freedrawing.model.FDWire;
 import asia.sejong.freedrawing.parts.FDContainerEditPart.command.FDShapeCloneCommand;
 import asia.sejong.freedrawing.parts.FDContainerEditPart.command.FDShapeCreateCommand;
 import asia.sejong.freedrawing.parts.FDContainerEditPart.command.FDShapeMoveAndResizeCommand;
-import asia.sejong.freedrawing.parts.FDShapeEditPart.FDShapeEditPart;
-import asia.sejong.freedrawing.parts.FDShapeEditPart.FDShapeResizableEditPolicy;
+import asia.sejong.freedrawing.parts.FDShapeEditPart.FDShapePrimaryDragEditPolicy;
 import asia.sejong.freedrawing.parts.FDShapeEditPart.command.RotateCommand;
 import asia.sejong.freedrawing.parts.FDShapeEditPart.request.RotateRequest;
 import asia.sejong.freedrawing.parts.common.FDShapeRotateTracker;
@@ -97,7 +95,7 @@ public class FDContainerXYLayoutEditPolicy extends XYLayoutEditPolicy {
 	}
 	
 	protected EditPolicy createChildEditPolicy(EditPart child) {
-		return new FDShapeResizableEditPolicy();
+		return new FDShapePrimaryDragEditPolicy();
 	}
 	
 	protected Command getCloneCommand(ChangeBoundsRequest request) {

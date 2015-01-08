@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.eclipse.draw2d.ChopboxAnchor;
 import org.eclipse.draw2d.ConnectionAnchor;
+import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.DragTracker;
@@ -23,6 +24,7 @@ import org.eclipse.swt.graphics.RGB;
 
 import asia.sejong.freedrawing.debug.ForEditPart;
 import asia.sejong.freedrawing.figures.FDShapeFigure;
+import asia.sejong.freedrawing.figures.FigureFactory;
 import asia.sejong.freedrawing.model.FDRoot;
 import asia.sejong.freedrawing.model.FDShape;
 import asia.sejong.freedrawing.model.FDWire;
@@ -35,6 +37,10 @@ import asia.sejong.freedrawing.parts.FDWireEditPart.FDWireableEditPart;
 
 public abstract class FDShapeEditPart extends AbstractGraphicalEditPart implements FDWireableEditPart, NodeEditPart, FDShapeListener {
 
+	protected final IFigure createFigure() {
+		return FigureFactory.createFigure(getModel().getClass());
+	}
+	
 	protected final EditPart findEditPart(Object model) {
 		if (model == null) {
 			return null;

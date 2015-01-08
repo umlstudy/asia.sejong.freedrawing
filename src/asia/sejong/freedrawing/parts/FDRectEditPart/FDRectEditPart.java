@@ -1,6 +1,5 @@
 package asia.sejong.freedrawing.parts.FDRectEditPart;
 
-import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.GraphicalEditPart;
 
@@ -22,10 +21,6 @@ public class FDRectEditPart extends FDTextShapeEditPart implements FDRectListene
 		super.refreshVisuals();
 	}
 	
-	protected IFigure createFigure() {
-		return new FDRectFigure();
-	}
-
 	protected FDRectFigure getRectangleFigure() {
 		return (FDRectFigure) getFigure();
 	}

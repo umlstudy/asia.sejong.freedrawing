@@ -1,7 +1,6 @@
 package asia.sejong.freedrawing.parts.FDImageEditPart;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.SWTGraphics;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
@@ -66,10 +65,6 @@ public class FDImageEditPart extends FDShapeEditPart implements FDImageListener 
 		super.refreshVisuals();
 	}
 	
-	protected IFigure createFigure() {
-		return new FDImageFigure();
-	}
-
 	protected FDImageFigure getRectangleFigure() {
 		return (FDImageFigure) getFigure();
 	}

@@ -3,24 +3,18 @@ package asia.sejong.freedrawing.parts.FDShapeEditPart.request;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.GraphicalEditPart;
-import org.eclipse.gef.requests.DropRequest;
-import org.eclipse.gef.requests.GroupRequest;
+import org.eclipse.gef.requests.ChangeBoundsRequest;
 
-public class RotateRequest extends GroupRequest implements DropRequest {
+public class RotateRequest extends ChangeBoundsRequest {
 
-	private Point moveDelta;
-	private Point location;
-	
-	public RotateRequest(String type) {
-		super(type);
-	}
-
-	@Override
-	public Point getLocation() {
-		return location;
+	public RotateRequest(String req) {
+		super(req);
 	}
 
 	public double getDegree() {
+		
+		Point location = getLocation();
+		
 		Rectangle bounds = ((GraphicalEditPart)getEditParts().get(0)).getFigure().getBounds();
 		int targetCenterX = bounds.x + (bounds.width>>1);
 		int targetCenterY = bounds.y + (bounds.height>>1);
@@ -29,16 +23,5 @@ public class RotateRequest extends GroupRequest implements DropRequest {
 		
 		return Math.abs(rslt);
 	}
-
-	public Point getMoveDelta() {
-		return moveDelta;
-	}
-
-	public void setMoveDelta(Point moveDelta) {
-		this.moveDelta = moveDelta;
-	}
-
-	public void setLocation(Point location) {
-		this.location = location;
-	}
+	
 }

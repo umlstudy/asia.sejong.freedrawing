@@ -17,7 +17,7 @@ public class FDImageFigure extends ImageFigure implements FDShapeFigure {
 
 	private Integer alpha = 0xff;
 	
-	public FDImageFigure() {
+	FDImageFigure() {
 		setPreferredSize(100, 100);
 	}
 	

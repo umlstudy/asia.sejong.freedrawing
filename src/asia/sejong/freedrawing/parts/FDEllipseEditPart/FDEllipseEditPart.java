@@ -1,6 +1,5 @@
 package asia.sejong.freedrawing.parts.FDEllipseEditPart;
 
-import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.GraphicalEditPart;
 
@@ -22,10 +21,6 @@ public class FDEllipseEditPart extends FDTextShapeEditPart implements FDRectList
 		super.refreshVisuals();
 	}
 	
-	protected IFigure createFigure() {
-		return new FDEllipseFigure();
-	}
-
 	protected FDEllipseFigure getRectangleFigure() {
 		return (FDEllipseFigure) getFigure();
 	}
