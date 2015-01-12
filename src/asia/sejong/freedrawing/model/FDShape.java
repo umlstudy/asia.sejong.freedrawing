@@ -72,6 +72,10 @@ public abstract class FDShape extends FDWireEndPoint {
 		fireDegreeChanged(degree);
 	}
 	
+	public double getDegree() {
+		return degree;
+	}
+	
 	//============================================================
 	// Cloneable
 	

@@ -1,8 +1,11 @@
 package asia.sejong.freedrawing.figures;
 
 import org.eclipse.draw2d.Graphics;
+import org.eclipse.draw2d.IClippingStrategy;
+import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.LineBorder;
 import org.eclipse.draw2d.RectangleFigure;
+import org.eclipse.draw2d.Shape;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.SWT;
@@ -20,26 +23,70 @@ public class FDEllipseFigure extends RectangleFigure implements FDTextShapeFigur
 
 	FDEllipseFigure() {
 		setPreferredSize(100, 100);
+		setClippingStrategy(new IClippingStrategy() {
+			
+			@Override
+			public Rectangle[] getClip(IFigure childFigure) {
+				FDEllipseFigure ep = (FDEllipseFigure)childFigure;
+				Rectangle calculateTranslateEffectArea = Rotationer.calculateTranslateEffectArea(ep, ep.degree);
+				return new Rectangle[] {calculateTranslateEffectArea,};
+			}
+		});
+	}
+	
+	boolean rotate = false;
+	
+	public Rectangle getTargetBounds() {
+		if ( rotate ) {
+			return new Rectangle(-bounds.width/2, -bounds.height/2, bounds.width, bounds.height);
+		} else {
+			return bounds;
+		}
 	}
 	
 	@Override
 	public void paintFigure(final Graphics graphics) {
-		Rectangle bounds = new Rectangle();
-		graphics.getClip(bounds);
 		graphics.setAntialias(SWT.ON);
 		graphics.setXORMode(true);
 		graphics.setBackgroundColor(getBackgroundColor());
 
+		// 드로잉역영을 일부러 크게 만듦
+		graphics.setClip(new Rectangle(getBounds().x-50, getBounds().y-50, getBounds().width+100, getBounds().height+100));
+		
+		System.out.println("ellipsefigure");
 		if ( degree > 0 ) {
-			new Rotationer() {
-				@Override
-				protected void paintInRotateState() {
-					FDEllipseFigure.super.paintFigure(graphics);
-				}
-			}.execute(graphics, this, degree);
-		} else {
-			super.paintFigure(graphics);
+			Point targetCenterPosition = new Point(bounds.width>>1, bounds.height>>1);
+			Point targetCenterPositionInGraphics = new Point(bounds.x + targetCenterPosition.x, bounds.y + targetCenterPosition.y);
+			graphics.translate(targetCenterPositionInGraphics);
+			rotate = true;
+			//graphics.setClip(Rotationer.calculateTranslateEffectArea(this, degree));
+			graphics.rotate((float)degree);
 		}
+		
+		super.paintFigure(graphics);
+		rotate = false;
+//		
+//		
+//		System.out.println("paintFigure");
+//		if ( degree > 0 ) {
+//			new Rotationer() {
+//				@Override
+//				protected void paintInRotateState() {
+//					FDEllipseFigure.super.paintFigure(graphics);
+//				}
+//			}.execute(graphics, this, degree);
+//		} else {
+//			super.paintFigure(graphics);
+//		}
+	}
+	
+	public void erase() {
+		if (getParent() == null || !isVisible())
+			return;
+
+		Rectangle r = new Rectangle(getBounds().x-50, getBounds().y-50, getBounds().width+100, getBounds().height+100);
+		getParent().translateToParent(r);
+		getParent().repaint(r.x, r.y, r.width, r.height);
 	}
 
 	public LineBorder getLineBorder() {
@@ -127,5 +174,28 @@ public class FDEllipseFigure extends RectangleFigure implements FDTextShapeFigur
 	@Override
 	public void setDegreeEx(double degree) {
 		this.degree = degree;
+	}
+	
+	@Override
+	public double getDegreeEx() {
+		return this.degree;
+	}
+	
+	protected void fillShape(Graphics graphics) {
+		graphics.fillRectangle(getTargetBounds());
+	}
+
+	protected void outlineShape(Graphics graphics) {
+		float lineInset = Math.max(1.0f, getLineWidthFloat()) / 2.0f;
+		int inset1 = (int) Math.floor(lineInset);
+		int inset2 = (int) Math.ceil(lineInset);
+
+		Rectangle r = Rectangle.SINGLETON.setBounds(getTargetBounds());
+		r.x += inset1;
+		r.y += inset1;
+		r.width -= inset1 + inset2;
+		r.height -= inset1 + inset2;
+
+		graphics.drawRectangle(r);
 	}
 }

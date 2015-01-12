@@ -24,8 +24,8 @@ public class ResizableHandleKitEx extends ResizableHandleKit {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static void addMoveHandle(GraphicalEditPart f, @SuppressWarnings("rawtypes") List handles, DragTracker tracker, Cursor cursor) {
-		handles.add(moveHandle(f, tracker, cursor));
+	public static void addMoveHandle(GraphicalEditPart part, @SuppressWarnings("rawtypes") List handles, DragTracker tracker, Cursor cursor) {
+		handles.add(moveHandle(part, tracker, cursor));
 	}
 	
 	public static Handle moveHandle(GraphicalEditPart owner, DragTracker tracker, Cursor cursor) {

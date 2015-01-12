@@ -178,6 +178,12 @@ public class FDRectFigure extends Label implements FDTextShapeFigure {
 		
 	}
 
+	@Override
+	public double getDegreeEx() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 //	@Override
 //	public void setSelected(boolean selected) {
 //		setForegroundColor(selected ? ColorConstants.blue : ColorConstants.black);

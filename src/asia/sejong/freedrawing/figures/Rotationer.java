@@ -7,7 +7,7 @@ import org.eclipse.draw2d.geometry.Rectangle;
 
 public abstract class Rotationer {
 
-	public void execute(Graphics graphics, IFigure figure, double degree) {
+	public void execute(Graphics graphics, FDShapeFigure figure, double degree) {
 		Rectangle originalBounds = rotate(graphics, figure, (float)degree);
 		paintInRotateState();
 		rotateFinished(originalBounds, figure);
@@ -15,7 +15,7 @@ public abstract class Rotationer {
 	
 	protected abstract void paintInRotateState();
 	
-	private Rectangle rotate(Graphics graphics, IFigure figure, float degree) {
+	private Rectangle rotate(Graphics graphics, FDShapeFigure figure, float degree) {
 		
 		Rectangle bounds = new Rectangle(figure.getBounds());
 		
@@ -38,7 +38,7 @@ public abstract class Rotationer {
 		figure.setLocation(originalBounds.getLocation());
 	}	
 	
-	private static Rectangle calculateTranslateEffectArea(IFigure figure, double degree) {
+	public static Rectangle calculateTranslateEffectArea(FDShapeFigure figure, double degree) {
 		
 		Rectangle bounds = figure.getBounds();
 		

@@ -133,21 +133,7 @@ public class FDShapePrimaryDragEditPolicy extends FDShapeRotateEditPolicy {
 	
 	@Override
 	protected void createResizeHandle(@SuppressWarnings("rawtypes") List handles, int direction) {
-		if ( RelativeHandleLocatorEx.ROTATION == direction ) {
-			Cursor cursor = Cursors.getDirectionalCursor(direction, getHostFigure().isMirrored());
-			DragTracker dragTracker = new FDShapeRotateTracker((GraphicalEditPart) getHost(), direction);
-			ResizableHandleKitEx.addHandle((GraphicalEditPart) getHost(), handles, direction, dragTracker, cursor);
-		} else if ( (getResizeDirections() & direction) == direction ) {
-//			Cursor cursor = null;
-//			DragTracker dragTracker = null;
-//			if ( RelativeHandleLocatorEx.ROTATION == direction ) {
-//				cursor = Cursors.HAND;
-//				dragTracker = new FDShapeRotateTracker((GraphicalEditPart) getHost());
-//			} else if ( (getResizeDirections() & direction) == direction ) {
-//				dragTracker = getResizeTracker(direction);
-//				cursor = Cursors.getDirectionalCursor(direction, getHostFigure().isMirrored());
-//			}
-				
+		if ( (getResizeDirections() & direction) == direction ) {
 			Cursor cursor = Cursors.getDirectionalCursor(direction, getHostFigure().isMirrored());
 			DragTracker dragTracker = new FDShapeResizeTracker((GraphicalEditPart) getHost(), direction);
 			ResizableHandleKitEx.addHandle((GraphicalEditPart) getHost(), handles, direction, dragTracker, cursor);
@@ -158,6 +144,12 @@ public class FDShapePrimaryDragEditPolicy extends FDShapeRotateEditPolicy {
 		}
 		
 //		createDragHandle(handles, direction);
+	}
+	
+	protected void createRotateHandle(@SuppressWarnings("rawtypes") List handles, int direction) {
+		Cursor cursor = Cursors.getDirectionalCursor(direction, getHostFigure().isMirrored());
+		DragTracker dragTracker = new FDShapeRotateTracker((GraphicalEditPart) getHost(), direction);
+		ResizableHandleKitEx.addHandle((GraphicalEditPart) getHost(), handles, direction, dragTracker, cursor);
 	}
 	
 	@Override
@@ -175,7 +167,7 @@ public class FDShapePrimaryDragEditPolicy extends FDShapeRotateEditPolicy {
 	@Override
 	protected List createSelectionHandles() {
 		List selectionHandles = super.createSelectionHandles();
-		createResizeHandle(selectionHandles, RelativeHandleLocatorEx.ROTATION);
+		createRotateHandle(selectionHandles, RelativeHandleLocatorEx.ROTATION);
 		return selectionHandles;
 	}
 	
@@ -205,13 +197,14 @@ public class FDShapePrimaryDragEditPolicy extends FDShapeRotateEditPolicy {
 		getHostFigure().translateToAbsolute(rect);
 		rect.translate(request.getMoveDelta());
 		rect.resize(request.getSizeDelta());
+		
 
 		feedback.translateToRelative(rect);
 		
 		// 각을 입력한다.
 		((FDShapeFigure)feedback).setDegreeEx(request.getDegree());
-		
-		feedback.setBounds(rect);
-		feedback.validate();
+		feedback.repaint();
+		//feedback.setBounds(rect);
+//		feedback.validate();
 	}
 }

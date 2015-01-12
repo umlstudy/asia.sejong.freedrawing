@@ -105,6 +105,12 @@ public class FDLabelFigure extends Label implements FDTextShapeFigure {
 		
 	}
 
+	@Override
+	public double getDegreeEx() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 //	@Override
 //	public void setSelected(boolean selected) {
 //		// TODO Auto-generated method stub

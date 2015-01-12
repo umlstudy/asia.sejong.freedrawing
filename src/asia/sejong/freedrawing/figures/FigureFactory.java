@@ -54,6 +54,7 @@ public class FigureFactory {
 			FDEllipseFigure realFigure = new FDEllipseFigure();
 			realFigure.setModelAttributes((FDElement)model);
 			realFigure.setAlpha(128);
+			realFigure.setDegreeEx(((FDEllipse)model).getDegree());
 			
 //			FDEllipse ellipse = (FDEllipse)model;
 //			realFigure.setText(ellipse.getText());

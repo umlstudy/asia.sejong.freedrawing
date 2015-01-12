@@ -5,7 +5,7 @@ import org.eclipse.swt.graphics.RGB;
 
 import asia.sejong.freedrawing.model.FDElement;
 
-public interface FDElementFigure {
+public interface FDElementFigure extends IFigure {
 	void setLineWidthEx(int lineWidth);
 	void setLineStyleEx(int lineStyle);
 	void setLineColorEx(RGB rgbColor);
