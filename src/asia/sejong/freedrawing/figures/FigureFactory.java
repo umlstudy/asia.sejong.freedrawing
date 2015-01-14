@@ -101,7 +101,8 @@ public class FigureFactory {
 		}
 		
 		if (model instanceof FDShape ) {
-			//FDShapeFigure f = (FDShapeFigure)figure;
+			FDShapeFigure f = (FDShapeFigure)figure;
+			f.setAlphaEx(128);
 		}
 		
 		if (model instanceof FDElement ) {

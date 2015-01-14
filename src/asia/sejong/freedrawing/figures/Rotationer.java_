@@ -7,6 +7,42 @@ import org.eclipse.draw2d.geometry.Rectangle;
 
 public abstract class Rotationer {
 
+		
+//		// EDITO
+//		// TODO 
+//		rootEditPart.getFigure().setClippingStrategy(new IClippingStrategy() {
+//			@Override
+//			public Rectangle[] getClip(IFigure childFigure) {
+//				Rectangle bounds = null;
+//				if ( childFigure instanceof FDShapeFigure ) {
+//					FDShapeFigure sp = (FDShapeFigure)childFigure;
+//					if ( sp.getDegreeEx() != 0 ) {
+//						bounds = new Rectangle(sp.getBounds().x-50, sp.getBounds().y-50, sp.getBounds().width+100, sp.getBounds().height+100);
+//					} else {
+//						bounds = childFigure.getBounds();
+//					}
+//				} else {
+//					bounds = childFigure.getBounds();
+//				}
+//				return new Rectangle[] {bounds,};
+//			}
+//		});
+
+
+//		
+//		
+//		System.out.println("paintFigure");
+//		if ( degree > 0 ) {
+//			new Rotationer() {
+//				@Override
+//				protected void paintInRotateState() {
+//					FDEllipseFigure.super.paintFigure(graphics);
+//				}
+//			}.execute(graphics, this, degree);
+//		} else {
+//			super.paintFigure(graphics);
+//		}
+
 	public void execute(Graphics graphics, FDShapeFigure figure, double degree) {
 		Rectangle originalBounds = rotate(graphics, figure, (float)degree);
 		paintInRotateState();

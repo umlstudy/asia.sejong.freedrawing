@@ -22,14 +22,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.draw2d.FreeformLayer;
-import org.eclipse.draw2d.IClippingStrategy;
-import org.eclipse.draw2d.IFigure;
-import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.GraphicalViewer;
-import org.eclipse.gef.LayerConstants;
 import org.eclipse.gef.MouseWheelHandler;
 import org.eclipse.gef.SnapToGeometry;
 import org.eclipse.gef.SnapToGrid;
@@ -54,11 +49,8 @@ import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.dialogs.SaveAsDialog;
 import org.eclipse.ui.part.FileEditorInput;
-import org.w3c.dom.css.Rect;
 
 import asia.sejong.freedrawing.editor.actions.palette.factory.PaletteActionFactory;
-import asia.sejong.freedrawing.figures.FDShapeFigure;
-import asia.sejong.freedrawing.figures.Rotationer;
 import asia.sejong.freedrawing.model.FDRoot;
 import asia.sejong.freedrawing.parts.common.FDEditPartFactory;
 import asia.sejong.freedrawing.resources.ContextManager;
@@ -115,26 +107,6 @@ public class FreedrawingEditor extends GraphicalEditor implements MouseWheelHand
 				control.setLayoutData(GridDataFactory.swtDefaults().grab(true, true).align(SWT.FILL, SWT.FILL).create());
 			}
 		}
-		
-//		// EDITO
-//		// TODO 
-//		rootEditPart.getFigure().setClippingStrategy(new IClippingStrategy() {
-//			@Override
-//			public Rectangle[] getClip(IFigure childFigure) {
-//				Rectangle bounds = null;
-//				if ( childFigure instanceof FDShapeFigure ) {
-//					FDShapeFigure sp = (FDShapeFigure)childFigure;
-//					if ( sp.getDegreeEx() != 0 ) {
-//						bounds = new Rectangle(sp.getBounds().x-50, sp.getBounds().y-50, sp.getBounds().width+100, sp.getBounds().height+100);
-//					} else {
-//						bounds = childFigure.getBounds();
-//					}
-//				} else {
-//					bounds = childFigure.getBounds();
-//				}
-//				return new Rectangle[] {bounds,};
-//			}
-//		});
 	}
 	
 	@Override

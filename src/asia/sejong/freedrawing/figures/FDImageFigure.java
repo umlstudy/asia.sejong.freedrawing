@@ -4,7 +4,6 @@ import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.ImageFigure;
 import org.eclipse.draw2d.LineBorder;
-import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
@@ -86,7 +85,7 @@ public class FDImageFigure extends ImageFigure implements FDShapeFigure {
 	}
 
 	@Override
-	public void setLineWidthEx(int lineWidth) {
+	public void setLineWidthEx(float lineWidth) {
 	}
 
 	@Override

@@ -17,9 +17,15 @@ public abstract class FDShape extends FDWireEndPoint {
 	
 	private double degree;
 	
+	private int alpha;
+	
 	private RGB backgroundColor;
 	
 	private FDContainer parent;
+	
+	public FDShape() {
+		alpha = 0xff;
+	}
 	
 	public FDContainer getParent() {
 		return parent;
@@ -75,6 +81,14 @@ public abstract class FDShape extends FDWireEndPoint {
 	public double getDegree() {
 		return degree;
 	}
+
+	public int getAlpha() {
+		return alpha;
+	}
+
+	public void setAlpha(int alpha) {
+		this.alpha = alpha;
+	}
 	
 	//============================================================
 	// Cloneable
@@ -91,6 +105,7 @@ public abstract class FDShape extends FDWireEndPoint {
 		shape.height = height;
 		shape.backgroundColor = backgroundColor;
 		shape.degree = degree;
+		shape.alpha = alpha;
 		
 		return shape;
 	}

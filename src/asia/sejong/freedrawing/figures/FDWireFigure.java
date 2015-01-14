@@ -189,8 +189,8 @@ public class FDWireFigure extends PolylineConnection implements FDElementFigure 
 	}
 
 	@Override
-	public void setLineWidthEx(int lineWidth) {
-		setLineWidth(lineWidth);
+	public void setLineWidthEx(float lineWidth) {
+		setLineWidth((int)lineWidth);
 	}
 
 	@Override

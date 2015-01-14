@@ -5,6 +5,8 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 
+import asia.sejong.freedrawing.figures.GeometryUtil;
+
 public class RotateRequest extends ChangeBoundsRequest {
 
 	public RotateRequest(String req) {
@@ -13,15 +15,10 @@ public class RotateRequest extends ChangeBoundsRequest {
 
 	public double getDegree() {
 		
-		Point location = getLocation();
-		
 		Rectangle bounds = ((GraphicalEditPart)getEditParts().get(0)).getFigure().getBounds();
-		int targetCenterX = bounds.x + (bounds.width>>1);
-		int targetCenterY = bounds.y + (bounds.height>>1);
+		Point centerPoint = GeometryUtil.centerPoint(bounds);
+		Point mouseLocation = getLocation();
 		
-		double rslt = 180f * Math.atan2(targetCenterX-location.x, targetCenterY-location.y)/Math.PI; 
-		
-		return Math.abs(rslt);
+		return GeometryUtil.calculateDegree(centerPoint.x, centerPoint.y, mouseLocation.x, mouseLocation.y);
 	}
-	
 }

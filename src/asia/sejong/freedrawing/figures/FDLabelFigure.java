@@ -61,7 +61,7 @@ public class FDLabelFigure extends Label implements FDTextShapeFigure {
 	}
 
 	@Override
-	public void setLineWidthEx(int lineWidth) {
+	public void setLineWidthEx(float lineWidth) {
 		
 	}
 

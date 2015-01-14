@@ -1,11 +1,8 @@
 package asia.sejong.freedrawing.figures;
 
 import org.eclipse.draw2d.Graphics;
-import org.eclipse.draw2d.IClippingStrategy;
-import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.LineBorder;
 import org.eclipse.draw2d.RectangleFigure;
-import org.eclipse.draw2d.Shape;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.SWT;
@@ -21,27 +18,10 @@ public class FDEllipseFigure extends RectangleFigure implements FDTextShapeFigur
 
 	private double degree;
 
+	transient boolean rotate = false;
+
 	FDEllipseFigure() {
 		setPreferredSize(100, 100);
-		setClippingStrategy(new IClippingStrategy() {
-			
-			@Override
-			public Rectangle[] getClip(IFigure childFigure) {
-				FDEllipseFigure ep = (FDEllipseFigure)childFigure;
-				Rectangle calculateTranslateEffectArea = Rotationer.calculateTranslateEffectArea(ep, ep.degree);
-				return new Rectangle[] {calculateTranslateEffectArea,};
-			}
-		});
-	}
-	
-	boolean rotate = false;
-	
-	public Rectangle getTargetBounds() {
-		if ( rotate ) {
-			return new Rectangle(-bounds.width/2, -bounds.height/2, bounds.width, bounds.height);
-		} else {
-			return bounds;
-		}
 	}
 	
 	@Override
@@ -50,41 +30,74 @@ public class FDEllipseFigure extends RectangleFigure implements FDTextShapeFigur
 		graphics.setXORMode(true);
 		graphics.setBackgroundColor(getBackgroundColor());
 
-		// 드로잉역영을 일부러 크게 만듦
-		graphics.setClip(new Rectangle(getBounds().x-50, getBounds().y-50, getBounds().width+100, getBounds().height+100));
+		// 드로잉역영을 일부러 크게 만듦 - 최적화 필요
+		// 사각형 회전시 최대길이를 한변으로 하는 정사각형 영역을 
+		// 드로잉 영역으로 설정함
+		Point centerPoint = GeometryUtil.centerPoint(getBounds());
+		double h = GeometryUtil.calculateHipotenuse(getBounds().width, getBounds().height);
+		graphics.setClip(GeometryUtil.createSquare(centerPoint, (int)h));
 		
+		// TODO TEST
 		System.out.println("ellipsefigure");
+		
+		boolean translated = false;
 		if ( degree > 0 ) {
-			Point targetCenterPosition = new Point(bounds.width>>1, bounds.height>>1);
-			Point targetCenterPositionInGraphics = new Point(bounds.x + targetCenterPosition.x, bounds.y + targetCenterPosition.y);
-			graphics.translate(targetCenterPositionInGraphics);
+			translated = true;
+			graphics.translate(centerPoint.x, centerPoint.y);
 			rotate = true;
-			//graphics.setClip(Rotationer.calculateTranslateEffectArea(this, degree));
 			graphics.rotate((float)degree);
+			System.out.println( " degree " + degree);
 		}
 		
 		super.paintFigure(graphics);
+		
+		if ( translated ) {
+			graphics.translate(-centerPoint.x, -centerPoint.y);
+		}
+		
 		rotate = false;
-//		
-//		
-//		System.out.println("paintFigure");
-//		if ( degree > 0 ) {
-//			new Rotationer() {
-//				@Override
-//				protected void paintInRotateState() {
-//					FDEllipseFigure.super.paintFigure(graphics);
-//				}
-//			}.execute(graphics, this, degree);
-//		} else {
-//			super.paintFigure(graphics);
-//		}
 	}
 	
-	public void erase() {
-		if (getParent() == null || !isVisible())
-			return;
+	private Rectangle getTargetBounds() {
+		if ( rotate ) {
+			return GeometryUtil.createRectangleCenterIsZero(bounds);
+		} else {
+			return bounds;
+		}
+	}
+	
+	@Override
+	protected void fillShape(Graphics graphics) {
+		graphics.fillRectangle(getTargetBounds());
+	}
 
-		Rectangle r = new Rectangle(getBounds().x-50, getBounds().y-50, getBounds().width+100, getBounds().height+100);
+	@Override
+	protected void outlineShape(Graphics graphics) {
+		float lineInset = Math.max(1.0f, getLineWidthFloat()) / 2.0f;
+		int inset1 = (int) Math.floor(lineInset);
+		int inset2 = (int) Math.ceil(lineInset);
+
+		Rectangle r = Rectangle.SINGLETON.setBounds(getTargetBounds());
+		r.x += inset1;
+		r.y += inset1;
+		r.width -= inset1 + inset2;
+		r.height -= inset1 + inset2;
+
+		graphics.drawRectangle(r);
+	}
+	
+	@Override
+	public void erase() {
+		if (getParent() == null || !isVisible()) {
+			return;
+		}
+
+		// 드로잉역영을 일부러 크게 만듦 - 최적화 필요
+		// 사각형 회전시 최대길이를 한변으로 하는 정사각형 영역을 
+		// 드로잉 영역으로 설정함
+		Point centerPoint = GeometryUtil.centerPoint(getBounds());
+		double h = GeometryUtil.calculateHipotenuse(getBounds().width, getBounds().height);
+		Rectangle r = GeometryUtil.createSquare(centerPoint, (int)h);
 		getParent().translateToParent(r);
 		getParent().repaint(r.x, r.y, r.width, r.height);
 	}
@@ -139,7 +152,7 @@ public class FDEllipseFigure extends RectangleFigure implements FDTextShapeFigur
 	}
 
 	@Override
-	public void setLineWidthEx(int lineWidth) {
+	public void setLineWidthEx(float lineWidth) {
 		
 	}
 
@@ -179,23 +192,5 @@ public class FDEllipseFigure extends RectangleFigure implements FDTextShapeFigur
 	@Override
 	public double getDegreeEx() {
 		return this.degree;
-	}
-	
-	protected void fillShape(Graphics graphics) {
-		graphics.fillRectangle(getTargetBounds());
-	}
-
-	protected void outlineShape(Graphics graphics) {
-		float lineInset = Math.max(1.0f, getLineWidthFloat()) / 2.0f;
-		int inset1 = (int) Math.floor(lineInset);
-		int inset2 = (int) Math.ceil(lineInset);
-
-		Rectangle r = Rectangle.SINGLETON.setBounds(getTargetBounds());
-		r.x += inset1;
-		r.y += inset1;
-		r.width -= inset1 + inset2;
-		r.height -= inset1 + inset2;
-
-		graphics.drawRectangle(r);
 	}
 }
