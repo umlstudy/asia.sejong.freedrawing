@@ -50,17 +50,17 @@ public class FDImageEditPart extends FDShapeEditPart implements FDImageListener 
 		Rectangle bounds = new Rectangle(m.getX(), m.getY(), m.getWidth(), m.getHeight());
 		((GraphicalEditPart) getParent()).setLayoutConstraint(this, getFigure(), bounds);
 		
-		Rectangle clientBounds = bounds;
-		FDImageFigure figure = (FDImageFigure)getFigure();
-		GC drawer = new GC(figure.getImage());
-		SWTGraphics graphics = new SWTGraphics(drawer);
-		graphics.translate(-clientBounds.x, -clientBounds.y);
-		figure.paint(graphics);
-		drawer.dispose();
-		getFigure().setBounds(clientBounds);
-//		((ImageFigure)getFigure()).setImage(image);
-		getFigure().invalidate();
-		getFigure().repaint();
+//		Rectangle clientBounds = bounds;
+//		FDImageFigure figure = (FDImageFigure)getFigure();
+//		GC drawer = new GC(figure.getImage());
+//		SWTGraphics graphics = new SWTGraphics(drawer);
+//		graphics.translate(-clientBounds.x, -clientBounds.y);
+//		figure.paint(graphics);
+//		drawer.dispose();
+//		getFigure().setBounds(clientBounds);
+////		((ImageFigure)getFigure()).setImage(image);
+//		getFigure().invalidate();
+//		getFigure().repaint();
 		
 		super.refreshVisuals();
 	}
