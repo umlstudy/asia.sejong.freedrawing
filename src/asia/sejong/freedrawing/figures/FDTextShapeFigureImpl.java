@@ -16,7 +16,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
 
 import asia.sejong.freedrawing.model.FDElement;
-import asia.sejong.freedrawing.model.FDRect;
+import asia.sejong.freedrawing.model.FDTextShape;
 import asia.sejong.freedrawing.model.FontInfo;
 import asia.sejong.freedrawing.resources.ContextManager;
 
@@ -504,9 +504,6 @@ public abstract class FDTextShapeFigureImpl extends FDShapeFigureImpl implements
 	public void paintFigure(Graphics graphics) {
 		
 		super.paintFigure(graphics);
-//		// sejong.lee
-//		Point centerPoint = positionToCenterZeroAndClip(graphics);
-		
 
 		Rectangle bounds = getBounds();
 //		graphics.translate(bounds.x, bounds.y);
@@ -524,9 +521,6 @@ public abstract class FDTextShapeFigureImpl extends FDShapeFigureImpl implements
 		textLocation.y -= bounds.height/2;
 		graphics.drawText(getSubStringText(), textLocation);
 //		graphics.translate(-bounds.x, -bounds.y);
-		
-//		// sejong.lee
-//		positionRestore(graphics, centerPoint);
 	}
 
 	/**
@@ -765,7 +759,7 @@ public abstract class FDTextShapeFigureImpl extends FDShapeFigureImpl implements
 	public final void setModelAttributes(FDElement model_) {
 		super.setModelAttributes(model_);
 		
-		FDRect model = (FDRect)model_;
+		FDTextShape model = (FDTextShape)model_;
 		
 		setTextEx(model.getText());
 		setFontInfoEx(model.getFontInfo());

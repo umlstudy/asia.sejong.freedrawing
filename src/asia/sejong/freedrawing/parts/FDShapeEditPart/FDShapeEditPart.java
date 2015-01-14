@@ -58,6 +58,8 @@ public abstract class FDShapeEditPart extends AbstractGraphicalEditPart implemen
 		((GraphicalEditPart) getParent()).setLayoutConstraint(this, getFigure(), rect);
 		
 		// 속성
+		((FDShapeFigure)getFigure()).setAlphaEx(m.getAlpha());
+		((FDShapeFigure)getFigure()).setDegreeEx(m.getDegree());
 		((FDShapeFigure)getFigure()).setLineColorEx(m.getLineColor());
 		((FDShapeFigure)getFigure()).setBackgroundColorEx(m.getBackgroundColor());
 		if ( m.getLineWidth() > 0 ) {

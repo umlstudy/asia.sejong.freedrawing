@@ -2,6 +2,7 @@ package asia.sejong.freedrawing.model;
 
 import java.io.Serializable;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.RGB;
 
 import asia.sejong.freedrawing.model.listener.FDBaseListener;
@@ -14,6 +15,10 @@ public abstract class FDElement extends FDBase implements Cloneable, Serializabl
 	private RGB lineColor;
 	private int lineStyle;
 	private int lineWidth;
+	
+	protected FDElement() {
+		lineStyle = SWT.LINE_SOLID;
+	}
 
 	public RGB getLineColor() {
 		return lineColor;

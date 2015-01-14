@@ -102,6 +102,7 @@ public class FigureFactory {
 		
 		if (model instanceof FDShape ) {
 			FDShapeFigure f = (FDShapeFigure)figure;
+			// 피드백 이미지의 경우 반투명 처리함
 			f.setAlphaEx(128);
 		}
 		

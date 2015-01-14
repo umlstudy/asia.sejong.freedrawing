@@ -1,142 +1,167 @@
 package asia.sejong.freedrawing.figures;
 
-import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.ImageFigure;
-import org.eclipse.draw2d.LineBorder;
-import org.eclipse.draw2d.geometry.Point;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.RGB;
+import org.eclipse.draw2d.PositionConstants;
+import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.draw2d.geometry.Insets;
+import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.swt.graphics.Image;
 
-import asia.sejong.freedrawing.model.FDElement;
-import asia.sejong.freedrawing.model.FDImage;
-import asia.sejong.freedrawing.resources.ContextManager;
+/**
+ * A Figure that simply contains an Image. Use this Figure, instead of a Label,
+ * when displaying Images without any accompanying text. This figure is not
+ * intended to have a layout mananger or children.
+ * <P>
+ * Note that it is the client's responsibility to dispose the given image. There
+ * is no "free" resource management in draw2d.
+ * 
+ * @author Pratik Shah
+ */
+public class FDImageFigure extends FDAbstractImageFigure {
 
-public class FDImageFigure extends ImageFigure implements FDShapeFigure {
+	private Image img;
+	private Dimension size = new Dimension();
+	private int alignment;
 
-	private Integer alpha = 0xff;
-	
-	FDImageFigure() {
-		setPreferredSize(100, 100);
+	/**
+	 * Constructor<br>
+	 * The default alignment is <code>PositionConstants.CENTER</code>.
+	 */
+	public FDImageFigure() {
+		this(null, PositionConstants.CENTER);
 	}
-	
-	@Override
+
+	/**
+	 * Constructor<br>
+	 * The default alignment is <code>PositionConstants.CENTER</code>.
+	 * 
+	 * @param image
+	 *            The Image to be displayed
+	 */
+	public FDImageFigure(Image image) {
+		this(image, PositionConstants.CENTER);
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param image
+	 *            The Image to be displayed
+	 * @param alignment
+	 *            A PositionConstant indicating the alignment
+	 * 
+	 * @see ImageFigure#setImage(Image)
+	 * @see ImageFigure#setAlignment(int)
+	 */
+	public FDImageFigure(Image image, int alignment) {
+		setImage(image);
+		setAlignment(alignment);
+	}
+
+	/**
+	 * @return The Image that this Figure displays
+	 */
+	public Image getImage() {
+		return img;
+	}
+
+	/**
+	 * Calculates the necessary size to display the Image within the figure's
+	 * client area.
+	 * 
+	 * @see org.eclipse.draw2d.Figure#getPreferredSize(int, int)
+	 */
+	public Dimension getPreferredSize(int wHint, int hHint) {
+		if (getInsets() == NO_INSETS)
+			return size;
+		Insets i = getInsets();
+		return size.getExpanded(i.getWidth(), i.getHeight());
+	}
+
+	/**
+	 * @see org.eclipse.draw2d.Figure#paintFigure(Graphics)
+	 */
 	public void paintFigure(Graphics graphics) {
-//		graphics.setAntialias(SWT.ON);
-//		graphics.setXORMode(true);
-//		graphics.setBackgroundColor(getBackgroundColor());
-//		graphics.setForegroundColor(getForegroundColor());
-//		graphics.setBackgroundColor(new Color(null, 31, 31, 31));
-		
-		float angle = 0f;
-		/*
-		Dimension size = getSize();
-		Point centerLoc = getLocation().getTranslated((size.width/2), (size.height/2));
-		double targetLocX = centerLoc.x;
-		double targetLocY = centerLoc.y;
-		
-		
-		double rad = getRadius(targetLocX, targetLocY);
-		double baseX = rad;
-		double targetAngle = 90f*(targetLocY/(targetLocX+targetLocY));
-		Point baseTranslate = getTranslate(rad, targetAngle, baseX, 0.0);
-		Point translate = getTranslate(rad, targetAngle + angle, baseX, 0.0);
-		graphics.translate(translate.x - baseTranslate.x, translate.y - baseTranslate.y);
-		*/
-		graphics.rotate(angle);
-		graphics.setAlpha(255);
-		graphics.setBackgroundColor(ColorConstants.gray);
 		super.paintFigure(graphics);
-	}
-	
-	private static double getRadius(double width, double height) {
-		return Math.sqrt(width*width + height * height);
-	}
-	
-	private static Point getTranslate(double r, double angle, double targetX, double targetY) {
-		double pi = 3.1415926535;
-		double fRadian = pi / 180. * angle;
-		double newX = r * Math.cos(fRadian);
-		double newY = r * Math.sin(fRadian);
-		Point p = new Point();
-		p.x = (int) Math.round(targetX - newX);
-		p.y = (int) Math.round(targetY - newY);
-		return p;
-	}
 
-	// TODO
-	public LineBorder getLineBorder() {
-//		return lineBorder;
-		return null;
-	}
+		if (getImage() == null)
+			return;
 
-	@Override
-	public void setAlphaEx(int alpha) {
-		this.alpha = alpha;
-	}
-	
-	@Override
-	public void setBackgroundColorEx(RGB rgbColor) {
-		Color color = null;
-		if ( rgbColor != null ) {
-			color = ContextManager.getInstance().getColorManager().get(rgbColor);
-			super.setBackgroundColor(color);
-		}	
-	}
-
-	@Override
-	public void setLineWidthEx(float lineWidth) {
-	}
-
-	@Override
-	public void setLineStyleEx(int lineStyle) {
-	}
-
-	@Override
-	public void setLineColorEx(RGB rgbColor) {
-		Color color = null;
-		if ( rgbColor != null ) {
-			color = ContextManager.getInstance().getColorManager().get(rgbColor);
-			setBackgroundColor(color);
+		int x, y;
+		Rectangle area = getBoundsInZeroPoint().getShrinked(getInsets());
+		switch (alignment & PositionConstants.NORTH_SOUTH) {
+		case PositionConstants.NORTH:
+			y = area.y;
+			break;
+		case PositionConstants.SOUTH:
+			y = area.y + area.height - size.height;
+			break;
+		default:
+			y = (area.height - size.height) / 2 + area.y;
+			break;
 		}
+		switch (alignment & PositionConstants.EAST_WEST) {
+		case PositionConstants.EAST:
+			x = area.x + area.width - size.width;
+			break;
+		case PositionConstants.WEST:
+			x = area.x;
+			break;
+		default:
+			x = (area.width - size.width) / 2 + area.x;
+			break;
+		}
+		graphics.drawImage(getImage(), x, y);
 	}
-	
-	@Override
-	public void setModelAttributes(FDElement model_) {
-		FDImage model = (FDImage)model_;
-//		setTextEx(model.getTText());
-//		setFontInfoEx(model.getFontInfo());
-//		setFontColorEx(model.getFontColor());
-		setBackgroundColorEx(model.getBackgroundColor());
-		setLineWidthEx(model.getLineWidth());
-		setLineStyleEx(model.getLineStyle());
-		setLineColorEx(model.getLineColor());
+
+	/**
+	 * Sets the alignment of the Image within this Figure. The alignment comes
+	 * into play when the ImageFigure is larger than the Image. The alignment
+	 * could be any valid combination of the following:
+	 * 
+	 * <UL>
+	 * <LI>PositionConstants.NORTH</LI>
+	 * <LI>PositionConstants.SOUTH</LI>
+	 * <LI>PositionConstants.EAST</LI>
+	 * <LI>PositionConstants.WEST</LI>
+	 * <LI>PositionConstants.CENTER or PositionConstants.NONE</LI>
+	 * </UL>
+	 * 
+	 * @param flag
+	 *            A constant indicating the alignment
+	 */
+	public void setAlignment(int flag) {
+		alignment = flag;
 	}
-	
-	@Override
-	public void setLocationEx(Point point) {
-		setLocation(point);
+
+	/**
+	 * Sets the Image that this ImageFigure displays.
+	 * <p>
+	 * IMPORTANT: Note that it is the client's responsibility to dispose the
+	 * given image.
+	 * 
+	 * @param image
+	 *            The Image to be displayed. It can be <code>null</code>.
+	 */
+	public void setImage(Image image) {
+		if (img == image)
+			return;
+		img = image;
+		if (img != null)
+			size = new Rectangle(image.getBounds()).getSize();
+		else
+			size = new Dimension();
+		revalidate();
+		notifyImageChanged();
+		repaint();
 	}
 
 	@Override
-	public void setSizeEx(int width, int height) {
-		setSize(width, height);
+	protected void fillShape(Graphics graphics) {
 	}
 
 	@Override
-	public void setDegreeEx(double degree) {
-		
+	protected void outlineShape(Graphics graphics) {
 	}
-
-	@Override
-	public double getDegreeEx() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-//	@Override
-//	public void setSelected(boolean selected) {
-//		// TODO Auto-generated method stub
-//		
-//	}
 }

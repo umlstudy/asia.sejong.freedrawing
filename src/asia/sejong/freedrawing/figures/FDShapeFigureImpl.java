@@ -12,7 +12,7 @@ import org.eclipse.swt.graphics.LineAttributes;
 import org.eclipse.swt.graphics.RGB;
 
 import asia.sejong.freedrawing.model.FDElement;
-import asia.sejong.freedrawing.model.FDRect;
+import asia.sejong.freedrawing.model.FDShape;
 import asia.sejong.freedrawing.resources.ContextManager;
 
 /**
@@ -20,6 +20,10 @@ import asia.sejong.freedrawing.resources.ContextManager;
  * <p>
  * When customizing shapes, you shouldn't override paintFigure(). Override
  * fillShape() and outlineShape() methods instead.
+ */
+/**
+ * @author fffffff
+ *
  */
 public abstract class FDShapeFigureImpl extends Figure implements FDShapeFigure {
 
@@ -110,6 +114,7 @@ public abstract class FDShapeFigureImpl extends Figure implements FDShapeFigure 
 	 * @see #paintClientArea(Graphics)
 	 * @see #paintBorder(Graphics)
 	 */
+	@SuppressWarnings("deprecation")
 	public void paint(Graphics graphics) {
 		if (getLocalBackgroundColor() != null)
 			graphics.setBackgroundColor(getLocalBackgroundColor());
@@ -148,14 +153,11 @@ public abstract class FDShapeFigureImpl extends Figure implements FDShapeFigure 
 		if (antialias != null) {
 			graphics.setAntialias(antialias.intValue());
 		}
+
 		if (alpha != null) {
 			graphics.setAlpha(alpha.intValue());
 		}
-		graphics.setXORMode(true);
-
-		// TODO DEBUG
-		System.out.println(this.getClass().getSimpleName()+ ".paintFigure");
-		// graphics.rotate(rotation);
+		//graphics.setXORMode(true);
 
 		/*
 		 * see bug #267397: paintFigure was historically not called, disabling
@@ -165,9 +167,6 @@ public abstract class FDShapeFigureImpl extends Figure implements FDShapeFigure 
 		// paint background and border
 		// super.paintFigure(graphics);
 		
-//		// sejong.lee
-//		Point centerPoint = positionToCenterZeroAndClip(graphics);
-
 		if (!isEnabled()) {
 			graphics.translate(1, 1);
 			graphics.setBackgroundColor(ColorConstants.buttonLightest);
@@ -194,11 +193,9 @@ public abstract class FDShapeFigureImpl extends Figure implements FDShapeFigure 
 			paintOutline(graphics);
 		}
 		
-//		// sejong.lee
-//		positionRestore(graphics, centerPoint);
 	}
 	
-	protected Point positionToCenterZeroAndClip(Graphics graphics) {
+	private Point positionToCenterZeroAndClip(Graphics graphics) {
 		// 드로잉역영을 일부러 크게 만듦 - 최적화 필요
 		// 사각형 회전시 최대길이를 한변으로 하는 정사각형 영역을 
 		// 드로잉 영역으로 설정함
@@ -210,19 +207,44 @@ public abstract class FDShapeFigureImpl extends Figure implements FDShapeFigure 
 		if ( degree > 0 ) {
 			graphics.rotate((float)degree);
 		}
+		System.out.println("DEGREE ? " + degree);
 		
 		return centerPoint;
 	}
 	
-	protected static void positionRestore(Graphics graphics, Point centerPoint) {
+	private static void positionRestore(Graphics graphics, Point centerPoint) {
 		graphics.rotate(0f);
 		graphics.translate(-centerPoint.x, -centerPoint.y);
 	}
 	
+	/**
+	 * Edit By sejong.lee
+	 * @return
+	 */
 	protected Rectangle getBoundsInZeroPoint() {
 		return GeometryUtil.createRectangleCenterIsZero(getBounds());
 	}
 	
+	
+	/* (non-Javadoc)
+	 * Edit By sejong.lee
+	 * @see org.eclipse.draw2d.Figure#repaint()
+	 */
+	@Override
+	public void repaint() {
+		if ( getParent() != null ) {
+			// 상위 피겨를 취하여
+			// 상위 피겨의 특정부분를 리페이트인트 하도록 지정함
+			getParent().repaint(GeometryUtil.createSquare(getBounds()));
+		} else {
+			super.repaint();
+		}
+	}
+	
+	/* (non-Javadoc)
+	 * Edit By sejong.lee
+	 * @see org.eclipse.draw2d.Figure#erase()
+	 */
 	@Override
 	public void erase() {
 		if (getParent() == null || !isVisible()) {
@@ -232,14 +254,18 @@ public abstract class FDShapeFigureImpl extends Figure implements FDShapeFigure 
 		// 드로잉역영을 일부러 크게 만듦 - 최적화 필요
 		// 사각형 회전시 최대길이를 한변으로 하는 정사각형 영역을 
 		// 드로잉 영역으로 설정함
-		Point centerPoint = GeometryUtil.centerPoint(getBounds());
-		double h = GeometryUtil.calculateHipotenuse(getBounds().width, getBounds().height);
-		Rectangle r = GeometryUtil.createSquare(centerPoint, (int)h);
+		Rectangle r = GeometryUtil.createSquare(getBounds());
 		getParent().translateToParent(r);
 		getParent().repaint(r.x, r.y, r.width, r.height);
 	}
 
 	private void paintOutline(Graphics graphics) {
+		
+		Color oriforegroundColor = graphics.getForegroundColor();
+		if ( lineColor != null ) {
+			graphics.setForegroundColor(lineColor);
+		}
+		
 		// synchronize the line width and style attributes to the
 		// public fields which may have been assigned
 		// to without our knowledge
@@ -265,6 +291,8 @@ public abstract class FDShapeFigureImpl extends Figure implements FDShapeFigure 
 		} else {
 			outlineShape(graphics);
 		}
+		
+		graphics.setForegroundColor(oriforegroundColor);
 	}
 
 	private void paintFill(Graphics graphics) {
@@ -743,21 +771,25 @@ public abstract class FDShapeFigureImpl extends Figure implements FDShapeFigure 
 
 	@Override
 	public final void setLineStyleEx(int lineStyle) {
-		getLineAttributes().style = lineStyle;
+		setLineStyle(lineStyle);
 	}
+	
+	private Color lineColor = null;
 
 	@Override
 	public final void setLineColorEx(RGB rgbColor) {
-		Color color = null;
 		if ( rgbColor != null ) {
-			color = ContextManager.getInstance().getColorManager().get(rgbColor);
-			setForegroundColor(color);
+			Color color = ContextManager.getInstance().getColorManager().get(rgbColor);
+			if ( color != lineColor ) {
+				lineColor = color;
+				repaint();
+			}
 		}	
 	}
 
 	@Override
 	public void setModelAttributes(FDElement model_) {
-		FDRect model = (FDRect)model_;
+		FDShape model = (FDShape)model_;
 		
 		setBackgroundColorEx(model.getBackgroundColor());
 		setLineWidthEx(model.getLineWidth());
@@ -782,6 +814,7 @@ public abstract class FDShapeFigureImpl extends Figure implements FDShapeFigure 
 	@Override
 	public final void setDegreeEx(double degree) {
 		this.degree = degree;
+		System.out.println("DE " + degree);
 	}
 
 	@Override

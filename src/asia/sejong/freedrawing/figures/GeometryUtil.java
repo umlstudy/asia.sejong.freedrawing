@@ -5,12 +5,19 @@ import org.eclipse.draw2d.geometry.Rectangle;
 
 public class GeometryUtil {
 
-    public static Point centerPoint(Rectangle rect) {
+	public static Point centerPoint(Rectangle rect) {
         return new Point(rect.x + rect.width / 2, rect.y + rect.height / 2);
     }
 
 	public static double calculateHipotenuse(int width, int height) {
 		return Math.sqrt(width * width + height * height);
+	}
+	
+	public static Rectangle createSquare(Rectangle bounds) {
+		Point centerPoint = GeometryUtil.centerPoint(bounds);
+		double h = GeometryUtil.calculateHipotenuse(bounds.width(), bounds.height());
+		Rectangle square = GeometryUtil.createSquare(centerPoint, (int)h);
+		return square;
 	}
 
 	public static Rectangle createSquare(Point cp, int aSide) {

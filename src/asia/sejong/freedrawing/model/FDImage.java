@@ -13,7 +13,6 @@ public class FDImage extends FDShape {
 		return imageBytes;
 	}
 
-
 	public void setImageBytes(byte[] imageBytes) {
 		this.imageBytes = imageBytes;
 	}
