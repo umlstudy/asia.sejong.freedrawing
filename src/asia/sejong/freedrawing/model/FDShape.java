@@ -23,9 +23,7 @@ public abstract class FDShape extends FDWireEndPoint {
 	
 	private FDContainer parent;
 	
-	public FDShape() {
-		alpha = 0xff;
-	}
+	FDShape() {}
 	
 	public FDContainer getParent() {
 		return parent;

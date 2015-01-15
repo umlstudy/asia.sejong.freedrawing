@@ -9,6 +9,7 @@ import org.eclipse.gef.editpolicies.GraphicalNodeEditPolicy;
 import org.eclipse.gef.requests.CreateConnectionRequest;
 import org.eclipse.gef.requests.ReconnectRequest;
 
+import asia.sejong.freedrawing.model.FDModelFactory;
 import asia.sejong.freedrawing.model.FDRoot;
 import asia.sejong.freedrawing.model.FDWire;
 import asia.sejong.freedrawing.model.FDWireEndPoint;
@@ -64,7 +65,7 @@ public class FDWireEditPolicy extends GraphicalNodeEditPolicy {
 		CreateConnectionRequest req = (CreateConnectionRequest)req_;
 		FDWireEndPoint src = (FDWireEndPoint)req.getSourceEditPart().getModel();
 		FDWireEndPoint tar = (FDWireEndPoint)req.getTargetEditPart().getModel();
-		return FDWireEditPart.createWireFigure(FDWire.newInstance(src, tar), false);
+		return FDWireEditPart.createWireFigure(FDModelFactory.createWire(src, tar), false);
 	}
 	
 	protected Command getReconnectSourceCommand(ReconnectRequest request) {

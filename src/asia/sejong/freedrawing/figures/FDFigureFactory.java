@@ -17,10 +17,11 @@ import asia.sejong.freedrawing.model.FDShape;
 import asia.sejong.freedrawing.model.FDTextShape;
 import asia.sejong.freedrawing.model.FDWire;
 
-public class FigureFactory {
+public class FDFigureFactory {
 
 	public static FDElementFigure createFigure(FDElement model) {
 		FDElementFigure figure = null;
+		
 		if ( model instanceof FDEllipse ) {
 			figure = new FDEllipseFigure();
 		} else if ( model instanceof FDImage ) {

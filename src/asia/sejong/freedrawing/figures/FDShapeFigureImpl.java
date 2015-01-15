@@ -157,7 +157,9 @@ public abstract class FDShapeFigureImpl extends Figure implements FDShapeFigure 
 		if (alpha != null) {
 			graphics.setAlpha(alpha.intValue());
 		}
-		//graphics.setXORMode(true);
+		// TODO !!!!!!!!!!!!!!!!! EDIT
+		graphics.setAlpha(255);
+		graphics.setXORMode(true);
 
 		/*
 		 * see bug #267397: paintFigure was historically not called, disabling
@@ -192,7 +194,6 @@ public abstract class FDShapeFigureImpl extends Figure implements FDShapeFigure 
 		if (outline) {
 			paintOutline(graphics);
 		}
-		
 	}
 	
 	private Point positionToCenterZeroAndClip(Graphics graphics) {

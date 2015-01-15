@@ -1,5 +1,6 @@
 package asia.sejong.freedrawing.parts.FDWireEditPart.command;
 
+import asia.sejong.freedrawing.model.FDModelFactory;
 import asia.sejong.freedrawing.model.FDRoot;
 import asia.sejong.freedrawing.model.FDWire;
 
@@ -18,7 +19,7 @@ public class FDWireRecreateCommand extends FDWireCreateCommand {
 	@Override
 	public void execute() {
 		if ( newWire == null ) {
-			newWire = FDWire.newInstance(source, target);
+			newWire = FDModelFactory.createWire(source, target);
 			newWire.addBendpoints(oldWire.getBendpoints());
 		}
 		getRoot().removeWire(oldWire);

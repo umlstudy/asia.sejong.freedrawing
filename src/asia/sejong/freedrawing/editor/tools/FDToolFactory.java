@@ -13,6 +13,7 @@ import asia.sejong.freedrawing.editor.FreedrawingEditor;
 import asia.sejong.freedrawing.model.FDEllipse;
 import asia.sejong.freedrawing.model.FDImage;
 import asia.sejong.freedrawing.model.FDLabel;
+import asia.sejong.freedrawing.model.FDModelFactory;
 import asia.sejong.freedrawing.model.FDRect;
 import asia.sejong.freedrawing.util.IOUtil;
 
@@ -41,7 +42,7 @@ public abstract class FDToolFactory {
 
 	public static FDToolFactory RECT_CREATION_TOOL = new FDToolFactory() {
 		@Override
-		public AbstractTool createTool(FreedrawingEditor editor) {
+		public AbstractTool createTool(final FreedrawingEditor editor) {
 			return new CreationTool(new CreationFactory() {
 				
 				@Override
@@ -51,7 +52,7 @@ public abstract class FDToolFactory {
 				
 				@Override
 				public Object getNewObject() {
-					return new FDRect();
+					return FDModelFactory.createModel(FDRect.class, editor.getEditorContext());
 				}
 			});
 		}
@@ -59,7 +60,7 @@ public abstract class FDToolFactory {
 	
 	public static FDToolFactory ELLIPSE_CREATION_TOOL = new FDToolFactory() {
 		@Override
-		public AbstractTool createTool(FreedrawingEditor editor) {
+		public AbstractTool createTool(final FreedrawingEditor editor) {
 			return new CreationTool(new CreationFactory() {
 				
 				@Override
@@ -69,7 +70,7 @@ public abstract class FDToolFactory {
 				
 				@Override
 				public Object getNewObject() {
-					return new FDEllipse();
+					return FDModelFactory.createModel(FDEllipse.class, editor.getEditorContext());
 				}
 			});
 		}
@@ -105,9 +106,9 @@ public abstract class FDToolFactory {
 						IOUtil.throwException(e);
 					}
 						
-					FDImage imageModel = new FDImage();
-					imageModel.setImageBytes(readBytes);
-					return imageModel;
+					FDImage fdImage = (FDImage)FDModelFactory.createModel(FDImage.class, editor.getEditorContext());
+					fdImage.setImageBytes(readBytes);
+					return fdImage;
 						
 				}
 			});
@@ -116,7 +117,7 @@ public abstract class FDToolFactory {
 	
 	public static FDToolFactory LABEL_CREATION_TOOL = new FDToolFactory() {
 		@Override
-		public AbstractTool createTool(FreedrawingEditor editor) {
+		public AbstractTool createTool(final FreedrawingEditor editor) {
 			return new CreationTool(new CreationFactory() {
 				
 				@Override
@@ -126,7 +127,7 @@ public abstract class FDToolFactory {
 				
 				@Override
 				public Object getNewObject() {
-					return new FDLabel();
+					return FDModelFactory.createModel(FDLabel.class, editor.getEditorContext());
 				}
 			});
 		}

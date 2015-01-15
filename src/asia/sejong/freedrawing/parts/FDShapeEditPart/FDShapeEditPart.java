@@ -24,7 +24,7 @@ import org.eclipse.swt.graphics.RGB;
 
 import asia.sejong.freedrawing.debug.ForEditPart;
 import asia.sejong.freedrawing.figures.FDShapeFigure;
-import asia.sejong.freedrawing.figures.FigureFactory;
+import asia.sejong.freedrawing.figures.FDFigureFactory;
 import asia.sejong.freedrawing.model.FDRoot;
 import asia.sejong.freedrawing.model.FDShape;
 import asia.sejong.freedrawing.model.FDWire;
@@ -38,7 +38,7 @@ import asia.sejong.freedrawing.parts.FDWireEditPart.FDWireableEditPart;
 public abstract class FDShapeEditPart extends AbstractGraphicalEditPart implements FDWireableEditPart, NodeEditPart, FDShapeListener {
 
 	protected final IFigure createFigure() {
-		return FigureFactory.createFigure(getModel());
+		return FDFigureFactory.createFigure(getModel());
 	}
 	
 	protected final EditPart findEditPart(Object model) {

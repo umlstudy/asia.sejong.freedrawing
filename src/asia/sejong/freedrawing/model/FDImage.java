@@ -9,6 +9,8 @@ public class FDImage extends FDShape {
 	
 	private byte[] imageBytes;
 	
+	FDImage() {}
+	
 	public byte[] getImageBytes() {
 		return imageBytes;
 	}

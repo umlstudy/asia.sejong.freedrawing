@@ -5,8 +5,7 @@ public class FDLabel extends FDTextShape {
 
 	private static final long serialVersionUID = -1236176647745936636L;
 
-	public FDLabel() {
-	}
+	FDLabel() {}
 	
 	//============================================================
 	// Clonable

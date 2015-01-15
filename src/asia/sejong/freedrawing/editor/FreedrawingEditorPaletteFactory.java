@@ -11,18 +11,21 @@ import org.eclipse.gef.palette.PanningSelectionToolEntry;
 import org.eclipse.gef.palette.ToolEntry;
 import org.eclipse.gef.requests.SimpleFactory;
 
+import asia.sejong.freedrawing.context.FreedrawingEditorContext;
 import asia.sejong.freedrawing.editor.tools.FDConnectionCreationTool;
 import asia.sejong.freedrawing.editor.tools.FDPanningSelectionTool;
+import asia.sejong.freedrawing.model.FDElement;
+import asia.sejong.freedrawing.model.FDModelFactory;
 import asia.sejong.freedrawing.model.FDRect;
 import asia.sejong.freedrawing.resources.IconManager;
 import asia.sejong.freedrawing.resources.IconManager.IconType;
 
 public class FreedrawingEditorPaletteFactory {
 
-	public static PaletteRoot createPalette(IconManager imageManager) {
+	public static PaletteRoot createPalette(IconManager imageManager, FreedrawingEditorContext editorContext) {
 		PaletteRoot palette = new PaletteRoot();
 		palette.add(createToolsGroup(palette));
-		palette.add(createElementsDrawer(imageManager));
+		palette.add(createElementsDrawer(imageManager, editorContext));
 		return palette;
 	}
 
@@ -46,16 +49,16 @@ public class FreedrawingEditorPaletteFactory {
 	}
 
 	/**
-	 * Create a drawer containing tools to add the various genealogy model elements
+	 * Create a drawer containing tools to add the various model elements
 	 */
-	private static PaletteEntry createElementsDrawer(IconManager imageManager) {
+	private static PaletteEntry createElementsDrawer(IconManager imageManager, final FreedrawingEditorContext editorContext) {
 		PaletteDrawer componentsDrawer = new PaletteDrawer("Elements");
 		
 		// 사각형 생성을 위한 팩토리 및 툴 생성
 		{
 			SimpleFactory factory = new SimpleFactory(FDRect.class) {
 				public Object getNewObject() {
-					FDRect node = new FDRect();
+					FDElement node = FDModelFactory.createModel(FDRect.class, editorContext);
 					return node;
 				}
 			};

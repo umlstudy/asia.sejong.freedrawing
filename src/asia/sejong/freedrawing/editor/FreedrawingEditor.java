@@ -50,16 +50,13 @@ import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.dialogs.SaveAsDialog;
 import org.eclipse.ui.part.FileEditorInput;
 
-import asia.sejong.freedrawing.context.ApplicationContext;
+import asia.sejong.freedrawing.context.FreedrawingEditorContext;
 import asia.sejong.freedrawing.editor.actions.palette.factory.PaletteActionFactory;
-import asia.sejong.freedrawing.model.FDRoot;
 import asia.sejong.freedrawing.parts.common.FDEditPartFactory;
 
 public class FreedrawingEditor extends GraphicalEditor implements MouseWheelHandler {
 
-	private FDRoot nodeRoot = null;
-	
-	private ApplicationContext applicationContext;
+	private FreedrawingEditorContext editorContext;
 	
 	private FreedrawingEditorActionManager actionManager;
 	
@@ -109,6 +106,19 @@ public class FreedrawingEditor extends GraphicalEditor implements MouseWheelHand
 		}
 	}
 	
+//	public Object getAdapter(@SuppressWarnings("rawtypes") Class type) {
+//		if (type == FreedrawingEditorContext.class) {
+//			return editorContext;
+//		}
+//		
+//		return super.getAdapter(type);
+//	}
+//	
+
+	public FreedrawingEditorContext getEditorContext() {
+		return editorContext;
+	}
+	
 	@Override
 	protected void createGraphicalViewer(Composite parent) {
 		RulerComposite rulerComp = new RulerComposite(parent, SWT.NONE);
@@ -137,50 +147,13 @@ public class FreedrawingEditor extends GraphicalEditor implements MouseWheelHand
 //		};
 //		IFigure primaryLayer = rootEditPart.getLayer(LayerConstants.PRIMARY_LAYER);
 //		((ConnectionLayer)rootEditPart.getLayer(LayerConstants.CONNECTION_LAYER)).setConnectionRouter(new ShortestPathConnectionRouter(primaryLayer));
-		
+		// SCALED_FEEDBACK_LAYER
 		viewer.setRootEditPart(rootEditPart);
-		// 그리드 표시
-		viewer.setProperty(SnapToGrid.PROPERTY_GRID_VISIBLE, true);
-		// Snap to Geometry property
-		viewer.setProperty(SnapToGeometry.PROPERTY_SNAP_ENABLED, true);
-//		viewer.setProperty(SnapToGrid.PROPERTY_GRID_ENABLED, true);
-				//new Boolean(getLogicDiagram().isSnapToGeometryEnabled()));
-//		viewer.setSnapToGeometry(true);
 		
 		// 마우스 CTRL + 스크롤 이벤트 캐치용
 		viewer.setProperty(MouseWheelHandler.KeyGenerator.getKey(SWT.CTRL), this);
 		
-//		rootEditPart.getZoomManager().setZoomAnimationStyle(1);
-//		
-		
-//		viewer.setRootEditPart(new ScalableFreeformRootEditPart() {
-//			protected GridLayer createGridLayer() {
-//				return new GridLayer() {
-//					
-//				};
-//			}
-//		});
-		
 		actionManager.createContextMenuManager(viewer);
-//		
-//		// TODO : test
-//		((FreeformLayer)rootEditPart.getLayer(LayerConstants.SCALED_FEEDBACK_LAYER)).setClippingStrategy(new IClippingStrategy() {
-//			@Override
-//			public Rectangle[] getClip(IFigure childFigure) {
-//				Rectangle bounds = null;
-//				if ( childFigure instanceof FDShapeFigure ) {
-//					FDShapeFigure sp = (FDShapeFigure)childFigure;
-//					if ( sp.getDegreeEx() != 0 ) {
-//						bounds = new Rectangle(sp.getBounds().x-50, sp.getBounds().y-50, sp.getBounds().width+100, sp.getBounds().height+100);
-//					} else {
-//						bounds = childFigure.getBounds();
-//					}
-//				} else {
-//					bounds = childFigure.getBounds();
-//				}
-//				return new Rectangle[] {bounds,};
-//			}
-//		});
 	}
 	
 
@@ -191,15 +164,15 @@ public class FreedrawingEditor extends GraphicalEditor implements MouseWheelHand
 	protected void initializeGraphicalViewer() {
 //		super.initializeGraphicalViewer();
 		
-		getGraphicalViewer().setContents(nodeRoot);
+		getGraphicalViewer().setContents(editorContext.getNodeRoot());
 		
 		actionManager.initializeKeyHandler(getGraphicalViewer());
 	}
 
 	@Override
 	public void dispose() {
-		if ( applicationContext != null ) {
-			applicationContext.dispose();
+		if ( editorContext != null ) {
+			editorContext.dispose();
 		}
 		
 		if ( actionManager != null ) {
@@ -222,20 +195,24 @@ public class FreedrawingEditor extends GraphicalEditor implements MouseWheelHand
 		try {
 			InputStream is = file.getContents(false);
 			ObjectInputStream ois = new ObjectInputStream(is);
-			nodeRoot = (FDRoot)ois.readObject();
+			editorContext = (FreedrawingEditorContext)ois.readObject();
 			ois.close();
+		} catch (ClassNotFoundException e) {
+			editorContext = new FreedrawingEditorContext();
 		} catch (Exception e) {
-			//handleException("An exception occurred while reading the file", e);
-			nodeRoot = new FDRoot();
+			editorContext = new FreedrawingEditorContext();
+//			handleException("An exception occurred while reading the file", e);
+//			throw new RuntimeException(e);
 		}
 		
-		this.applicationContext = ApplicationContext.newInstance(getSite().getShell().getDisplay()); // must dispose, run before creating EditDomain
+		this.editorContext.init(this);
+
 		this.setEditDomain(new FreedrawingEditDomain(this));
 
 		if (!editorSaving) {
 			if (getGraphicalViewer() != null) {
-				getGraphicalViewer().setContents(nodeRoot);
-				loadProperties();
+				getGraphicalViewer().setContents(editorContext.getNodeRoot());
+				initProperties();
 			}
 		}
 	}
@@ -331,11 +308,33 @@ public class FreedrawingEditor extends GraphicalEditor implements MouseWheelHand
 	
 	protected void writeToOutputStream(OutputStream os) throws IOException {
 		ObjectOutputStream out = new ObjectOutputStream(os);
-		out.writeObject(nodeRoot);
+		saveProperties();
+		out.writeObject(editorContext);
 		out.close();
 	}
 	
-	protected void loadProperties() {
+	private void initProperties() {
+		GraphicalViewer graphicalViewer = getGraphicalViewer();
+		
+		// Snap to Geometry property
+		graphicalViewer.setProperty(SnapToGeometry.PROPERTY_SNAP_ENABLED, new Boolean(editorContext.isSnapToGeometryEnabled()));
+		
+		// Grid properties
+		graphicalViewer.setProperty(SnapToGrid.PROPERTY_GRID_ENABLED,  new Boolean(editorContext.isGridEnabled()));
+
+		// We keep grid visibility and enablement in sync
+		graphicalViewer.setProperty(SnapToGrid.PROPERTY_GRID_VISIBLE,  new Boolean(editorContext.isGridEnabled()));
+
+		// Zoom
+		getZoomManager().setZoomAnimationStyle(1);
+		scaleChanged(editorContext.getScaleIndex());
+		
+		
+//		// Scroll-wheel Zoom
+//		getGraphicalViewer().setProperty(
+//				MouseWheelHandler.KeyGenerator.getKey(SWT.MOD1),
+//				MouseWheelZoomHandler.SINGLETON);
+		
 //		// Ruler properties
 //		LogicRuler ruler = getLogicDiagram().getRuler(PositionConstants.WEST);
 //		RulerProvider provider = null;
@@ -354,44 +353,21 @@ public class FreedrawingEditor extends GraphicalEditor implements MouseWheelHand
 //		getGraphicalViewer().setProperty(
 //				RulerProvider.PROPERTY_RULER_VISIBILITY,
 //				new Boolean(getLogicDiagram().getRulerVisibility()));
-//
-//		// Snap to Geometry property
-//		getGraphicalViewer().setProperty(SnapToGeometry.PROPERTY_SNAP_ENABLED,
-//				new Boolean(getLogicDiagram().isSnapToGeometryEnabled()));
-//
-//		// Grid properties
-//		getGraphicalViewer().setProperty(SnapToGrid.PROPERTY_GRID_ENABLED,
-//				new Boolean(getLogicDiagram().isGridEnabled()));
-//		// We keep grid visibility and enablement in sync
-//		getGraphicalViewer().setProperty(SnapToGrid.PROPERTY_GRID_VISIBLE,
-//				new Boolean(getLogicDiagram().isGridEnabled()));
-//
-//		// Zoom
-//		ZoomManager manager = (ZoomManager) getGraphicalViewer().getProperty(
-//				ZoomManager.class.toString());
-//		if (manager != null)
-//			manager.setZoom(getLogicDiagram().getZoom());
-//		// Scroll-wheel Zoom
-//		getGraphicalViewer().setProperty(
-//				MouseWheelHandler.KeyGenerator.getKey(SWT.MOD1),
-//				MouseWheelZoomHandler.SINGLETON);
 	}
 	
 	protected void saveProperties() {
-//		getLogicDiagram().setRulerVisibility(
-//				((Boolean) getGraphicalViewer().getProperty(
-//						RulerProvider.PROPERTY_RULER_VISIBILITY))
-//						.booleanValue());
-//		getLogicDiagram().setGridEnabled(
-//				((Boolean) getGraphicalViewer().getProperty(
-//						SnapToGrid.PROPERTY_GRID_ENABLED)).booleanValue());
-//		getLogicDiagram().setSnapToGeometry(
-//				((Boolean) getGraphicalViewer().getProperty(
-//						SnapToGeometry.PROPERTY_SNAP_ENABLED)).booleanValue());
-//		ZoomManager manager = (ZoomManager) getGraphicalViewer().getProperty(
-//				ZoomManager.class.toString());
-//		if (manager != null)
-//			getLogicDiagram().setZoom(manager.getZoom());
+		GraphicalViewer graphicalViewer = getGraphicalViewer();
+		
+		editorContext.setSnapToGeometryEnabled((Boolean)graphicalViewer.getProperty(SnapToGeometry.PROPERTY_SNAP_ENABLED));
+		editorContext.setGridEnabled((Boolean)graphicalViewer.getProperty(SnapToGrid.PROPERTY_GRID_ENABLED));
+		
+		double zoom = getZoomManager().getZoom();
+		for ( int index = 0; index< getZoomManager().getZoomLevels().length; index++ ) {
+			if ( getZoomManager().getZoomLevels()[index] == zoom ) {
+				editorContext.setScaleIndex(index);
+				break;
+			}
+		}
 	}
 
 	/**
@@ -494,23 +470,6 @@ public class FreedrawingEditor extends GraphicalEditor implements MouseWheelHand
 	}
 
 //	/**
-//	 * 아뎁터 취득
-//	 */
-//	@SuppressWarnings("rawtypes")
-//	public Object getAdapter(Class type) {
-//		
-//		Object value = super.getAdapter(type);
-//
-//		System.out.println("getAdapter(" + type.getSimpleName() + ") -> " + (value != null ? value.getClass().getSimpleName() : "null"));
-//
-//		if (value == null) {
-//			return null;
-//		}
-//
-//		return value;
-//	}
-
-//	/**
 //	 * 팔레트 팩토리
 //	 */
 //	@Override
@@ -538,10 +497,14 @@ public class FreedrawingEditor extends GraphicalEditor implements MouseWheelHand
 	public void setTargetEditPart(EditPart targetEditPart) {
 		actionManager.setTargetEditPart(targetEditPart);
 	}
+	
+	private ZoomManager getZoomManager() {
+		ScalableFreeformRootEditPart rootEditPart = (ScalableFreeformRootEditPart)getGraphicalViewer().getRootEditPart();
+		return rootEditPart.getZoomManager();
+	}
 
 	public void scaleChanged(int scale) {
-		ScalableFreeformRootEditPart rootEditPart = (ScalableFreeformRootEditPart)getGraphicalViewer().getRootEditPart();
-		ZoomManager zoomManager = rootEditPart.getZoomManager();
+		ZoomManager zoomManager = getZoomManager();
 
 		if ( scale >=0 && zoomManager.getZoomLevels().length > scale ) {
 			zoomManager.setZoom(zoomManager.getZoomLevels()[scale]);

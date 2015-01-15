@@ -20,7 +20,7 @@ public class FDWire extends FDElement {
 	
 	private FDWire() {}
 
-	public static FDWire newInstance(FDWireEndPoint source, FDWireEndPoint target) {
+	static FDWire newInstance(FDWireEndPoint source, FDWireEndPoint target) {
 		return new FDWire(source, target);
 	}
 	
