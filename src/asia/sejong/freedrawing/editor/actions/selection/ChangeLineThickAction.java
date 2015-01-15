@@ -5,12 +5,12 @@ import java.util.List;
 
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.ui.actions.SelectionAction;
-import org.eclipse.swt.graphics.RGB;
-import org.eclipse.swt.widgets.ColorDialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.ui.IEditorPart;
 
+import asia.sejong.freedrawing.editor.dialog.SelectLineWidthDialog;
 import asia.sejong.freedrawing.model.FDElement;
-import asia.sejong.freedrawing.parts.FDShapeEditPart.command.LineColorChangeCommand;
+import asia.sejong.freedrawing.parts.FDShapeEditPart.command.LineWidthChangeCommand;
 
 
 public class ChangeLineThickAction extends SelectionAction {
@@ -21,9 +21,8 @@ public class ChangeLineThickAction extends SelectionAction {
 	
 	public void run() {
 		
-		ColorDialog dialog = new ColorDialog(getWorkbenchPart().getSite().getShell());
-		RGB selectedColor = dialog.open();
-		if ( selectedColor != null ) {
+		SelectLineWidthDialog dialog = new SelectLineWidthDialog(getWorkbenchPart().getSite().getShell());
+		if ( dialog.open() == IDialogConstants.OK_ID ) {
 			
 			List<FDElement> lists = new ArrayList<FDElement>();
 			for ( Object item : getSelectedObjects() ) {
@@ -35,9 +34,9 @@ public class ChangeLineThickAction extends SelectionAction {
 				}
 			}
 			
-			
 			if (lists.size()>0) {
-				execute(new LineColorChangeCommand(lists, selectedColor));
+				Float lineWidth = dialog.getResult();
+				execute(new LineWidthChangeCommand(lists, lineWidth));
 			} else {
 				// TODO change color
 			}

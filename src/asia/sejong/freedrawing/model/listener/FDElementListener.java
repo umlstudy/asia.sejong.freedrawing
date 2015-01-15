@@ -9,5 +9,5 @@ public interface FDElementListener extends FDBaseListener {
 
 	void lineStyleChanged(int lineStyle);
 
-	void lineWidthChanged(int lineWidth);
+	void lineWidthChanged(float lineWidth);
 }

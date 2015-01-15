@@ -1,10 +1,15 @@
-package asia.sejong.freedrawing.resources;
+package asia.sejong.freedrawing.context;
 
 import org.eclipse.swt.graphics.Device;
 
-public class ContextManager {
+import asia.sejong.freedrawing.resources.ColorManager;
+import asia.sejong.freedrawing.resources.FontManager;
+import asia.sejong.freedrawing.resources.IconManager;
+import asia.sejong.freedrawing.resources.ImageManager;
 
-	private static ContextManager instance;
+public class ApplicationContext {
+
+	private static ApplicationContext instance;
 	
 	private ColorManager colorManager;
 	private IconManager iconManager;
@@ -13,7 +18,7 @@ public class ContextManager {
 	
 	private static int referenceCount = 0;
 	
-	private ContextManager(Device device) {
+	private ApplicationContext(Device device) {
 		setColorManager(new ColorManager(device));
 		setIconManager(new IconManager());
 		setFontManager(new FontManager(device));
@@ -21,7 +26,7 @@ public class ContextManager {
 	}
 	
 	public void dispose() {
-		synchronized ( ContextManager.class ) {
+		synchronized ( ApplicationContext.class ) {
 			if ( referenceCount == 1 ) {
 				if ( colorManager != null ) {
 					colorManager.dispose();
@@ -54,11 +59,11 @@ public class ContextManager {
 		}
 	}
 	
-	public static ContextManager newInstance(Device device) {
+	public static ApplicationContext newInstance(Device device) {
 		if ( instance == null ) {
-			synchronized (ContextManager.class) {
+			synchronized (ApplicationContext.class) {
 				if ( instance == null ) {
-					instance = new ContextManager(device);
+					instance = new ApplicationContext(device);
 				}
 			}
 		}
@@ -68,7 +73,7 @@ public class ContextManager {
 		return instance;
 	}
 	
-	public static ContextManager getInstance() {
+	public static ApplicationContext getInstance() {
 		return instance;
 	}
 

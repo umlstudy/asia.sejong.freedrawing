@@ -38,7 +38,7 @@ import asia.sejong.freedrawing.parts.FDWireEditPart.FDWireableEditPart;
 public abstract class FDShapeEditPart extends AbstractGraphicalEditPart implements FDWireableEditPart, NodeEditPart, FDShapeListener {
 
 	protected final IFigure createFigure() {
-		return FigureFactory.createFigure(getModel().getClass());
+		return FigureFactory.createFigure(getModel());
 	}
 	
 	protected final EditPart findEditPart(Object model) {
@@ -261,7 +261,7 @@ public abstract class FDShapeEditPart extends AbstractGraphicalEditPart implemen
 	}
 	
 	@Override
-	public final void lineWidthChanged(int lineWidth) {
+	public final void lineWidthChanged(float lineWidth) {
 		refreshVisuals();
 	}
 	

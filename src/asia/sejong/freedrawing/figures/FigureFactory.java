@@ -3,12 +3,11 @@ package asia.sejong.freedrawing.figures;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.FigureUtilities;
 import org.eclipse.draw2d.Graphics;
-import org.eclipse.draw2d.IFigure;
-import org.eclipse.draw2d.RectangleFigure;
 import org.eclipse.draw2d.Shape;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.graphics.Image;
 
+import asia.sejong.freedrawing.context.ApplicationContext;
 import asia.sejong.freedrawing.model.FDElement;
 import asia.sejong.freedrawing.model.FDEllipse;
 import asia.sejong.freedrawing.model.FDImage;
@@ -17,33 +16,39 @@ import asia.sejong.freedrawing.model.FDRect;
 import asia.sejong.freedrawing.model.FDShape;
 import asia.sejong.freedrawing.model.FDTextShape;
 import asia.sejong.freedrawing.model.FDWire;
-import asia.sejong.freedrawing.resources.ContextManager;
 
 public class FigureFactory {
 
-	public static IFigure newFDEllipseFigure() {
-		return new FDEllipseFigure();
-	}
-
-	public static IFigure createFigure(Class<? extends FDElement> clazz) {
-		if ( clazz == FDEllipse.class ) {
-			return new FDEllipseFigure();
-		} else if ( clazz == FDImage.class ) {
-			return new FDImageFigure();
-		} else if ( clazz == FDLabel.class ) {
-			return new FDLabelFigure();
-		} else if ( clazz == FDRect.class ) {
-			return new FDRectFigure();
-		} else if ( clazz == FDWire.class ) {
-			return new FDWireFigure();
+	public static FDElementFigure createFigure(FDElement model) {
+		FDElementFigure figure = null;
+		if ( model instanceof FDEllipse ) {
+			figure = new FDEllipseFigure();
+		} else if ( model instanceof FDImage ) {
+			figure = new FDImageFigure();
+		} else if ( model instanceof FDLabel ) {
+			figure = new FDLabelFigure();
+		} else if ( model instanceof FDRect ) {
+			figure = new FDRectFigure();
+		} else if ( model instanceof FDWire ) {
+			figure = new FDWireFigure();
+		} else {
+			throw new RuntimeException(model.getClass().getName());
 		}
 		
-		throw new RuntimeException(clazz.getName());
+		figure.setModelAttributes(model);
+		
+		return figure;
 	}
 
-	public static IFigure createCustomFeedbackFigure(Object model, Rectangle initialFeedbackBounds) {
-		IFigure figure;
-
+	public static FDShapeFigure createCustomFeedbackFigure(FDShape model) {
+		FDShapeFigure figure = (FDShapeFigure)createFigure(model);
+		figure.setAlphaEx(128);
+		return figure;
+	}
+	
+	public static FDElementFigure createCustomFeedbackFigure(FDElement model, Rectangle initialFeedbackBounds) {
+		FDElementFigure figure = null;
+		
 		if (model instanceof FDRect) {
 			FDRectFigure realFigure = new FDRectFigure();
 			realFigure.setModelAttributes((FDElement)model);
@@ -69,7 +74,7 @@ public class FigureFactory {
 		} else if (model instanceof FDImage ) {
 			FDImageFigure realFigure = new FDImageFigure();
 			FDImage imageModel = (FDImage)model;
-			Image image = ContextManager.getInstance().getImageManager().get(imageModel.getImageBytes());
+			Image image = ApplicationContext.getInstance().getImageManager().get(imageModel.getImageBytes());
 			realFigure.setImage(image);
 
 			realFigure.setModelAttributes((FDElement)model);
@@ -86,8 +91,8 @@ public class FigureFactory {
 //			figure.setBackgroundColor(ColorConstants.white);
 //			figure.setForegroundColor(ColorConstants.white);
 			
-			RectangleFigure r = new RectangleFigure();
-			FigureUtilities.makeGhostShape(r);
+			FDRectFigure r = new FDRectFigure();
+//			FigureUtilities.makeGhostShape(r);
 			r.setLineStyle(Graphics.LINE_DOT);
 			r.setForegroundColor(ColorConstants.white);
 			r.setBounds(initialFeedbackBounds);

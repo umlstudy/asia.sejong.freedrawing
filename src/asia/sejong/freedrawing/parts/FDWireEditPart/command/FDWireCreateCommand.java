@@ -19,7 +19,7 @@ public class FDWireCreateCommand extends FDWireCommand {
 	@Override
 	public void execute() {
 		if ( createdWire == null ) {
-			createdWire = FDWire.newInstance__(source, target);
+			createdWire = FDWire.newInstance(source, target);
 		}
 		
 		getRoot().addWire(createdWire);

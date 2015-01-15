@@ -14,7 +14,7 @@ public abstract class FDElement extends FDBase implements Cloneable, Serializabl
 
 	private RGB lineColor;
 	private int lineStyle;
-	private int lineWidth;
+	private float lineWidth;
 	
 	protected FDElement() {
 		lineStyle = SWT.LINE_SOLID;
@@ -42,11 +42,11 @@ public abstract class FDElement extends FDBase implements Cloneable, Serializabl
 		fireLineStyleChanged(lineStyle);
 	}
 
-	public int getLineWidth() {
+	public float getLineWidth() {
 		return lineWidth;
 	}
 
-	public void setLineWidth(int lineWidth) {
+	public void setLineWidth(float lineWidth) {
 		this.lineWidth = lineWidth;
 		
 		// send event
@@ -65,7 +65,7 @@ public abstract class FDElement extends FDBase implements Cloneable, Serializabl
 		}
 	}
 	
-	protected void fireLineWidthChanged(int lineWidth) {
+	protected void fireLineWidthChanged(float lineWidth) {
 		for (FDBaseListener l : listeners) {
 			((FDElementListener)l).lineWidthChanged(lineWidth);
 		}
@@ -98,7 +98,11 @@ public abstract class FDElement extends FDBase implements Cloneable, Serializabl
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+		
 		object.setLineColor(lineColor);
+		object.setLineWidth(lineWidth);
+		object.setLineStyle(lineStyle);
+		
 		return object;
 	}
 	

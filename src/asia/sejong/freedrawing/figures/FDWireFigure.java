@@ -10,9 +10,9 @@ import org.eclipse.swt.graphics.Path;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 
+import asia.sejong.freedrawing.context.ApplicationContext;
 import asia.sejong.freedrawing.model.FDElement;
 import asia.sejong.freedrawing.model.FDWire;
-import asia.sejong.freedrawing.resources.ContextManager;
 
 public class FDWireFigure extends PolylineConnection implements FDElementFigure {
 	
@@ -202,7 +202,7 @@ public class FDWireFigure extends PolylineConnection implements FDElementFigure 
 	public void setLineColorEx(RGB rgbColor) {
 		Color color = null;
 		if ( rgbColor != null ) {
-			color = ContextManager.getInstance().getColorManager().get(rgbColor);
+			color = ApplicationContext.getInstance().getColorManager().get(rgbColor);
 			setForegroundColor(color);
 		}
 	}

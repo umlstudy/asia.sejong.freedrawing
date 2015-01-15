@@ -6,11 +6,13 @@ import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Rectangle;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.widgets.Display;
+
+import asia.sejong.freedrawing.context.ApplicationContext;
+import asia.sejong.freedrawing.model.FDElement;
+import asia.sejong.freedrawing.model.FDImage;
 
 /**
  * A Figure that simply contains an Image. Use this Figure, instead of a Label,
@@ -101,12 +103,6 @@ public class FDImageFigure extends FDAbstractImageFigure {
 
 		int drawAreaImageWidth = getBounds().width;
 		int drawAreaImageHeight = getBounds().height;
-		Image drawAreaImage = new Image(Display.getCurrent(), drawAreaImageWidth, drawAreaImageHeight);
-		GC offscreenGc = new GC(drawAreaImage);
-		// Draw the background
-		offscreenGc.fillRectangle(drawAreaImage.getBounds());
-		offscreenGc.setAntialias(SWT.ON);
-		offscreenGc.setAdvanced(true);
 		
 		Image image = getImage();
 		float wScale = 1.0f;
@@ -121,13 +117,10 @@ public class FDImageFigure extends FDAbstractImageFigure {
 		
 		if (wScale > 0.0 && hScale > 0.0 ) {
 			Image scaledImage = new Image(Display.getCurrent(), data.scaledTo(Math.round(data.width * wScale), Math.round(data.height * hScale)));
-			offscreenGc.drawImage(scaledImage, 0, 0);
+			Rectangle bounds = getBoundsInZeroPoint();
+			graphics.drawImage(scaledImage, bounds.x, bounds.y);
 			scaledImage.dispose();
 		}
-		
-		Rectangle bounds = getBoundsInZeroPoint();
-		graphics.drawImage(drawAreaImage, bounds.x, bounds.y);
-		drawAreaImage.dispose();
 	}
 	
 	protected void paintFigureNotFit(Graphics graphics) {
@@ -211,5 +204,14 @@ public class FDImageFigure extends FDAbstractImageFigure {
 
 	@Override
 	protected void outlineShape(Graphics graphics) {
+	}
+	
+	@Override
+	public void setModelAttributes(FDElement model_) {
+		super.setModelAttributes(model_);
+		
+		FDImage model = (FDImage)model_;
+		Image image = ApplicationContext.getInstance().getImageManager().get(model.getImageBytes());
+		setImage(image);
 	}
 }

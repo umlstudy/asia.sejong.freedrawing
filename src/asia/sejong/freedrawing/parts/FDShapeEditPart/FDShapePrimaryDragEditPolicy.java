@@ -17,6 +17,7 @@ import org.eclipse.swt.graphics.Cursor;
 
 import asia.sejong.freedrawing.figures.FDShapeFigure;
 import asia.sejong.freedrawing.figures.FigureFactory;
+import asia.sejong.freedrawing.model.FDShape;
 import asia.sejong.freedrawing.parts.FDShapeEditPart.request.RotateRequest;
 import asia.sejong.freedrawing.parts.common.FDShapeResizeTracker;
 import asia.sejong.freedrawing.parts.common.FDShapeRotateTracker;
@@ -36,8 +37,10 @@ public class FDShapePrimaryDragEditPolicy extends FDShapeRotateEditPolicy {
 		return feedbackFigure;
 	}
 
-	protected IFigure createFeedbackFigure(GraphicalEditPart targetEditPart, IFigure parent) {
-		IFigure feedbackFigure = FigureFactory.createCustomFeedbackFigure(targetEditPart.getModel(), getInitialFeedbackBounds());
+	protected FDShapeFigure createFeedbackFigure(GraphicalEditPart targetEditPart, IFigure parent) {
+		//FDElementFigure feedbackFigure = FigureFactory.createCustomFeedbackFigure((FDElement)targetEditPart.getModel(), getInitialFeedbackBounds());
+		//FDShapeFigure feedbackFigure = (FDShapeFigure)FigureFactory.createCustomFeedbackFigure((FDShape)targetEditPart.getModel(), getInitialFeedbackBounds());
+		FDShapeFigure feedbackFigure = FigureFactory.createCustomFeedbackFigure((FDShape)targetEditPart.getModel());
 
 		if (parent != null) {
 			parent.add(feedbackFigure);

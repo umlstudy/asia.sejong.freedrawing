@@ -18,7 +18,7 @@ public class FDWireRecreateCommand extends FDWireCreateCommand {
 	@Override
 	public void execute() {
 		if ( newWire == null ) {
-			newWire = FDWire.newInstance__(source, target);
+			newWire = FDWire.newInstance(source, target);
 			newWire.addBendpoints(oldWire.getBendpoints());
 		}
 		getRoot().removeWire(oldWire);

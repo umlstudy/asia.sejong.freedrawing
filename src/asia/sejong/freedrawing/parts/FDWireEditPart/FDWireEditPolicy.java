@@ -60,8 +60,11 @@ public class FDWireEditPolicy extends GraphicalNodeEditPolicy {
 		return wireCreateCommand;
 	}
 	
-	protected Connection createDummyConnection(Request req) {
-		return FDWireEditPart.createWireFigure(false);
+	protected Connection createDummyConnection(Request req_) {
+		CreateConnectionRequest req = (CreateConnectionRequest)req_;
+		FDWireEndPoint src = (FDWireEndPoint)req.getSourceEditPart().getModel();
+		FDWireEndPoint tar = (FDWireEndPoint)req.getTargetEditPart().getModel();
+		return FDWireEditPart.createWireFigure(FDWire.newInstance(src, tar), false);
 	}
 	
 	protected Command getReconnectSourceCommand(ReconnectRequest request) {

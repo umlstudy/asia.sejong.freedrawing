@@ -18,13 +18,13 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
+import asia.sejong.freedrawing.context.ApplicationContext;
 import asia.sejong.freedrawing.figures.FDTextShapeFigure;
 import asia.sejong.freedrawing.model.FDTextShape;
 import asia.sejong.freedrawing.model.FontInfo;
 import asia.sejong.freedrawing.model.listener.TextShapeListener;
 import asia.sejong.freedrawing.parts.FDShapeEditPart.FDShapeEditPart;
 import asia.sejong.freedrawing.parts.FDTextShapeEditPart.command.TextChangeCommand;
-import asia.sejong.freedrawing.resources.ContextManager;
 
 public abstract class FDTextShapeEditPart extends FDShapeEditPart implements TextShapeListener {
 	
@@ -87,7 +87,7 @@ public abstract class FDTextShapeEditPart extends FDShapeEditPart implements Tex
 					Font font = null;
 					FontInfo fontInfo = getModel().getFontInfo();
 					if ( fontInfo != null ) {
-						font = ContextManager.getInstance().getFontManager().get(fontInfo);
+						font = ApplicationContext.getInstance().getFontManager().get(fontInfo);
 						text.setFont(font);
 					}
 					

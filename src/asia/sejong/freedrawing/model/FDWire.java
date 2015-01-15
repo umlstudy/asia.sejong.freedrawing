@@ -13,14 +13,14 @@ public class FDWire extends FDElement {
 
 	private static final long serialVersionUID = 6588011474926567950L;
 
-	private final List<FDWireBendpoint> bendpoints = new ArrayList<FDWireBendpoint>();
+	private List<FDWireBendpoint> bendpoints = new ArrayList<FDWireBendpoint>();
 	
 	private FDWireEndPoint source;
 	private FDWireEndPoint target;
 	
 	private FDWire() {}
 
-	public static FDWire newInstance__(FDWireEndPoint source, FDWireEndPoint target) {
+	public static FDWire newInstance(FDWireEndPoint source, FDWireEndPoint target) {
 		return new FDWire(source, target);
 	}
 	

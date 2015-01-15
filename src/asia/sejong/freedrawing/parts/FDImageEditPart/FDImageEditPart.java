@@ -1,18 +1,16 @@
 package asia.sejong.freedrawing.parts.FDImageEditPart;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.draw2d.SWTGraphics;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.GraphicalEditPart;
-import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 
+import asia.sejong.freedrawing.context.ApplicationContext;
 import asia.sejong.freedrawing.figures.FDImageFigure;
 import asia.sejong.freedrawing.model.FDImage;
 import asia.sejong.freedrawing.model.listener.FDImageListener;
 import asia.sejong.freedrawing.parts.FDShapeEditPart.FDShapeEditPart;
-import asia.sejong.freedrawing.resources.ContextManager;
 
 public class FDImageEditPart extends FDShapeEditPart implements FDImageListener {
 	
@@ -22,7 +20,7 @@ public class FDImageEditPart extends FDShapeEditPart implements FDImageListener 
 	}
 	
 	private Image extractImage(byte[] imageBytes) {
-		return ContextManager.getInstance().getImageManager().get(imageBytes);
+		return ApplicationContext.getInstance().getImageManager().get(imageBytes);
 	}
 	
 	public void setParent(EditPart parent) {

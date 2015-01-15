@@ -26,6 +26,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 
+import asia.sejong.freedrawing.context.ApplicationContext;
 import asia.sejong.freedrawing.debug.ForEditPart;
 import asia.sejong.freedrawing.figures.FDElementFigure;
 import asia.sejong.freedrawing.figures.FDWireFigure;
@@ -35,7 +36,6 @@ import asia.sejong.freedrawing.model.FDWire;
 import asia.sejong.freedrawing.model.FDWireBendpoint;
 import asia.sejong.freedrawing.model.listener.FDWireListener;
 import asia.sejong.freedrawing.parts.FDWireEditPart.command.FDWireDeleteCommand;
-import asia.sejong.freedrawing.resources.ContextManager;
 
 public class FDWireEditPart extends AbstractConnectionEditPart implements FDWireListener, PropertyChangeListener {
 
@@ -49,7 +49,7 @@ public class FDWireEditPart extends AbstractConnectionEditPart implements FDWire
 	
 	@Override
 	protected IFigure createFigure() {
-		return createWireFigure(true);
+		return createWireFigure(getModel(), true);
 	}
 
 	@Override
@@ -62,15 +62,15 @@ public class FDWireEditPart extends AbstractConnectionEditPart implements FDWire
 		return (FDWireFigure)super.getFigure();
 	}
 	
-	public static FDWireFigure createWireFigure(boolean custom) {
+	public static FDWireFigure createWireFigure(FDWire wire, boolean custom) {
 		FDWireFigure wireFigure = null;
 		if ( custom ) {
-			wireFigure = (FDWireFigure)FigureFactory.createFigure(FDWire.class);
+			wireFigure = (FDWireFigure)FigureFactory.createFigure(wire);
 			wireFigure.setLineWidth(3);
 			wireFigure.setAlpha(180);
 			wireFigure.setAntialias(SWT.ON);
 		} else {
-			wireFigure = (FDWireFigure)FigureFactory.createFigure(FDWire.class);
+			wireFigure = (FDWireFigure)FigureFactory.createFigure(wire);
 			wireFigure.setLineStyle(SWT.LINE_DASH);
 			wireFigure.setAlpha(180);
 			wireFigure.setBackgroundColor(ColorConstants.blue);
@@ -176,7 +176,7 @@ public class FDWireEditPart extends AbstractConnectionEditPart implements FDWire
 	public void lineColorChanged(RGB rgbColor) {
 		Color color = null;
 		if ( rgbColor != null ) {
-			color = ContextManager.getInstance().getColorManager().get(rgbColor);
+			color = ApplicationContext.getInstance().getColorManager().get(rgbColor);
 			getFigure().setForegroundColor(color);
 		}
 	}
@@ -236,7 +236,7 @@ public class FDWireEditPart extends AbstractConnectionEditPart implements FDWire
 	}
 
 	@Override
-	public void lineWidthChanged(int lineWidth) {
+	public void lineWidthChanged(float lineWidth) {
 		refreshVisuals();	
 	}
 }

@@ -15,10 +15,10 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
 
+import asia.sejong.freedrawing.context.ApplicationContext;
 import asia.sejong.freedrawing.model.FDElement;
 import asia.sejong.freedrawing.model.FDTextShape;
 import asia.sejong.freedrawing.model.FontInfo;
-import asia.sejong.freedrawing.resources.ContextManager;
 
 /**
  * A figure that can display text and/or an image.
@@ -736,7 +736,7 @@ public abstract class FDTextShapeFigureImpl extends FDShapeFigureImpl implements
 	public final void setFontColorEx(RGB rgbColor) {
 		Color color = null;
 		if ( rgbColor != null ) {
-			color = ContextManager.getInstance().getColorManager().get(rgbColor);
+			color = ApplicationContext.getInstance().getColorManager().get(rgbColor);
 			super.setForegroundColor(color);
 		}	
 	}
@@ -745,7 +745,7 @@ public abstract class FDTextShapeFigureImpl extends FDShapeFigureImpl implements
 	public final void setFontInfoEx(FontInfo fontInfo) {
 		Font font = null;
 		if ( fontInfo != null ) {
-			font = ContextManager.getInstance().getFontManager().get(fontInfo);
+			font = ApplicationContext.getInstance().getFontManager().get(fontInfo);
 		}
 		setFont(font);
 	}

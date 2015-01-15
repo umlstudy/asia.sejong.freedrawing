@@ -11,9 +11,9 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.LineAttributes;
 import org.eclipse.swt.graphics.RGB;
 
+import asia.sejong.freedrawing.context.ApplicationContext;
 import asia.sejong.freedrawing.model.FDElement;
 import asia.sejong.freedrawing.model.FDShape;
-import asia.sejong.freedrawing.resources.ContextManager;
 
 /**
  * Provides abstract support for a variety of shapes.
@@ -759,14 +759,14 @@ public abstract class FDShapeFigureImpl extends Figure implements FDShapeFigure 
 	public final void setBackgroundColorEx(RGB rgbColor) {
 		Color color = null;
 		if ( rgbColor != null ) {
-			color = ContextManager.getInstance().getColorManager().get(rgbColor);
+			color = ApplicationContext.getInstance().getColorManager().get(rgbColor);
 			setBackgroundColor(color);
 		}	
 	}
 
 	@Override
 	public final void setLineWidthEx(float lineWidth) {
-		getLineAttributes().width = lineWidth;
+		setLineWidth((int)lineWidth);
 	}
 
 	@Override
@@ -779,7 +779,7 @@ public abstract class FDShapeFigureImpl extends Figure implements FDShapeFigure 
 	@Override
 	public final void setLineColorEx(RGB rgbColor) {
 		if ( rgbColor != null ) {
-			Color color = ContextManager.getInstance().getColorManager().get(rgbColor);
+			Color color = ApplicationContext.getInstance().getColorManager().get(rgbColor);
 			if ( color != lineColor ) {
 				lineColor = color;
 				repaint();

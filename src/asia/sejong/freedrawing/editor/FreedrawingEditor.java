@@ -50,16 +50,16 @@ import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.dialogs.SaveAsDialog;
 import org.eclipse.ui.part.FileEditorInput;
 
+import asia.sejong.freedrawing.context.ApplicationContext;
 import asia.sejong.freedrawing.editor.actions.palette.factory.PaletteActionFactory;
 import asia.sejong.freedrawing.model.FDRoot;
 import asia.sejong.freedrawing.parts.common.FDEditPartFactory;
-import asia.sejong.freedrawing.resources.ContextManager;
 
 public class FreedrawingEditor extends GraphicalEditor implements MouseWheelHandler {
 
 	private FDRoot nodeRoot = null;
 	
-	private ContextManager contextManager;
+	private ApplicationContext applicationContext;
 	
 	private FreedrawingEditorActionManager actionManager;
 	
@@ -198,8 +198,8 @@ public class FreedrawingEditor extends GraphicalEditor implements MouseWheelHand
 
 	@Override
 	public void dispose() {
-		if ( contextManager != null ) {
-			contextManager.dispose();
+		if ( applicationContext != null ) {
+			applicationContext.dispose();
 		}
 		
 		if ( actionManager != null ) {
@@ -229,7 +229,7 @@ public class FreedrawingEditor extends GraphicalEditor implements MouseWheelHand
 			nodeRoot = new FDRoot();
 		}
 		
-		this.contextManager = ContextManager.newInstance(getSite().getShell().getDisplay()); // must dispose, run before creating EditDomain
+		this.applicationContext = ApplicationContext.newInstance(getSite().getShell().getDisplay()); // must dispose, run before creating EditDomain
 		this.setEditDomain(new FreedrawingEditDomain(this));
 
 		if (!editorSaving) {

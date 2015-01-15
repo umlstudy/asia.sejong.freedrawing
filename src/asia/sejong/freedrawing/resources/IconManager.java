@@ -30,7 +30,7 @@ public class IconManager {
 	private final Image[] colorPickImage = new Image[IconType.values().length];
 	private final Image[] fontPickImage = new Image[IconType.values().length];
 	
-	IconManager() {
+	public IconManager() {
 		Display display = Display.getCurrent();
 		
 		Point point = new Point(32, 32);
@@ -86,7 +86,7 @@ public class IconManager {
 		images[IconType.MOUSE_OVER.ordinal()] = mouseOverBgImageIcon.createImage();
 	}
 
-	void dispose() {
+	public void dispose() {
 		disposeImages(connectionImage);
 		disposeImages(rectangleImage);
 		disposeImages(selectImage);
