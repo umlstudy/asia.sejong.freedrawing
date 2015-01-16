@@ -4,10 +4,10 @@ import org.eclipse.gef.Tool;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
 
-import asia.sejong.freedrawing.editor.actions.common.DropDownAction;
+import asia.sejong.freedrawing.editor.actions.common.ChangableDropDownAction;
 import asia.sejong.freedrawing.resources.IconManager.IconType;
 
-public class PaletteDropDownAction extends DropDownAction<PaletteAction> implements PaletteChangeListener {
+public class PaletteDropDownAction extends ChangableDropDownAction<PaletteAction> implements PaletteChangeListener {
 	
 	private IconType type;
 

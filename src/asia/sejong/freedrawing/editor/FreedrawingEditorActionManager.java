@@ -27,12 +27,15 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Scale;
 import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
 
-import asia.sejong.freedrawing.editor.actions.common.DropDownAction;
+import asia.sejong.freedrawing.editor.actions.common.ChangableDropDownAction;
 import asia.sejong.freedrawing.editor.actions.palette.PaletteAction;
 import asia.sejong.freedrawing.editor.actions.palette.PaletteChangeListener;
 import asia.sejong.freedrawing.editor.actions.palette.PaletteDropDownAction;
@@ -287,7 +290,7 @@ public class FreedrawingEditorActionManager implements FreedrawingEditDomainList
 		
 		toolbarManager.add(new Separator());
 		{
-			DropDownAction<SelectionAction> dropDownAction = new DropDownAction<SelectionAction>();
+			ChangableDropDownAction<SelectionAction> dropDownAction = new ChangableDropDownAction<SelectionAction>();
 			
 			addToDropDownAction(dropDownAction, SelectionActionFactory.CHANGE_FONT.getId(), true);
 			addToDropDownAction(dropDownAction, SelectionActionFactory.CHANGE_FONT_COLOR.getId(), false);
@@ -300,7 +303,7 @@ public class FreedrawingEditorActionManager implements FreedrawingEditDomainList
 		
 		toolbarManager.add(new Separator());
 		{
-			DropDownAction<SelectionAction> dropDownAction = new DropDownAction<SelectionAction>();
+			ChangableDropDownAction<SelectionAction> dropDownAction = new ChangableDropDownAction<SelectionAction>();
 			
 			addToDropDownAction(dropDownAction, SelectionActionFactory.CHANGE_LINE_STYLE_DASH.getId(), true);
 			addToDropDownAction(dropDownAction, SelectionActionFactory.CHANGE_LINE_STYLE_DASHDOT.getId(), false);
@@ -351,10 +354,28 @@ public class FreedrawingEditorActionManager implements FreedrawingEditDomainList
 			}
 			
 		});
+		
+		toolbarManager.add(new ControlContribution("XXXX") {
+
+			@Override
+			protected Control createControl(Composite parent) {
+//				Label label = new Label(parent, SWT.BORDER_DASH);
+//				label.setText("AAAAAAAAAAAAAAAAAAAAAA");
+				int flags = SWT.PUSH;
+				Button b = new Button(parent, flags);
+				b.setText("AAAAAAA");
+				return b;
+				
+//				ToolItem ti = new ToolItem((ToolBar)parent, SWT.DROP_DOWN);
+//				ti.setText("AAAA");
+//				
+//				return parent;
+			}
+		});
 		toolbarManager.update(true);
 	}
 	
-	private void addToDropDownAction(DropDownAction<SelectionAction> dropDownAction, String actionId, boolean defaultAction) {
+	private void addToDropDownAction(ChangableDropDownAction<SelectionAction> dropDownAction, String actionId, boolean defaultAction) {
 		ActionRegistry registry = (ActionRegistry)editor.getAdapter(ActionRegistry.class);
 		SelectionAction action = (SelectionAction)registry.getAction(actionId);
 		dropDownAction.addAction(action, defaultAction);
