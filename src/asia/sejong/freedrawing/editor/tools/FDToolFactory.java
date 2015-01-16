@@ -52,7 +52,7 @@ public abstract class FDToolFactory {
 				
 				@Override
 				public Object getNewObject() {
-					return FDModelFactory.createModel(FDRect.class, editor.getEditorContext());
+					return FDModelFactory.createModel(FDRect.class);
 				}
 			});
 		}
@@ -70,7 +70,7 @@ public abstract class FDToolFactory {
 				
 				@Override
 				public Object getNewObject() {
-					return FDModelFactory.createModel(FDEllipse.class, editor.getEditorContext());
+					return FDModelFactory.createModel(FDEllipse.class);
 				}
 			});
 		}
@@ -106,7 +106,7 @@ public abstract class FDToolFactory {
 						IOUtil.throwException(e);
 					}
 						
-					FDImage fdImage = (FDImage)FDModelFactory.createModel(FDImage.class, editor.getEditorContext());
+					FDImage fdImage = (FDImage)FDModelFactory.createModel(FDImage.class);
 					fdImage.setImageBytes(readBytes);
 					return fdImage;
 						
@@ -127,7 +127,7 @@ public abstract class FDToolFactory {
 				
 				@Override
 				public Object getNewObject() {
-					return FDModelFactory.createModel(FDLabel.class, editor.getEditorContext());
+					return FDModelFactory.createModel(FDLabel.class);
 				}
 			});
 		}

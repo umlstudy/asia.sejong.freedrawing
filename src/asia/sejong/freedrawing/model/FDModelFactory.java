@@ -1,10 +1,14 @@
 package asia.sejong.freedrawing.model;
 
+import org.eclipse.ui.IEditorPart;
+
 import asia.sejong.freedrawing.context.FreedrawingEditorContext;
+import asia.sejong.freedrawing.editor.FreedrawingEditor;
+import asia.sejong.freedrawing.util.UIUtil;
 
 public class FDModelFactory {
 
-	public static FDElement createModel(Class<? extends FDElement> modelClass, FreedrawingEditorContext editorContext) {
+	public static FDElement createModel(Class<? extends FDElement> modelClass) {
 		FDElement model = null;
 		
 		if ( modelClass == FDEllipse.class ) {
@@ -19,12 +23,23 @@ public class FDModelFactory {
 			throw new RuntimeException(modelClass.getName());
 		}
 		
-		setDefaultValues(model, editorContext);
+		setDefaultValues(model);
 		
 		return model;
 	}
 	
-	private static void setDefaultValues(FDElement model, FreedrawingEditorContext editorContext) {
+	private static void setDefaultValues(FDElement model) {
+		
+		FreedrawingEditorContext editorContext = null; 
+		IEditorPart editor = UIUtil.getActiveEditor();
+		if ( editor instanceof FreedrawingEditor ) {
+			editorContext = ((FreedrawingEditor)editor).getEditorContext();
+		}
+		
+		if ( editorContext == null ) {
+			editorContext = new FreedrawingEditorContext();
+		}
+		
 		model.setLineColor(editorContext.getLineColor());
 		model.setLineStyle(editorContext.getLineStyle());
 		model.setLineWidth(editorContext.getLineWidth());
@@ -46,6 +61,9 @@ public class FDModelFactory {
 
 	public static FDWire createWire(FDWireEndPoint src, FDWireEndPoint tar) {
 		FDWire model = FDWire.newInstance(src, tar);
+		
+		setDefaultValues(model);
+		
 		return model;
 	}
 }

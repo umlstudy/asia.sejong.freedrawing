@@ -11,7 +11,6 @@ import org.eclipse.gef.palette.PanningSelectionToolEntry;
 import org.eclipse.gef.palette.ToolEntry;
 import org.eclipse.gef.requests.SimpleFactory;
 
-import asia.sejong.freedrawing.context.FreedrawingEditorContext;
 import asia.sejong.freedrawing.editor.tools.FDConnectionCreationTool;
 import asia.sejong.freedrawing.editor.tools.FDPanningSelectionTool;
 import asia.sejong.freedrawing.model.FDElement;
@@ -22,10 +21,10 @@ import asia.sejong.freedrawing.resources.IconManager.IconType;
 
 public class FreedrawingEditorPaletteFactory {
 
-	public static PaletteRoot createPalette(IconManager imageManager, FreedrawingEditorContext editorContext) {
+	public static PaletteRoot createPalette(IconManager imageManager) {
 		PaletteRoot palette = new PaletteRoot();
 		palette.add(createToolsGroup(palette));
-		palette.add(createElementsDrawer(imageManager, editorContext));
+		palette.add(createElementsDrawer(imageManager));
 		return palette;
 	}
 
@@ -51,14 +50,14 @@ public class FreedrawingEditorPaletteFactory {
 	/**
 	 * Create a drawer containing tools to add the various model elements
 	 */
-	private static PaletteEntry createElementsDrawer(IconManager imageManager, final FreedrawingEditorContext editorContext) {
+	private static PaletteEntry createElementsDrawer(IconManager imageManager) {
 		PaletteDrawer componentsDrawer = new PaletteDrawer("Elements");
 		
 		// 사각형 생성을 위한 팩토리 및 툴 생성
 		{
 			SimpleFactory factory = new SimpleFactory(FDRect.class) {
 				public Object getNewObject() {
-					FDElement node = FDModelFactory.createModel(FDRect.class, editorContext);
+					FDElement node = FDModelFactory.createModel(FDRect.class);
 					return node;
 				}
 			};

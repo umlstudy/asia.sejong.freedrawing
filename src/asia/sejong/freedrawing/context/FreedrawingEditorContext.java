@@ -13,8 +13,7 @@ public class FreedrawingEditorContext implements Serializable {
 	
 	private static final long serialVersionUID = 857831127795002358L;
 	
-	private transient boolean init;
-	private transient boolean newCreated;
+	private transient boolean initFinished;
 	
 	// 에디터 종속 속성들
 	private FDRoot nodeRoot = null;
@@ -35,34 +34,32 @@ public class FreedrawingEditorContext implements Serializable {
 	private RGB fontColor;
 	
 	public FreedrawingEditorContext() {
+		
+		// 역직열화에 의해 생성되지 않고, new 키워드에 의해 생성된 경우,
+		// 각 값을 초기화 함
 		nodeRoot = new FDRoot();
-		newCreated = true;
+		
+		setSnapToGeometryEnabled(true);
+		setRulerVisibility(false);
+		setGridEnabled(true);
+		setScaleIndex(2);
+
+		setDefaultWidth(150);
+		setDefaultHeight(150);
+		setAlpha(0xff);
+		setDegree(0);
+		setBackgroundColor(new RGB(0xff,0xff,0xff));
+		setLineColor(new RGB(0,0,0));
+		setLineStyle(SWT.LINE_SOLID);
+		setLineWidth(2);
+		setFontInfo(new FontInfo("", 12, 0));
+		setFontColor(new RGB(0,0,0));
 	}
 	
 	public void init(FreedrawingEditor editor) {
 		// 어플리케이션 컨텍스트의 참조카운트 증가
 		ApplicationContext.newInstance(editor.getSite().getShell().getDisplay());
-		init = true;
-		
-		if ( newCreated ) {
-			// 역직열화에 의해 생성되지 않고, new 키워드에 의해 생성된 경우,
-			// 각 값을 초기화 함
-			setSnapToGeometryEnabled(true);
-			setRulerVisibility(false);
-			setGridEnabled(true);
-			setScaleIndex(2);
-
-			setDefaultWidth(100);
-			setDefaultHeight(100);
-			setAlpha(256);
-			setDegree(0);
-			setBackgroundColor(new RGB(255,255,255));
-			setLineColor(new RGB(0,0,0));
-			setLineStyle(SWT.LINE_SOLID);
-			setLineWidth(2);
-			setFontInfo(new FontInfo("", 12, 0));
-			setFontColor(new RGB(0,0,0));
-		}
+		initFinished = true;
 	}
 	
 	public void dispose() {
@@ -71,7 +68,7 @@ public class FreedrawingEditorContext implements Serializable {
 	}
 
 	public FDRoot getNodeRoot() {
-		if ( !init ) {
+		if ( !initFinished ) {
 			throw new RuntimeException();
 		}
 		return nodeRoot;

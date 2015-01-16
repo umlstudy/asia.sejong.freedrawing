@@ -165,6 +165,7 @@ public class FreedrawingEditor extends GraphicalEditor implements MouseWheelHand
 //		super.initializeGraphicalViewer();
 		
 		getGraphicalViewer().setContents(editorContext.getNodeRoot());
+		initProperties();
 		
 		actionManager.initializeKeyHandler(getGraphicalViewer());
 	}
