@@ -4,12 +4,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.gef.commands.Command;
 import org.eclipse.swt.graphics.RGB;
 
 import asia.sejong.freedrawing.model.FDShape;
 
-public class BackgroundColorChangeCommand extends Command {
+public class BackgroundColorChangeCommand extends ColorChangeCommand {
 
 	private List<FDShape> elements;
 	private RGB newColor;

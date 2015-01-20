@@ -6,19 +6,20 @@ import java.util.Map;
 
 import org.eclipse.gef.commands.Command;
 
+import asia.sejong.freedrawing.code.LineStyle;
 import asia.sejong.freedrawing.model.FDElement;
 
 public class LineStyleChangeCommand extends Command {
 
 	private List<FDElement> elements;
-	private int lineStyle;
+	private LineStyle lineStyle;
 	
-	private Map<FDElement, Integer> oldLineStyles;
+	private Map<FDElement, LineStyle> oldLineStyles;
 	
-	public LineStyleChangeCommand(List<FDElement> elements, int lineStyle) {
+	public LineStyleChangeCommand(List<FDElement> elements, LineStyle lineStyle) {
 		this.elements = elements;
 		this.lineStyle = lineStyle;
-		this.oldLineStyles = new HashMap<FDElement, Integer>();
+		this.oldLineStyles = new HashMap<FDElement, LineStyle>();
 	}
 	
 	public void execute() {
@@ -33,7 +34,7 @@ public class LineStyleChangeCommand extends Command {
 	
 	public void undo() {
 		for ( FDElement item : elements ) {
-			Integer oldLineStyle = oldLineStyles.get(item);
+			LineStyle oldLineStyle = oldLineStyles.get(item);
 			if ( item.getLineStyle() == oldLineStyle ) {
 				item.setLineStyle(oldLineStyle);
 			}

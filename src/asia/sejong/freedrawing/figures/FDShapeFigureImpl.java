@@ -11,6 +11,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.LineAttributes;
 import org.eclipse.swt.graphics.RGB;
 
+import asia.sejong.freedrawing.code.LineStyle;
 import asia.sejong.freedrawing.context.ApplicationContext;
 import asia.sejong.freedrawing.model.FDElement;
 import asia.sejong.freedrawing.model.FDShape;
@@ -768,8 +769,8 @@ public abstract class FDShapeFigureImpl extends Figure implements FDShapeFigure 
 	}
 
 	@Override
-	public final void setLineStyleEx(int lineStyle) {
-		setLineStyle(lineStyle);
+	public final void setLineStyleEx(LineStyle lineStyle) {
+		setLineStyle(lineStyle.getStyle());
 	}
 	
 	private Color lineColor = null;

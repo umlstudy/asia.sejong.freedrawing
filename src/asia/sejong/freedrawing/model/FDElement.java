@@ -2,9 +2,9 @@ package asia.sejong.freedrawing.model;
 
 import java.io.Serializable;
 
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.RGB;
 
+import asia.sejong.freedrawing.code.LineStyle;
 import asia.sejong.freedrawing.model.listener.FDBaseListener;
 import asia.sejong.freedrawing.model.listener.FDElementListener;
 
@@ -13,11 +13,11 @@ public abstract class FDElement extends FDBase implements Cloneable, Serializabl
 	private static final long serialVersionUID = 1785663272619287600L;
 
 	private RGB lineColor;
-	private int lineStyle;
+	private LineStyle lineStyle;
 	private float lineWidth;
 	
 	protected FDElement() {
-		lineStyle = SWT.LINE_SOLID;
+		lineStyle = LineStyle.SOLID;
 	}
 
 	public RGB getLineColor() {
@@ -31,11 +31,11 @@ public abstract class FDElement extends FDBase implements Cloneable, Serializabl
 		fireLineColorChanged(lineColor);
 	}
 	
-	public int getLineStyle() {
+	public LineStyle getLineStyle() {
 		return lineStyle;
 	}
 
-	public void setLineStyle(int lineStyle) {
+	public void setLineStyle(LineStyle lineStyle) {
 		this.lineStyle = lineStyle;
 		
 		// send event
@@ -59,7 +59,7 @@ public abstract class FDElement extends FDBase implements Cloneable, Serializabl
 		}
 	}
 	
-	protected void fireLineStyleChanged(int lineStyle) {
+	protected void fireLineStyleChanged(LineStyle lineStyle) {
 		for (FDBaseListener l : listeners) {
 			((FDElementListener)l).lineStyleChanged(lineStyle);
 		}

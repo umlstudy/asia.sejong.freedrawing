@@ -10,6 +10,7 @@ import org.eclipse.swt.graphics.Path;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 
+import asia.sejong.freedrawing.code.LineStyle;
 import asia.sejong.freedrawing.context.ApplicationContext;
 import asia.sejong.freedrawing.model.FDElement;
 import asia.sejong.freedrawing.model.FDWire;
@@ -194,8 +195,8 @@ public class FDWireFigure extends PolylineConnection implements FDElementFigure 
 	}
 
 	@Override
-	public void setLineStyleEx(int lineStyle) {
-		setLineStyle(lineStyle);
+	public void setLineStyleEx(LineStyle lineStyle) {
+		setLineStyle(lineStyle.getStyle());
 	}
 
 	@Override

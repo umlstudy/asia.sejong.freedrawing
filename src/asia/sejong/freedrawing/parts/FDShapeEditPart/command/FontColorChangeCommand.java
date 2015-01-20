@@ -4,12 +4,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.gef.commands.Command;
 import org.eclipse.swt.graphics.RGB;
 
 import asia.sejong.freedrawing.model.FDTextShape;
 
-public class FontColorChangeCommand extends Command {
+public class FontColorChangeCommand extends ColorChangeCommand {
 
 	private List<FDTextShape> elements;
 	private RGB newColor;

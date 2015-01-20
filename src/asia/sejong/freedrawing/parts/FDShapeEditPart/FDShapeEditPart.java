@@ -22,9 +22,10 @@ import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.requests.GroupRequest;
 import org.eclipse.swt.graphics.RGB;
 
+import asia.sejong.freedrawing.code.LineStyle;
 import asia.sejong.freedrawing.debug.ForEditPart;
-import asia.sejong.freedrawing.figures.FDShapeFigure;
 import asia.sejong.freedrawing.figures.FDFigureFactory;
+import asia.sejong.freedrawing.figures.FDShapeFigure;
 import asia.sejong.freedrawing.model.FDRoot;
 import asia.sejong.freedrawing.model.FDShape;
 import asia.sejong.freedrawing.model.FDWire;
@@ -65,7 +66,7 @@ public abstract class FDShapeEditPart extends AbstractGraphicalEditPart implemen
 		if ( m.getLineWidth() > 0 ) {
 			((FDShapeFigure)getFigure()).setLineWidthEx(m.getLineWidth());
 		}
-		if ( m.getLineStyle() > 0 ) {
+		if ( m.getLineStyle() != null ) {
 			((FDShapeFigure)getFigure()).setLineStyleEx(m.getLineStyle());
 		}
 		
@@ -256,7 +257,7 @@ public abstract class FDShapeEditPart extends AbstractGraphicalEditPart implemen
 	
 
 	@Override
-	public final void lineStyleChanged(int lineStyle) {
+	public final void lineStyleChanged(LineStyle lineStyle) {
 		refreshVisuals();
 	}
 	

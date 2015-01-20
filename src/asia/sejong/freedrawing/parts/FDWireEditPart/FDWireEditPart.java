@@ -26,11 +26,12 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 
+import asia.sejong.freedrawing.code.LineStyle;
 import asia.sejong.freedrawing.context.ApplicationContext;
 import asia.sejong.freedrawing.debug.ForEditPart;
 import asia.sejong.freedrawing.figures.FDElementFigure;
-import asia.sejong.freedrawing.figures.FDWireFigure;
 import asia.sejong.freedrawing.figures.FDFigureFactory;
+import asia.sejong.freedrawing.figures.FDWireFigure;
 import asia.sejong.freedrawing.model.FDRoot;
 import asia.sejong.freedrawing.model.FDWire;
 import asia.sejong.freedrawing.model.FDWireBendpoint;
@@ -231,7 +232,7 @@ public class FDWireEditPart extends AbstractConnectionEditPart implements FDWire
 	}
 
 	@Override
-	public void lineStyleChanged(int lineStyle) {
+	public void lineStyleChanged(LineStyle lineStyle) {
 		refreshVisuals();
 	}
 

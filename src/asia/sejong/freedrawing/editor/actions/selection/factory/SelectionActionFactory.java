@@ -2,10 +2,10 @@ package asia.sejong.freedrawing.editor.actions.selection.factory;
 
 import org.eclipse.gef.ui.actions.DirectEditAction;
 import org.eclipse.gef.ui.actions.SelectionAction;
-import org.eclipse.swt.SWT;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.actions.ActionFactory;
 
+import asia.sejong.freedrawing.code.LineStyle;
 import asia.sejong.freedrawing.editor.actions.common.LocalActionFactory;
 import asia.sejong.freedrawing.editor.actions.selection.ChangeBackgroundColorAction;
 import asia.sejong.freedrawing.editor.actions.selection.ChangeFontAction;
@@ -168,65 +168,77 @@ public abstract class SelectionActionFactory extends LocalActionFactory {
 	//============================================================
 	// LINE ATTRIBUTES
 	
-	public static final SelectionActionFactory CHANGE_LINE_STYLE_DASH = new SelectionActionFactory("CHANGE_LINE_STYLE_DASH") {
+	public static final SelectionActionFactory CHANGE_LINE_STYLE = new SelectionActionFactory("CHANGE_LINE_STYLE") {
 		public SelectionAction create(IEditorPart part) {
 			
-			ChangeLineStyleAction action = new ChangeLineStyleAction(part, SWT.LINE_DASH);
+			ChangeLineStyleAction action = new ChangeLineStyleAction(part, LineStyle.SOLID);
 			action.setId(getId());
 //			action.setImageDescriptor(ContextManager.getInstance().getIconManager().getColorPickImageDescriptor(IconType.NORMAL));
-			action.setText("데쉬");
-			
+			action.setText("선종류");
+
 			return action;
 		}
 	};
 	
-	public static final SelectionActionFactory CHANGE_LINE_STYLE_DASHDOT = new SelectionActionFactory("CHANGE_LINE_STYLE_DASHDOT") {
-		public SelectionAction create(IEditorPart part) {
-			
-			ChangeLineStyleAction action = new ChangeLineStyleAction(part, SWT.LINE_DASHDOT);
-			action.setId(getId());
-//			action.setImageDescriptor(ContextManager.getInstance().getIconManager().getColorPickImageDescriptor(IconType.NORMAL));
-			action.setText("데쉬점");
-			
-			return action;
-		}
-	};
-	
-	public static final SelectionActionFactory CHANGE_LINE_STYLE_DASHDOTDOT = new SelectionActionFactory("CHANGE_LINE_STYLE_DASHDOTDOT") {
-		public SelectionAction create(IEditorPart part) {
-			
-			ChangeLineStyleAction action = new ChangeLineStyleAction(part, SWT.LINE_DASHDOTDOT);
-			action.setId(getId());
-//			action.setImageDescriptor(ContextManager.getInstance().getIconManager().getColorPickImageDescriptor(IconType.NORMAL));
-			action.setText("데쉬점점");
-			
-			return action;
-		}
-	};
-	
-	public static final SelectionActionFactory CHANGE_LINE_STYLE_DOT = new SelectionActionFactory("CHANGE_LINE_STYLE_DOT") {
-		public SelectionAction create(IEditorPart part) {
-			
-			ChangeLineStyleAction action = new ChangeLineStyleAction(part, SWT.LINE_DOT);
-			action.setId(getId());
-//			action.setImageDescriptor(ContextManager.getInstance().getIconManager().getColorPickImageDescriptor(IconType.NORMAL));
-			action.setText("점");
-			
-			return action;
-		}
-	};
-	
-	public static final SelectionActionFactory CHANGE_LINE_STYLE_SOLID = new SelectionActionFactory("CHANGE_LINE_STYLE_SOLID") {
-		public SelectionAction create(IEditorPart part) {
-			
-			ChangeLineStyleAction action = new ChangeLineStyleAction(part, SWT.LINE_SOLID);
-			action.setId(getId());
-//			action.setImageDescriptor(ContextManager.getInstance().getIconManager().getColorPickImageDescriptor(IconType.NORMAL));
-			action.setText("솔리드");
-			
-			return action;
-		}
-	};
+//	public static final SelectionActionFactory CHANGE_LINE_STYLE_DASH = new SelectionActionFactory("CHANGE_LINE_STYLE_DASH") {
+//		public SelectionAction create(IEditorPart part) {
+//			
+//			ChangeLineStyleAction action = new ChangeLineStyleAction(part, LineStyle.DASH);
+//			action.setId(getId());
+////			action.setImageDescriptor(ContextManager.getInstance().getIconManager().getColorPickImageDescriptor(IconType.NORMAL));
+//			action.setText("데쉬");
+//			
+//			return action;
+//		}
+//	};
+//	
+//	public static final SelectionActionFactory CHANGE_LINE_STYLE_DASHDOT = new SelectionActionFactory("CHANGE_LINE_STYLE_DASHDOT") {
+//		public SelectionAction create(IEditorPart part) {
+//			
+//			ChangeLineStyleAction action = new ChangeLineStyleAction(part, LineStyle.DASHDOT);
+//			action.setId(getId());
+////			action.setImageDescriptor(ContextManager.getInstance().getIconManager().getColorPickImageDescriptor(IconType.NORMAL));
+//			action.setText("데쉬점");
+//			
+//			return action;
+//		}
+//	};
+//	
+//	public static final SelectionActionFactory CHANGE_LINE_STYLE_DASHDOTDOT = new SelectionActionFactory("CHANGE_LINE_STYLE_DASHDOTDOT") {
+//		public SelectionAction create(IEditorPart part) {
+//			
+//			ChangeLineStyleAction action = new ChangeLineStyleAction(part, SWT.LINE_DASHDOTDOT);
+//			action.setId(getId());
+////			action.setImageDescriptor(ContextManager.getInstance().getIconManager().getColorPickImageDescriptor(IconType.NORMAL));
+//			action.setText("데쉬점점");
+//			
+//			return action;
+//		}
+//	};
+//	
+//	public static final SelectionActionFactory CHANGE_LINE_STYLE_DOT = new SelectionActionFactory("CHANGE_LINE_STYLE_DOT") {
+//		public SelectionAction create(IEditorPart part) {
+//			
+//			ChangeLineStyleAction action = new ChangeLineStyleAction(part, SWT.LINE_DOT);
+//			action.setId(getId());
+////			action.setImageDescriptor(ContextManager.getInstance().getIconManager().getColorPickImageDescriptor(IconType.NORMAL));
+//			action.setText("점");
+//			
+//			return action;
+//		}
+//	};
+//	
+//	public static final SelectionActionFactory CHANGE_LINE_STYLE_SOLID = new SelectionActionFactory("CHANGE_LINE_STYLE_SOLID") {
+//		public SelectionAction create(IEditorPart part) {
+//			
+//			ChangeLineStyleAction action = new ChangeLineStyleAction(part, SWT.LINE_SOLID);
+//			action.setId(getId());
+////			action.setImageDescriptor(ContextManager.getInstance().getIconManager().getColorPickImageDescriptor(IconType.NORMAL));
+//			action.setText("솔리드");
+//			
+//			return action;
+//		}
+//	};
 	
 	//============================================================
 	// OBJECT ATTRIBUTES

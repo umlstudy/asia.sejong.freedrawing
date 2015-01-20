@@ -15,14 +15,18 @@ import asia.sejong.freedrawing.parts.FDTextShapeEditPart.command.FontChangeComma
 
 public class ChangeFontAction extends SelectionAction {
 	
+	private FontData fontData;
+
 	public ChangeFontAction(IEditorPart part) {
 		super(part);
 	}
 	
 	public void run() {
 		
-		FontDialog dialog = new FontDialog(getWorkbenchPart().getSite().getShell());
-		FontData fontData = dialog.open();
+		if ( fontData == null ) {
+			FontDialog dialog = new FontDialog(getWorkbenchPart().getSite().getShell());
+			fontData = dialog.open();
+		}
 		
 		if ( fontData != null ) {
 			
@@ -47,5 +51,9 @@ public class ChangeFontAction extends SelectionAction {
 	@Override
 	protected boolean calculateEnabled() {
 		return true;
+	}
+
+	public void setFont(FontData fontData) {
+		this.fontData = fontData;
 	}
 }

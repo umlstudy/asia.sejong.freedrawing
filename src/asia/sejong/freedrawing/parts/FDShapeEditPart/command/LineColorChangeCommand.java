@@ -4,12 +4,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.gef.commands.Command;
 import org.eclipse.swt.graphics.RGB;
 
 import asia.sejong.freedrawing.model.FDElement;
 
-public class LineColorChangeCommand extends Command {
+public class LineColorChangeCommand extends ColorChangeCommand {
 
 	private List<FDElement> elements;
 	private RGB newColor;

@@ -7,18 +7,19 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.ui.actions.SelectionAction;
 import org.eclipse.ui.IEditorPart;
 
+import asia.sejong.freedrawing.code.LineStyle;
 import asia.sejong.freedrawing.model.FDElement;
 import asia.sejong.freedrawing.parts.FDShapeEditPart.command.LineStyleChangeCommand;
 
 
 public class ChangeLineStyleAction extends SelectionAction {
 
-	private int lineStyle;
+	private LineStyle lineStyle;
 	
-	public ChangeLineStyleAction(IEditorPart part, int lineStyle) {
+	public ChangeLineStyleAction(IEditorPart part, LineStyle lineStyle) {
 		super(part);
 		
-		this.lineStyle = lineStyle;
+		this.setLineStyle(lineStyle);
 	}
 	
 	public void run() {
@@ -35,7 +36,7 @@ public class ChangeLineStyleAction extends SelectionAction {
 		}
 		
 		if (lists.size()>0) {
-			execute(new LineStyleChangeCommand(lists, lineStyle));
+			execute(new LineStyleChangeCommand(lists, getLineStyle()));
 		} else {
 			// TODO change color
 		}
@@ -44,6 +45,14 @@ public class ChangeLineStyleAction extends SelectionAction {
 	@Override
 	protected boolean calculateEnabled() {
 		return true;
+	}
+
+	public LineStyle getLineStyle() {
+		return lineStyle;
+	}
+
+	public void setLineStyle(LineStyle lineStyle) {
+		this.lineStyle = lineStyle;
 	}
 
 }
