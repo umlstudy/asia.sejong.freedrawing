@@ -17,6 +17,7 @@ import org.eclipse.gef.ui.actions.ToggleGridAction;
 import org.eclipse.gef.ui.actions.ToggleRulerVisibilityAction;
 import org.eclipse.gef.ui.actions.ToggleSnapToGeometryAction;
 import org.eclipse.gef.ui.parts.GraphicalViewerKeyHandler;
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ControlContribution;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
@@ -41,6 +42,7 @@ import org.eclipse.swt.widgets.Scale;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
+import asia.sejong.freedrawing.code.Item;
 import asia.sejong.freedrawing.code.LineStyle;
 import asia.sejong.freedrawing.editor.actions.common.ChangableDropDownAction;
 import asia.sejong.freedrawing.editor.actions.contributions.ColorDisplayItem;
@@ -48,6 +50,8 @@ import asia.sejong.freedrawing.editor.actions.contributions.ComboSelectionItem;
 import asia.sejong.freedrawing.editor.actions.contributions.DirectEditItem;
 import asia.sejong.freedrawing.editor.actions.contributions.DropDownToolItemContribution;
 import asia.sejong.freedrawing.editor.actions.contributions.TextDisplayItem;
+import asia.sejong.freedrawing.editor.actions.etc.ChangeEditorScaleAction;
+import asia.sejong.freedrawing.editor.actions.etc.factory.EtcActionFactory;
 import asia.sejong.freedrawing.editor.actions.palette.PaletteAction;
 import asia.sejong.freedrawing.editor.actions.palette.PaletteChangeListener;
 import asia.sejong.freedrawing.editor.actions.palette.PaletteDropDownAction;
@@ -59,11 +63,13 @@ import asia.sejong.freedrawing.editor.actions.selection.ChangeFontColorAction;
 import asia.sejong.freedrawing.editor.actions.selection.ChangeLineColorAction;
 import asia.sejong.freedrawing.editor.actions.selection.ChangeLineStyleAction;
 import asia.sejong.freedrawing.editor.actions.selection.ChangeLineThickAction;
+import asia.sejong.freedrawing.editor.actions.selection.ChangeRotateAction;
 import asia.sejong.freedrawing.editor.actions.selection.CopyToClipboardAction;
 import asia.sejong.freedrawing.editor.actions.selection.PasteFromClipboardAction;
 import asia.sejong.freedrawing.editor.actions.selection.factory.SelectionActionFactory;
 import asia.sejong.freedrawing.editor.dialog.DialogUtil;
 import asia.sejong.freedrawing.editor.tools.FDPanningSelectionTool;
+import asia.sejong.freedrawing.model.FontInfo;
 import asia.sejong.freedrawing.parts.FDShapeEditPart.FDShapeEditPart;
 import asia.sejong.freedrawing.resources.IconManager.IconType;
 
@@ -80,13 +86,20 @@ public class FreedrawingEditorActionManager implements FreedrawingEditDomainList
 	private EditPart targetEditPart;
 	
 	private Scale scale;
+	private ComboSelectionItem<Item<Integer>> editorScaleSelectionItem;
 	
 	private FreedrawingEditorActionManager(FreedrawingEditor editor, List<Object> selectionActions) {
 		this.editor = editor;
 		this.paletteChangeListeners = new ArrayList<PaletteChangeListener>();
 		
-		createPaletteActions();
+		// 1.
+		FreedrawingEditDomain editDomain = editor.getEditDomain();
+		editDomain.setEditDomainListener(this);
+		createPaletteActions(editDomain);
+		// 2.
 		createSelectionActions(selectionActions);
+		// 3.
+		createEtcActions();
 	}
 
 	static FreedrawingEditorActionManager newInstance(FreedrawingEditor editor, List<Object> selectionActions) {
@@ -108,12 +121,10 @@ public class FreedrawingEditorActionManager implements FreedrawingEditDomainList
 		registry.registerAction(showGrid);
 	}
 
-	private void createPaletteActions() {
+	private void createPaletteActions(FreedrawingEditDomain editDomain) {
 		ActionRegistry registry = (ActionRegistry)editor.getAdapter(ActionRegistry.class);
-		FreedrawingEditDomain editDomain = editor.getEditDomain();
 		PaletteAction action;
 		
-		editDomain.setEditDomainListener(this);
 		// --------------------
 		// PaletteActionFactory
 		
@@ -253,13 +264,13 @@ public class FreedrawingEditorActionManager implements FreedrawingEditDomainList
 		registry.registerAction(action);
 		selectionActions.add(action.getId());
 		
-		// CHANGE_ROUTER
-		action = SelectionActionFactory.CHANGE_ROUTER.create(editor);
+		// CHANGE_LINE_STYLE
+		action = SelectionActionFactory.CHANGE_LINE_STYLE.create(editor);
 		registry.registerAction(action);
 		selectionActions.add(action.getId());
 		
-		// CHANGE_LINE_STYLE
-		action = SelectionActionFactory.CHANGE_LINE_STYLE.create(editor);
+		// CHANGE_ROTATION
+		action = SelectionActionFactory.CHANGE_ROTATION.create(editor);
 		registry.registerAction(action);
 		selectionActions.add(action.getId());
 		
@@ -289,6 +300,22 @@ public class FreedrawingEditorActionManager implements FreedrawingEditDomainList
 //		selectionActions.add(action.getId());
 	}
 	
+	private void createEtcActions() {
+		ActionRegistry registry = (ActionRegistry)editor.getAdapter(ActionRegistry.class);
+		Action action;
+		
+		// --------------------
+		// EtcActionFactory
+		
+		// CHANGE_EDITOR_SCALE
+		action = EtcActionFactory.CHANGE_EDITOR_SCALE.create(editor);
+		registry.registerAction(action);
+		
+		// CHANGE_ROUTER
+		action = EtcActionFactory.CHANGE_ROUTER.create(editor);
+		registry.registerAction(action);
+	}
+	
 	void createToolBar(Composite parent) {
 		ToolBar toolbar = new ToolBar(parent, SWT.FLAT | SWT.RIGHT);
 		toolbar.setLayoutData(GridDataFactory.swtDefaults().grab(true, false).align(SWT.FILL, SWT.FILL).create());
@@ -310,26 +337,40 @@ public class FreedrawingEditorActionManager implements FreedrawingEditDomainList
 		// add actions to ToolBar
 		ToolBarManager toolbarManager = new ToolBarManager(toolbar);
 		
+		RGB rgb = null;
 		// 글자 칼라 선택
-		addColorChangeTool(toolbarManager,(ChangeFontColorAction)registry.getAction(SelectionActionFactory.CHANGE_FONT_COLOR.getId()));
+		rgb = editor.getEditorContext().getFontColor();
+		addColorChangeTool(toolbarManager,(ChangeFontColorAction)registry.getAction(SelectionActionFactory.CHANGE_FONT_COLOR.getId()), rgb);
 		// 배경 칼라 선택
-		addColorChangeTool(toolbarManager, (ChangeBackgroundColorAction)registry.getAction(SelectionActionFactory.CHANGE_BACKGROUND_COLOR.getId()));
+		rgb = editor.getEditorContext().getBackgroundColor();
+		addColorChangeTool(toolbarManager, (ChangeBackgroundColorAction)registry.getAction(SelectionActionFactory.CHANGE_BACKGROUND_COLOR.getId()), rgb);
 		// 테두리 칼라 선택
-		addColorChangeTool(toolbarManager, (ChangeLineColorAction)registry.getAction(SelectionActionFactory.CHANGE_LINE_COLOR.getId()));
+		rgb = editor.getEditorContext().getLineColor();
+		addColorChangeTool(toolbarManager, (ChangeLineColorAction)registry.getAction(SelectionActionFactory.CHANGE_LINE_COLOR.getId()), rgb);
 		// 구분자
 		toolbarManager.add(new Separator());
 		// 폰트 선택
-		addFontChangeTool(toolbarManager, (ChangeFontAction)registry.getAction(SelectionActionFactory.CHANGE_FONT.getId()));
+		FontInfo fontInfo = editor.getEditorContext().getFontInfo();
+		addFontChangeTool(toolbarManager, (ChangeFontAction)registry.getAction(SelectionActionFactory.CHANGE_FONT.getId()), fontInfo);
+		// 구분자
 		toolbarManager.add(new Separator());
 		// 선두께
-		addChangeLineThickTool(toolbarManager, (ChangeLineThickAction)registry.getAction(SelectionActionFactory.CHANGE_LINE_WIDTH.getId()));
+		Float lineWidth = editor.getEditorContext().getLineWidth();
+		addChangeLineThickTool(toolbarManager, (ChangeLineThickAction)registry.getAction(SelectionActionFactory.CHANGE_LINE_WIDTH.getId()), lineWidth);
+		// 구분자
 		toolbarManager.add(new Separator());
 		// 선두께#2
 		//addChangeLineThickTool2(toolbarManager, (ChangeLineThickAction)registry.getAction(SelectionActionFactory.CHANGE_LINE_WIDTH.getId()));
-		toolbarManager.add(new Separator());
+//		toolbarManager.add(new Separator());
 		// 선종류
-		addChangeLineStyleTool(toolbarManager, (ChangeLineStyleAction)registry.getAction(SelectionActionFactory.CHANGE_LINE_STYLE.getId()));
-				
+		LineStyle lineStyle = LineStyle.getLineStyle(editor.getEditorContext().getLineStyle());
+		addChangeLineStyleTool(toolbarManager, (ChangeLineStyleAction)registry.getAction(SelectionActionFactory.CHANGE_LINE_STYLE.getId()), lineStyle);
+		// 피처 각도
+		Double degree = editor.getEditorContext().getDegree();
+		addChangeRotationTool(toolbarManager, (ChangeRotateAction)registry.getAction(SelectionActionFactory.CHANGE_ROTATION.getId()), degree);
+		// 에디터 스케일
+		addChangeEditorScaleTool(toolbarManager, (ChangeEditorScaleAction)registry.getAction(EtcActionFactory.CHANGE_EDITOR_SCALE.getId()));
+						
 		return toolbarManager;
 	}
 
@@ -423,23 +464,14 @@ public class FreedrawingEditorActionManager implements FreedrawingEditDomainList
 			
 		});
 		
-//		// 글자 칼라 선택
-//		addColorChangeTool(toolbarManager,(ChangeFontColorAction)registry.getAction(SelectionActionFactory.CHANGE_FONT_COLOR.getId()));
-//		
-//		// 배경 칼라 선택
-//		addColorChangeTool(toolbarManager, (ChangeBackgroundColorAction)registry.getAction(SelectionActionFactory.CHANGE_BACKGROUND_COLOR.getId()));
-//		
-//		// 테두리 칼라 선택
-//		addColorChangeTool(toolbarManager, (ChangeLineColorAction)registry.getAction(SelectionActionFactory.CHANGE_LINE_COLOR.getId()));
-						
 		return toolbarManager;
 	}
 	
-	private void addColorChangeTool(ToolBarManager toolbarManager, final ChangeColorAction<?> action) {
-		final ColorDisplayItem colorDisplayItem = new ColorDisplayItem(action.getId()+"_CDI");
+	private static void addColorChangeTool(ToolBarManager toolbarManager, final ChangeColorAction<?> action, RGB defaultRgb) {
+		final ColorDisplayItem colorDisplayItem = new ColorDisplayItem(action, defaultRgb);
 		toolbarManager.add(action);
 		toolbarManager.add(colorDisplayItem);
-		toolbarManager.add(new DropDownToolItemContribution(action.getId()+"_DropDown") {
+		toolbarManager.add(new DropDownToolItemContribution(action.getId()) {
 			@Override
 			protected void dropDownSelected(Event e) {
 				ToolItem ti = (ToolItem)e.widget;
@@ -453,32 +485,38 @@ public class FreedrawingEditorActionManager implements FreedrawingEditDomainList
 				}
 			}
 		});
+		
+		action.setRgb(defaultRgb);
 	}
 	
-	
-	private void addFontChangeTool(ToolBarManager toolbarManager, final ChangeFontAction action) {
-		final TextDisplayItem textDisplayItem = new TextDisplayItem(action.getId()+"_TDI");
+	private static void addFontChangeTool(ToolBarManager toolbarManager, final ChangeFontAction action, FontInfo defaultFontInfo) {
+		final String formatString = "%s(%d) - %d";
+		final String defaultText = String.format(formatString, defaultFontInfo.getName(), defaultFontInfo.getHeight(), defaultFontInfo.getStyle());
+		final TextDisplayItem textDisplayItem = new TextDisplayItem(action, defaultText);
 		toolbarManager.add(action);
 		toolbarManager.add(textDisplayItem);
-		toolbarManager.add(new DropDownToolItemContribution(action.getId()+"_DropDown") {
+		toolbarManager.add(new DropDownToolItemContribution(action.getId()) {
 			@Override
 			protected void dropDownSelected(Event e) {
 				ToolItem ti = (ToolItem)e.widget;
 				Point loc = ti.getParent().toDisplay( new Point(e.x, e.y));
-				FontData fontData = DialogUtil.openFontSelectDialog(ti.getDisplay(), loc);
+				FontData fontData = DialogUtil.openFontSelectDialog(ti.getDisplay(), loc, action.getFontInfo());
 				
 				if ( fontData != null ) {
-					String text = String.format("%s(%d) - %d", fontData.getName(), fontData.getHeight(), fontData.getStyle());
+					FontInfo fontInfo = FontInfo.create(fontData);
+					String text = String.format(formatString, fontInfo.getName(), fontInfo.getHeight(), fontInfo.getStyle());
 					textDisplayItem.setText(text);
-					action.setFont(fontData);
+					action.setFontInfo(fontInfo);
 					action.run();
 				}
 			}
 		});
+		
+		action.setFontInfo(defaultFontInfo);
 	}
 	
-	private void addChangeLineThickTool(ToolBarManager toolbarManager, final ChangeLineThickAction action) {
-		final ComboSelectionItem<Float> comboSelectionItem = new ComboSelectionItem<Float>(action.getId()+"_CSI");
+	private static void addChangeLineThickTool(ToolBarManager toolbarManager, final ChangeLineThickAction action, Float defaultLineWidth) {
+		final ComboSelectionItem<Float> comboSelectionItem = new ComboSelectionItem<Float>(action);
 		toolbarManager.add(action);
 		toolbarManager.add(comboSelectionItem);
 		comboSelectionItem.addSelectionChangedListener(new ISelectionChangedListener() {
@@ -493,10 +531,29 @@ public class FreedrawingEditorActionManager implements FreedrawingEditDomainList
 		});
 		List<Float> data = Arrays.asList(1f,2f,3f,4f,5f,6f,7f);
 		comboSelectionItem.setInput(data);
+		comboSelectionItem.setSelection(defaultLineWidth);
 	}
 	
-	private void addChangeLineStyleTool(ToolBarManager toolbarManager, final ChangeLineStyleAction action) {
-		final ComboSelectionItem<LineStyle> comboSelectionItem = new ComboSelectionItem<LineStyle>(action.getId()+"_CSI");
+	private void addChangeEditorScaleTool(ToolBarManager toolbarManager, final ChangeEditorScaleAction action) {
+		editorScaleSelectionItem = new ComboSelectionItem<Item<Integer>>(action);
+		toolbarManager.add(action);
+		toolbarManager.add(editorScaleSelectionItem);
+		editorScaleSelectionItem.addSelectionChangedListener(new ISelectionChangedListener() {
+			@Override
+			public void selectionChanged(SelectionChangedEvent event) {
+				IStructuredSelection sel = (IStructuredSelection)event.getSelection();
+				if ( sel.getFirstElement() instanceof Item ) {
+					@SuppressWarnings("unchecked")
+					Item<Integer> item = (Item<Integer>)sel.getFirstElement();
+					action.setZoomLevelIndex(item.getValue());
+					action.run();
+				}
+			}
+		});
+	}
+
+	private static void addChangeLineStyleTool(ToolBarManager toolbarManager, final ChangeLineStyleAction action, LineStyle defaultLineStyle) {
+		final ComboSelectionItem<LineStyle> comboSelectionItem = new ComboSelectionItem<LineStyle>(action);
 		toolbarManager.add(action);
 		toolbarManager.add(comboSelectionItem);
 		comboSelectionItem.addSelectionChangedListener(new ISelectionChangedListener() {
@@ -511,10 +568,39 @@ public class FreedrawingEditorActionManager implements FreedrawingEditDomainList
 		});
 		List<LineStyle> data = Arrays.asList(LineStyle.SOLID,LineStyle.DASH,LineStyle.DASHDOT,LineStyle.DASHDOTDOT,LineStyle.DOT);
 		comboSelectionItem.setInput(data);
+		comboSelectionItem.setSelection(defaultLineStyle);
+		action.setLineStyle(defaultLineStyle);
 	}
 	
-	private void addChangeLineThickTool2(ToolBarManager toolbarManager, final ChangeLineThickAction action) {
-		final DirectEditItem directEditItem = new DirectEditItem(action.getId()+"_DEI") {
+	private static void addChangeRotationTool(ToolBarManager toolbarManager, final ChangeRotateAction action, Double defaultDegree) {
+		final DirectEditItem directEditItem = new DirectEditItem(action) {
+			@Override
+			protected boolean checkValidValue(String value) {
+				try {
+					Double dValue = Double.valueOf(value);
+					if ( dValue>=0f && 360f>dValue) {
+						return true;
+					}
+				} catch ( Exception e ) {
+				}
+				
+				return false;
+			}
+			
+			protected void valueChanged(String value) {
+				Double dValue = Double.valueOf(value);
+				action.setDegree(dValue);
+				action.run();
+			}
+		};
+		toolbarManager.add(action);
+		toolbarManager.add(directEditItem);
+//		action.setDegree(defaultDegree);
+		directEditItem.changeValue(defaultDegree.toString());
+	}
+	
+	private static void addChangeLineThickTool2(ToolBarManager toolbarManager, final ChangeLineThickAction action) {
+		final DirectEditItem directEditItem = new DirectEditItem(action) {
 			@Override
 			protected boolean checkValidValue(String value) {
 				try {
@@ -561,6 +647,17 @@ public class FreedrawingEditorActionManager implements FreedrawingEditDomainList
 			}
 		}
 		setScaleSelection(currentLocation);
+		
+		@SuppressWarnings("unchecked")
+		ComboSelectionItem<Item<Integer>> changeEditorScaleItem = (ComboSelectionItem<Item<Integer>>)toolbarManagerSub.find(EtcActionFactory.CHANGE_EDITOR_SCALE.getId()+"_CSI");
+		List<Item<Integer>> data = new ArrayList<Item<Integer>>();
+		for ( int i=0; i<zoomManager.getZoomLevels().length; i++ ) {
+			data.add(new Item<Integer>("" + zoomManager.getZoomLevels()[i], i));
+		}
+		changeEditorScaleItem.setInput(data);
+		int defaultScaleIndex = editor.getEditorContext().getScaleIndex();
+		changeEditorScaleItem.setSelection(defaultScaleIndex);
+
 	}
 	
 	void dispose() {
@@ -610,7 +707,7 @@ public class FreedrawingEditorActionManager implements FreedrawingEditDomainList
 			contextMenuManger.add(registry.getAction(GEFActionConstants.TOGGLE_RULER_VISIBILITY));
 			contextMenuManger.add(registry.getAction(GEFActionConstants.TOGGLE_SNAP_TO_GEOMETRY));
 			contextMenuManger.add(registry.getAction(GEFActionConstants.TOGGLE_GRID_VISIBILITY));
-			contextMenuManger.add(registry.getAction(SelectionActionFactory.CHANGE_ROUTER.getId()));
+			contextMenuManger.add(registry.getAction(EtcActionFactory.CHANGE_ROUTER.getId()));
 		}
 	}
 	
@@ -660,21 +757,24 @@ public class FreedrawingEditorActionManager implements FreedrawingEditDomainList
 	private void setScaleSelection(int currentLocation) {
 		if ( currentLocation != scale.getSelection() ) {
 			scale.setSelection(currentLocation);
+			editorScaleSelectionItem.setSelection(currentLocation);
 			editor.scaleChanged(scale.getSelection());
 		}
 	}
 	
 	void setScaleNext() {
 		int next = scale.getSelection() + 1;
-		if ( next <= scale.getMaximum() ) {
-			setScaleSelection(next);
+		if ( next > scale.getMaximum() ) {
+			next = scale.getMaximum();
 		}
+		setScaleSelection(next);
 	}
 	
 	void setScalePrevious() {
-		int prev = scale.getSelection() -1;
-		if ( prev <= scale.getMaximum() ) {
-			setScaleSelection(prev);
+		int prev = scale.getSelection() - 1;
+		if ( prev < scale.getMinimum() ) {
+			prev = scale.getMinimum();
 		}
+		setScaleSelection(prev);
 	}
 }

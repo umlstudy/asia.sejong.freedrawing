@@ -2,6 +2,7 @@ package asia.sejong.freedrawing.context;
 
 import java.io.Serializable;
 
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.graphics.RGB;
 
 import asia.sejong.freedrawing.code.LineStyle;
@@ -28,7 +29,7 @@ public class FreedrawingEditorContext implements Serializable {
 	private double degree;
 	private RGB backgroundColor;
 	private RGB lineColor;
-	private LineStyle lineStyle;
+	private int lineStyle;
 	private float lineWidth;
 	private FontInfo fontInfo;
 	private RGB fontColor;
@@ -47,12 +48,14 @@ public class FreedrawingEditorContext implements Serializable {
 		setDefaultWidth(150);
 		setDefaultHeight(150);
 		setAlpha(0xff);
-		setDegree(0);
+		setDegree(0f);
 		setBackgroundColor(new RGB(0xff,0xff,0xff));
 		setLineColor(new RGB(0,0,0));
-		setLineStyle(LineStyle.SOLID);
+		setLineStyle(LineStyle.SOLID.getStyle());
 		setLineWidth(2);
-		setFontInfo(new FontInfo("", 12, 0));
+		FontInfo fontInfo = FontInfo.create(JFaceResources.getDefaultFont().getFontData()[0]);
+		fontInfo.setHeight(12);
+		setFontInfo(fontInfo);
 		setFontColor(new RGB(0,0,0));
 	}
 	
@@ -154,11 +157,11 @@ public class FreedrawingEditorContext implements Serializable {
 		this.lineColor = lineColor;
 	}
 
-	public LineStyle getLineStyle() {
+	public int getLineStyle() {
 		return lineStyle;
 	}
 
-	public void setLineStyle(LineStyle lineStyle) {
+	public void setLineStyle(int lineStyle) {
 		this.lineStyle = lineStyle;
 	}
 

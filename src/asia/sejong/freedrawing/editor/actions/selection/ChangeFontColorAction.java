@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.swt.graphics.RGB;
-import org.eclipse.ui.IEditorPart;
 
+import asia.sejong.freedrawing.editor.FreedrawingEditor;
 import asia.sejong.freedrawing.model.FDShape;
 import asia.sejong.freedrawing.model.FDTextShape;
 import asia.sejong.freedrawing.parts.FDShapeEditPart.command.ColorChangeCommand;
@@ -14,7 +14,7 @@ import asia.sejong.freedrawing.parts.FDShapeEditPart.command.FontColorChangeComm
 
 public class ChangeFontColorAction extends ChangeColorAction<FDTextShape> {
 
-	public ChangeFontColorAction(IEditorPart part) {
+	public ChangeFontColorAction(FreedrawingEditor part) {
 		super(part);
 	}
 
@@ -28,12 +28,22 @@ public class ChangeFontColorAction extends ChangeColorAction<FDTextShape> {
 		}
 		return new FontColorChangeCommand(lists, color);
 	}
-	
+
 	@Override
-	protected FDTextShape filter(Object model) {
-		if ( model instanceof FDTextShape ) {
-			return (FDTextShape)model;
-		}
-		return null;
+	protected Class<FDTextShape> getClassType() {
+		return FDTextShape.class;
 	}
+
+	@Override
+	protected void rgbChanged(RGB rgb) {
+		getEditorContext().setFontColor(rgb);
+	}
+	
+//	@Override
+//	protected FDTextShape filter(Object model) {
+//		if ( model instanceof FDTextShape ) {
+//			return (FDTextShape)model;
+//		}
+//		return null;
+//	}
 }

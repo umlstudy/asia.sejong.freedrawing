@@ -62,4 +62,13 @@ public class FontInfo implements Cloneable, Serializable {
 		
 		return fi;
 	}
+	
+	public FontData createFontData() {
+		FontData fontData = new FontData();
+		fontData.setHeight(getHeight());
+		fontData.setName(getName());
+		fontData.setStyle(getStyle());
+		
+		return fontData;
+	}
 }

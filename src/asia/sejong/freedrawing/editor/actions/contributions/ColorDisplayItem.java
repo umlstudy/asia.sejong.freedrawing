@@ -1,7 +1,7 @@
 package asia.sejong.freedrawing.editor.actions.contributions;
 
-import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.jface.action.ControlContribution;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
@@ -16,8 +16,11 @@ public class ColorDisplayItem extends ControlContribution {
 
 	private Label label;
 	
-	public ColorDisplayItem(String id) {
-		super(id);
+	private RGB defaultRgb;
+	
+	public ColorDisplayItem(IAction action, RGB defaultRgb) {
+		super(action.getId()+"_CDI");
+		this.defaultRgb = defaultRgb;
 	}
 	
 	public void setRgb(RGB rgb) {
@@ -34,7 +37,7 @@ public class ColorDisplayItem extends ControlContribution {
 		
 		label = new Label(background,  SWT.CENTER);
 		label.setAlignment(SWT.CENTER);
-		label.setBackground(ColorConstants.blue);
+		this.setRgb(defaultRgb);
 		
 		return background;
 	}

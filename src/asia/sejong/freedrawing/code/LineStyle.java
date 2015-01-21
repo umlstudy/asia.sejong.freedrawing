@@ -2,10 +2,6 @@ package asia.sejong.freedrawing.code;
 
 import org.eclipse.swt.SWT;
 
-/**
- * @author fffffff
- *
- */
 public enum LineStyle {
 	DASH(SWT.LINE_DASH, "데쉬"),
 	DASHDOT(SWT.LINE_DASHDOT, "데쉬닷"),
@@ -29,7 +25,7 @@ public enum LineStyle {
 		return style;
 	}
 
-	public void setStyle(int style) {
+	private void setStyle(int style) {
 		this.style = style;
 	}
 
@@ -39,5 +35,14 @@ public enum LineStyle {
 
 	public void setDesc(String desc) {
 		this.desc = desc;
+	}
+
+	public static LineStyle getLineStyle(int lineStyle) {
+		for ( LineStyle element : LineStyle.values() ) {
+			if ( element.getStyle() == lineStyle ) {
+				return element;
+			}
+		}
+		throw new RuntimeException("invalid line style.");
 	}
 }

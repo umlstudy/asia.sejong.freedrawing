@@ -2,10 +2,10 @@ package asia.sejong.freedrawing.editor.actions.selection.factory;
 
 import org.eclipse.gef.ui.actions.DirectEditAction;
 import org.eclipse.gef.ui.actions.SelectionAction;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.actions.ActionFactory;
 
 import asia.sejong.freedrawing.code.LineStyle;
+import asia.sejong.freedrawing.editor.FreedrawingEditor;
 import asia.sejong.freedrawing.editor.actions.common.LocalActionFactory;
 import asia.sejong.freedrawing.editor.actions.selection.ChangeBackgroundColorAction;
 import asia.sejong.freedrawing.editor.actions.selection.ChangeFontAction;
@@ -13,7 +13,7 @@ import asia.sejong.freedrawing.editor.actions.selection.ChangeFontColorAction;
 import asia.sejong.freedrawing.editor.actions.selection.ChangeLineColorAction;
 import asia.sejong.freedrawing.editor.actions.selection.ChangeLineStyleAction;
 import asia.sejong.freedrawing.editor.actions.selection.ChangeLineThickAction;
-import asia.sejong.freedrawing.editor.actions.selection.ChangeRouterAction;
+import asia.sejong.freedrawing.editor.actions.selection.ChangeRotateAction;
 import asia.sejong.freedrawing.editor.actions.selection.ChangeZOrderAction;
 import asia.sejong.freedrawing.editor.actions.selection.ChangeZOrderAction.ZOrderDirection;
 import asia.sejong.freedrawing.editor.actions.selection.MoveAction;
@@ -22,7 +22,8 @@ import asia.sejong.freedrawing.editor.actions.selection.MoveAction.Direction;
 public abstract class SelectionActionFactory extends LocalActionFactory {
 
 	public static final SelectionActionFactory EDIT_TEXT = new SelectionActionFactory(ActionFactory.RENAME.getId()) {
-		public SelectionAction create(IEditorPart part) {
+		@Override
+		public SelectionAction create(FreedrawingEditor part) {
 			
 			DirectEditAction action = new DirectEditAction(part);
 			action.setId(getId());
@@ -36,7 +37,8 @@ public abstract class SelectionActionFactory extends LocalActionFactory {
 	// 1Pixel Move
 	
 	public static final SelectionActionFactory MOVE_LEFT = new SelectionActionFactory("MOVE_LEFT") {
-		public SelectionAction create(IEditorPart part) {
+		@Override
+		public SelectionAction create(FreedrawingEditor part) {
 			
 			MoveAction action = new MoveAction(part, Direction.East, false);
 			action.setId(getId());
@@ -47,7 +49,8 @@ public abstract class SelectionActionFactory extends LocalActionFactory {
 	};
 	
 	public static final SelectionActionFactory MOVE_RIGHT = new SelectionActionFactory("MOVE_RIGHT") {
-		public SelectionAction create(IEditorPart part) {
+		@Override
+		public SelectionAction create(FreedrawingEditor part) {
 			
 			MoveAction action = new MoveAction(part, Direction.West, false);
 			action.setId(getId());
@@ -58,7 +61,8 @@ public abstract class SelectionActionFactory extends LocalActionFactory {
 	};
 	
 	public static final SelectionActionFactory MOVE_DOWN = new SelectionActionFactory("MOVE_DOWN") {
-		public SelectionAction create(IEditorPart part) {
+		@Override
+		public SelectionAction create(FreedrawingEditor part) {
 			
 			MoveAction action = new MoveAction(part, Direction.South, false);
 			action.setId(getId());
@@ -69,7 +73,8 @@ public abstract class SelectionActionFactory extends LocalActionFactory {
 	};
 	
 	public static final SelectionActionFactory MOVE_UP = new SelectionActionFactory("MOVE_UP") {
-		public SelectionAction create(IEditorPart part) {
+		@Override
+		public SelectionAction create(FreedrawingEditor part) {
 			
 			MoveAction action = new MoveAction(part, Direction.North, false);
 			action.setId(getId());
@@ -83,7 +88,8 @@ public abstract class SelectionActionFactory extends LocalActionFactory {
 	// XFixel Move
 	
 	public static final SelectionActionFactory MOVE_LEFT_FAST = new SelectionActionFactory("MOVE_LEFT_FAST") {
-		public SelectionAction create(IEditorPart part) {
+		@Override
+		public SelectionAction create(FreedrawingEditor part) {
 			
 			MoveAction action = new MoveAction(part, Direction.East, true);
 			action.setId(getId());
@@ -94,7 +100,8 @@ public abstract class SelectionActionFactory extends LocalActionFactory {
 	};
 	
 	public static final SelectionActionFactory MOVE_RIGHT_FAST = new SelectionActionFactory("MOVE_RIGHT_FAST") {
-		public SelectionAction create(IEditorPart part) {
+		@Override
+		public SelectionAction create(FreedrawingEditor part) {
 			
 			MoveAction action = new MoveAction(part, Direction.West, true);
 			action.setId(getId());
@@ -105,7 +112,8 @@ public abstract class SelectionActionFactory extends LocalActionFactory {
 	};
 	
 	public static final SelectionActionFactory MOVE_DOWN_FAST = new SelectionActionFactory("MOVE_DOWN_FAST") {
-		public SelectionAction create(IEditorPart part) {
+		@Override
+		public SelectionAction create(FreedrawingEditor part) {
 			
 			MoveAction action = new MoveAction(part, Direction.South, true);
 			action.setId(getId());
@@ -116,7 +124,8 @@ public abstract class SelectionActionFactory extends LocalActionFactory {
 	};
 	
 	public static final SelectionActionFactory MOVE_UP_FAST = new SelectionActionFactory("MOVE_UP_FAST") {
-		public SelectionAction create(IEditorPart part) {
+		@Override
+		public SelectionAction create(FreedrawingEditor part) {
 			
 			MoveAction action = new MoveAction(part, Direction.North, true);
 			action.setId(getId());
@@ -130,7 +139,8 @@ public abstract class SelectionActionFactory extends LocalActionFactory {
 	// ZORDER
 	
 	public static final SelectionActionFactory ZORDER_TO_FRONT = new SelectionActionFactory("ZORDER_TO_FRONT") {
-		public SelectionAction create(IEditorPart part) {
+		@Override
+		public SelectionAction create(FreedrawingEditor part) {
 			
 			ChangeZOrderAction action = new ChangeZOrderAction(part, ZOrderDirection.TO_FRONT);
 			action.setId(getId());
@@ -141,7 +151,8 @@ public abstract class SelectionActionFactory extends LocalActionFactory {
 	};
 	
 	public static final SelectionActionFactory ZORDER_TO_BACK = new SelectionActionFactory("ZORDER_TO_BACK") {
-		public SelectionAction create(IEditorPart part) {
+		@Override
+		public SelectionAction create(FreedrawingEditor part) {
 			
 			ChangeZOrderAction action = new ChangeZOrderAction(part, ZOrderDirection.TO_BACK);
 			action.setId(getId());
@@ -154,24 +165,37 @@ public abstract class SelectionActionFactory extends LocalActionFactory {
 	//============================================================
 	// EDITOR PROPERTIES
 	
-	public static final SelectionActionFactory CHANGE_ROUTER = new SelectionActionFactory("CHANGE_ROUTER") {
-		public SelectionAction create(IEditorPart part) {
+	public static final SelectionActionFactory CHANGE_ROTATION = new SelectionActionFactory("CHANGE_ROTATION") {
+		@Override
+		public SelectionAction create(FreedrawingEditor part) {
 			
-			ChangeRouterAction action = new ChangeRouterAction(part);
+			ChangeRotateAction action = new ChangeRotateAction(part);
 			action.setId(getId());
-			action.setText("라우터변경");
+			action.setText("각도변경");
 			
 			return action;
 		}
 	};
+//	
+//	public static final SelectionActionFactory CHANGE_ROUTER = new SelectionActionFactory("CHANGE_ROUTER") {
+//		public SelectionAction create(IEditorPart part) {
+//			
+//			ChangeRouterAction action = new ChangeRouterAction(part);
+//			action.setId(getId());
+//			action.setText("라우터변경");
+//			
+//			return action;
+//		}
+//	};
 	
 	//============================================================
 	// LINE ATTRIBUTES
 	
 	public static final SelectionActionFactory CHANGE_LINE_STYLE = new SelectionActionFactory("CHANGE_LINE_STYLE") {
-		public SelectionAction create(IEditorPart part) {
+		@Override
+		public SelectionAction create(FreedrawingEditor part) {
 			
-			ChangeLineStyleAction action = new ChangeLineStyleAction(part, LineStyle.SOLID);
+			ChangeLineStyleAction action = new ChangeLineStyleAction(part);
 			action.setId(getId());
 //			action.setImageDescriptor(ContextManager.getInstance().getIconManager().getColorPickImageDescriptor(IconType.NORMAL));
 			action.setText("선종류");
@@ -244,7 +268,8 @@ public abstract class SelectionActionFactory extends LocalActionFactory {
 	// OBJECT ATTRIBUTES
 	
 	public static final SelectionActionFactory CHANGE_LINE_COLOR = new SelectionActionFactory("CHANGE_LINE_COLOR") {
-		public SelectionAction create(IEditorPart part) {
+		@Override
+		public SelectionAction create(FreedrawingEditor part) {
 			
 			ChangeLineColorAction action = new ChangeLineColorAction(part);
 			action.setId(getId());
@@ -255,7 +280,8 @@ public abstract class SelectionActionFactory extends LocalActionFactory {
 	};
 	
 	public static final SelectionActionFactory CHANGE_BACKGROUND_COLOR = new SelectionActionFactory("CHANGE_BACKGROUND_COLOR") {
-		public SelectionAction create(IEditorPart part) {
+		@Override
+		public SelectionAction create(FreedrawingEditor part) {
 			
 			ChangeBackgroundColorAction action = new ChangeBackgroundColorAction(part);
 			action.setId(getId());
@@ -266,7 +292,8 @@ public abstract class SelectionActionFactory extends LocalActionFactory {
 	};
 	
 	public static final SelectionActionFactory CHANGE_FONT = new SelectionActionFactory("CHANGE_FONT") {
-		public SelectionAction create(IEditorPart part) {
+		@Override
+		public SelectionAction create(FreedrawingEditor part) {
 			
 			ChangeFontAction action = new ChangeFontAction(part);
 			action.setId(getId());
@@ -278,7 +305,8 @@ public abstract class SelectionActionFactory extends LocalActionFactory {
 	};
 	
 	public static final SelectionActionFactory CHANGE_FONT_COLOR = new SelectionActionFactory("CHANGE_FONT_COLOR") {
-		public SelectionAction create(IEditorPart part) {
+		@Override
+		public SelectionAction create(FreedrawingEditor part) {
 			
 			ChangeFontColorAction action = new ChangeFontColorAction(part);
 			action.setId(getId());
@@ -289,7 +317,8 @@ public abstract class SelectionActionFactory extends LocalActionFactory {
 	};
 	
 	public static final SelectionActionFactory CHANGE_LINE_WIDTH = new SelectionActionFactory("CHANGE_LINE_WIDTH") {
-		public SelectionAction create(IEditorPart part) {
+		@Override
+		public SelectionAction create(FreedrawingEditor part) {
 			
 			ChangeLineThickAction action = new ChangeLineThickAction(part);
 			action.setId(getId());
@@ -312,7 +341,7 @@ public abstract class SelectionActionFactory extends LocalActionFactory {
 	 * @param part
 	 * @return
 	 */
-	public SelectionAction create(IEditorPart part) {
+	public SelectionAction create(FreedrawingEditor part) {
 		throw new RuntimeException();
 	}
 }

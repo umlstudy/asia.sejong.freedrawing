@@ -1,23 +1,20 @@
 package asia.sejong.freedrawing.editor.actions.selection;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.gef.EditPart;
-import org.eclipse.gef.ui.actions.SelectionAction;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.ColorDialog;
-import org.eclipse.ui.IEditorPart;
 
+import asia.sejong.freedrawing.editor.FreedrawingEditor;
 import asia.sejong.freedrawing.model.FDElement;
 import asia.sejong.freedrawing.parts.FDShapeEditPart.command.ColorChangeCommand;
 
 
-public abstract class ChangeColorAction<T extends FDElement> extends SelectionAction {
+public abstract class ChangeColorAction<T extends FDElement> extends ElementSelectionAction<T> {
 
 	private RGB selectedColor;
 
-	public ChangeColorAction(IEditorPart part) {
+	public ChangeColorAction(FreedrawingEditor part) {
 		super(part);
 	}
 	
@@ -29,17 +26,7 @@ public abstract class ChangeColorAction<T extends FDElement> extends SelectionAc
 		}
 		if ( selectedColor != null ) {
 			
-			List<T> lists = new ArrayList<T>();
-			for ( Object item : getSelectedObjects() ) {
-				if ( item instanceof EditPart ) {
-					Object model = ((EditPart)item).getModel();
-					T filterd = filter(model);
-					if ( filterd != null ) {
-						lists.add(filterd);
-					}
-				}
-			}
-			
+			List<T> lists = getElements(getClassType());
 			if (lists.size()>0) {
 				execute(createColorChangeCommand(lists, selectedColor));
 			} else {
@@ -48,16 +35,14 @@ public abstract class ChangeColorAction<T extends FDElement> extends SelectionAc
 		}
 	}
 	
-	protected abstract T filter(Object model);
+	protected abstract Class<T> getClassType();
 
 	protected abstract ColorChangeCommand createColorChangeCommand(List<T> lists, RGB color);
 
-	@Override
-	protected boolean calculateEnabled() {
-		return true;
-	}
-
 	public void setRgb(RGB rgb) {
 		this.selectedColor = rgb;
+		rgbChanged(rgb);
 	}
+
+	protected abstract void rgbChanged(RGB rgb);
 }

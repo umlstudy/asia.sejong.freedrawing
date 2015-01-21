@@ -2,6 +2,7 @@ package asia.sejong.freedrawing.model;
 
 import org.eclipse.ui.IEditorPart;
 
+import asia.sejong.freedrawing.code.LineStyle;
 import asia.sejong.freedrawing.context.FreedrawingEditorContext;
 import asia.sejong.freedrawing.editor.FreedrawingEditor;
 import asia.sejong.freedrawing.util.UIUtil;
@@ -41,7 +42,7 @@ public class FDModelFactory {
 		}
 		
 		model.setLineColor(editorContext.getLineColor());
-		model.setLineStyle(editorContext.getLineStyle());
+		model.setLineStyle(LineStyle.getLineStyle(editorContext.getLineStyle()));
 		model.setLineWidth(editorContext.getLineWidth());
 		
 		if ( model instanceof FDShape) {

@@ -3,10 +3,12 @@ package asia.sejong.freedrawing.editor.actions.contributions;
 import java.util.List;
 
 import org.eclipse.jface.action.ControlContribution;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
@@ -21,8 +23,10 @@ public class ComboSelectionItem<T> extends ControlContribution {
 	private ILabelProvider provider;
 	private List<T> items;
 	
-	public ComboSelectionItem(String id) {
-		super(id);
+	private IStructuredSelection defaultSelection;
+	
+	public ComboSelectionItem(IAction action) {
+		super(action.getId()+"_CSI");
 	}
 	
 	public void setLabelProvider(ILabelProvider provider) {
@@ -47,13 +51,45 @@ public class ComboSelectionItem<T> extends ControlContribution {
 			comboViewer.setLabelProvider(new LabelProvider());
 		}
 		comboViewer.addSelectionChangedListener(listener);
-		comboViewer.setInput(items);
-		comboViewer.setSelection(new StructuredSelection(items.get(0)));
+		if ( items != null ) {
+			comboViewer.setInput(items);
+			comboViewer.setSelection(new StructuredSelection(items.get(0)));
+		} else {
+			comboViewer.setInput(new Object[] {"......."});
+		}
+		
+		comboViewer.setSelection(defaultSelection);
 		
 		return background;
 	}
 
 	public void setInput(List<T> items) {
 		this.items = items;
+		if ( comboViewer != null ) {
+			comboViewer.setInput(items);
+//			setSelection(2);
+//			comboViewer.getControl().getParent().getParent().setRedraw(true);
+		}
+	}
+	
+	public void setSelection(T value) {
+		if ( items != null ) {
+			int indexOf = items.indexOf(value);
+			setSelection(indexOf);
+		}
+	}
+	
+	public void setSelection(int index) {
+		if ( items != null ) {
+			setSelection(new StructuredSelection(items.get(index)));
+		}
+	}
+	
+	public void setSelection(IStructuredSelection selection) {
+		if ( comboViewer != null ) {
+			comboViewer.setSelection(selection);
+		} else {
+			defaultSelection = selection;
+		}
 	}
 }

@@ -14,7 +14,7 @@ import org.eclipse.swt.widgets.ToolItem;
 public abstract class DropDownToolItemContribution extends ContributionItem {
 
 	protected DropDownToolItemContribution(String id) {
-        super(id);
+        super(id+"_DropDown");
     }
 
     public final void fill(Composite parent) {

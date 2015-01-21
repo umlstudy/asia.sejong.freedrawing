@@ -1,6 +1,7 @@
 package asia.sejong.freedrawing.editor.actions.contributions;
 
 import org.eclipse.jface.action.ControlContribution;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
@@ -15,8 +16,8 @@ public abstract class DirectEditItem extends ControlContribution {
 
 	private String oldValue;
 
-	public DirectEditItem(String id) {
-		super(id);
+	public DirectEditItem(IAction action) {
+		super(action.getId() + "_DEI");
 	}
 	
 	@Override
@@ -40,15 +41,16 @@ public abstract class DirectEditItem extends ControlContribution {
 				changeValue(text);
 			}
 		});
+		if ( oldValue != null ) {
+			text.setText(String.format("%8s",oldValue));
+		}
 		
 		return background;
 	}
 	
 	private void changeValue(Text text) {
 		if ( checkValidValue(text.getText()) ) {
-			String newValue = text.getText();
-			valueChanged(newValue);
-			oldValue = newValue;
+			changeValue(text.getText());
 		} else {
 			if ( oldValue != null ) {
 				text.setText(oldValue);
@@ -56,6 +58,13 @@ public abstract class DirectEditItem extends ControlContribution {
 		}
 	}
 	
+	public void changeValue(String str) {
+		String newValue = str;
+		valueChanged(newValue);
+		oldValue = newValue;
+	}
+
 	protected abstract boolean checkValidValue(String value);
 	protected abstract void valueChanged(String value);
+
 }

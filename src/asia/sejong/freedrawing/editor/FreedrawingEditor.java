@@ -504,11 +504,12 @@ public class FreedrawingEditor extends GraphicalEditor implements MouseWheelHand
 		return rootEditPart.getZoomManager();
 	}
 
-	public void scaleChanged(int scale) {
+	public void scaleChanged(int scaleIndex) {
 		ZoomManager zoomManager = getZoomManager();
 
-		if ( scale >=0 && zoomManager.getZoomLevels().length > scale ) {
-			zoomManager.setZoom(zoomManager.getZoomLevels()[scale]);
+		if ( scaleIndex >=0 && zoomManager.getZoomLevels().length > scaleIndex ) {
+			zoomManager.setZoom(zoomManager.getZoomLevels()[scaleIndex]);
+			editorContext.setScaleIndex(scaleIndex);
 		}
 	}
 
