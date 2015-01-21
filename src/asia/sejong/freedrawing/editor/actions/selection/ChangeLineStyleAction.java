@@ -5,7 +5,7 @@ import java.util.List;
 import asia.sejong.freedrawing.code.LineStyle;
 import asia.sejong.freedrawing.editor.FreedrawingEditor;
 import asia.sejong.freedrawing.model.FDElement;
-import asia.sejong.freedrawing.parts.FDShapeEditPart.command.LineStyleChangeCommand;
+import asia.sejong.freedrawing.parts.FDElementEditPart.command.LineStyleChangeCommand;
 
 
 public class ChangeLineStyleAction extends ElementSelectionAction<FDElement> {

@@ -270,4 +270,9 @@ public abstract class FDShapeEditPart extends AbstractGraphicalEditPart implemen
 	public final void backgroundColorChanged(RGB rgbColor) {
 		refreshVisuals();
 	}
+
+	@Override
+	public void alphaChanged(Integer alpha) {
+		refreshVisuals();
+	}
 }

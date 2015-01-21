@@ -240,4 +240,9 @@ public class FDWireEditPart extends AbstractConnectionEditPart implements FDWire
 	public void lineWidthChanged(float lineWidth) {
 		refreshVisuals();	
 	}
+	
+	@Override
+	public void alphaChanged(Integer alpha) {
+		refreshVisuals();
+	}
 }

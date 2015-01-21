@@ -4,7 +4,7 @@ import java.util.List;
 
 import asia.sejong.freedrawing.editor.FreedrawingEditor;
 import asia.sejong.freedrawing.model.FDElement;
-import asia.sejong.freedrawing.parts.FDShapeEditPart.command.LineWidthChangeCommand;
+import asia.sejong.freedrawing.parts.FDElementEditPart.command.LineWidthChangeCommand;
 
 
 public class ChangeLineThickAction extends ElementSelectionAction<FDElement> {

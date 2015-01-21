@@ -12,4 +12,6 @@ public interface FDElementListener extends FDBaseListener {
 	void lineStyleChanged(LineStyle lineStyle);
 
 	void lineWidthChanged(float lineWidth);
+
+	void alphaChanged(Integer alpha);
 }

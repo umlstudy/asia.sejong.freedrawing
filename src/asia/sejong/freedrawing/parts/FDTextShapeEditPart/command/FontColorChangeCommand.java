@@ -1,4 +1,4 @@
-package asia.sejong.freedrawing.parts.FDShapeEditPart.command;
+package asia.sejong.freedrawing.parts.FDTextShapeEditPart.command;
 
 import java.util.HashMap;
 import java.util.List;
@@ -7,6 +7,7 @@ import java.util.Map;
 import org.eclipse.swt.graphics.RGB;
 
 import asia.sejong.freedrawing.model.FDTextShape;
+import asia.sejong.freedrawing.parts.FDElementEditPart.command.ColorChangeCommand;
 
 public class FontColorChangeCommand extends ColorChangeCommand {
 

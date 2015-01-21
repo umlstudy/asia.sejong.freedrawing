@@ -750,7 +750,7 @@ public abstract class FDShapeFigureImpl extends Figure implements FDShapeFigure 
 	private double degree = 0;
 	
 	@Override
-	public final void setAlphaEx(int alpha) {
+	public final void setAlphaEx(Integer alpha) {
 		this.alpha = alpha;
 	}
 	

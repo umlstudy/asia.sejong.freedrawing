@@ -7,6 +7,7 @@ import java.util.Map;
 import org.eclipse.swt.graphics.RGB;
 
 import asia.sejong.freedrawing.model.FDShape;
+import asia.sejong.freedrawing.parts.FDElementEditPart.command.ColorChangeCommand;
 
 public class BackgroundColorChangeCommand extends ColorChangeCommand {
 

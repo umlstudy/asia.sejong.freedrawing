@@ -1,4 +1,4 @@
-package asia.sejong.freedrawing.parts.FDShapeEditPart.command;
+package asia.sejong.freedrawing.parts.FDElementEditPart.command;
 
 import org.eclipse.gef.commands.Command;
 

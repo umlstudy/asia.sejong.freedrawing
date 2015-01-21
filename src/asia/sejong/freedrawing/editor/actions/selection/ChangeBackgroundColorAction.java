@@ -6,8 +6,8 @@ import org.eclipse.swt.graphics.RGB;
 
 import asia.sejong.freedrawing.editor.FreedrawingEditor;
 import asia.sejong.freedrawing.model.FDShape;
+import asia.sejong.freedrawing.parts.FDElementEditPart.command.ColorChangeCommand;
 import asia.sejong.freedrawing.parts.FDShapeEditPart.command.BackgroundColorChangeCommand;
-import asia.sejong.freedrawing.parts.FDShapeEditPart.command.ColorChangeCommand;
 
 
 public class ChangeBackgroundColorAction extends ChangeColorAction<FDShape> {

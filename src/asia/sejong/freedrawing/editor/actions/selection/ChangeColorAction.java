@@ -7,7 +7,7 @@ import org.eclipse.swt.widgets.ColorDialog;
 
 import asia.sejong.freedrawing.editor.FreedrawingEditor;
 import asia.sejong.freedrawing.model.FDElement;
-import asia.sejong.freedrawing.parts.FDShapeEditPart.command.ColorChangeCommand;
+import asia.sejong.freedrawing.parts.FDElementEditPart.command.ColorChangeCommand;
 
 
 public abstract class ChangeColorAction<T extends FDElement> extends ElementSelectionAction<T> {

@@ -8,8 +8,8 @@ import org.eclipse.swt.graphics.RGB;
 import asia.sejong.freedrawing.editor.FreedrawingEditor;
 import asia.sejong.freedrawing.model.FDShape;
 import asia.sejong.freedrawing.model.FDTextShape;
-import asia.sejong.freedrawing.parts.FDShapeEditPart.command.ColorChangeCommand;
-import asia.sejong.freedrawing.parts.FDShapeEditPart.command.FontColorChangeCommand;
+import asia.sejong.freedrawing.parts.FDElementEditPart.command.ColorChangeCommand;
+import asia.sejong.freedrawing.parts.FDTextShapeEditPart.command.FontColorChangeCommand;
 
 
 public class ChangeFontColorAction extends ChangeColorAction<FDTextShape> {

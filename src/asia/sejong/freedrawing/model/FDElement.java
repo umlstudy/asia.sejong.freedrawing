@@ -15,6 +15,7 @@ public abstract class FDElement extends FDBase implements Cloneable, Serializabl
 	private RGB lineColor;
 	private LineStyle lineStyle;
 	private float lineWidth;
+	private Integer alpha;
 	
 	protected FDElement() {
 		lineStyle = LineStyle.SOLID;
@@ -53,6 +54,16 @@ public abstract class FDElement extends FDBase implements Cloneable, Serializabl
 		fireLineWidthChanged(lineWidth);
 	}
 
+	public Integer getAlpha() {
+		return alpha;
+	}
+
+	public void setAlpha(Integer alpha) {
+		this.alpha = alpha;
+		
+		fireAlphaChanged(alpha);
+	}
+
 	protected void fireLineColorChanged(RGB rgbColor) {
 		for (FDBaseListener l : listeners) {
 			((FDElementListener)l).lineColorChanged(rgbColor);
@@ -68,6 +79,12 @@ public abstract class FDElement extends FDBase implements Cloneable, Serializabl
 	protected void fireLineWidthChanged(float lineWidth) {
 		for (FDBaseListener l : listeners) {
 			((FDElementListener)l).lineWidthChanged(lineWidth);
+		}
+	}
+	
+	protected void fireAlphaChanged(Integer alpha) {
+		for (FDBaseListener l : listeners) {
+			((FDElementListener)l).alphaChanged(alpha);
 		}
 	}
 	
@@ -102,6 +119,7 @@ public abstract class FDElement extends FDBase implements Cloneable, Serializabl
 		object.setLineColor(lineColor);
 		object.setLineWidth(lineWidth);
 		object.setLineStyle(lineStyle);
+		object.setAlpha(alpha);
 		
 		return object;
 	}

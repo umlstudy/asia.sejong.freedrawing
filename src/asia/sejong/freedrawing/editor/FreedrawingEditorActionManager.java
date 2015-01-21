@@ -56,6 +56,7 @@ import asia.sejong.freedrawing.editor.actions.palette.PaletteAction;
 import asia.sejong.freedrawing.editor.actions.palette.PaletteChangeListener;
 import asia.sejong.freedrawing.editor.actions.palette.PaletteDropDownAction;
 import asia.sejong.freedrawing.editor.actions.palette.factory.PaletteActionFactory;
+import asia.sejong.freedrawing.editor.actions.selection.ChangeAlphaAction;
 import asia.sejong.freedrawing.editor.actions.selection.ChangeBackgroundColorAction;
 import asia.sejong.freedrawing.editor.actions.selection.ChangeColorAction;
 import asia.sejong.freedrawing.editor.actions.selection.ChangeFontAction;
@@ -274,6 +275,11 @@ public class FreedrawingEditorActionManager implements FreedrawingEditDomainList
 		registry.registerAction(action);
 		selectionActions.add(action.getId());
 		
+		// CHANGE_ALPHA
+		action = SelectionActionFactory.CHANGE_ALPHA.create(editor);
+		registry.registerAction(action);
+		selectionActions.add(action.getId());
+		
 //		// CHANGE_LINE_STYLE_DASH
 //		action = SelectionActionFactory.CHANGE_LINE_STYLE_DASH.create(editor);
 //		registry.registerAction(action);
@@ -365,9 +371,18 @@ public class FreedrawingEditorActionManager implements FreedrawingEditDomainList
 		// 선종류
 		LineStyle lineStyle = LineStyle.getLineStyle(editor.getEditorContext().getLineStyle());
 		addChangeLineStyleTool(toolbarManager, (ChangeLineStyleAction)registry.getAction(SelectionActionFactory.CHANGE_LINE_STYLE.getId()), lineStyle);
+		// 구분자
+		toolbarManager.add(new Separator());
+		// 투명도
+		Integer alpah = editor.getEditorContext().getAlpha();
+		addChangeAlphaTool(toolbarManager,(ChangeAlphaAction)registry.getAction(SelectionActionFactory.CHANGE_ALPHA.getId()), alpah);
+		// 구분자
+		toolbarManager.add(new Separator());
 		// 피처 각도
 		Double degree = editor.getEditorContext().getDegree();
 		addChangeRotationTool(toolbarManager, (ChangeRotateAction)registry.getAction(SelectionActionFactory.CHANGE_ROTATION.getId()), degree);
+		// 구분자
+		toolbarManager.add(new Separator());
 		// 에디터 스케일
 		addChangeEditorScaleTool(toolbarManager, (ChangeEditorScaleAction)registry.getAction(EtcActionFactory.CHANGE_EDITOR_SCALE.getId()));
 						
@@ -570,6 +585,33 @@ public class FreedrawingEditorActionManager implements FreedrawingEditDomainList
 		comboSelectionItem.setInput(data);
 		comboSelectionItem.setSelection(defaultLineStyle);
 		action.setLineStyle(defaultLineStyle);
+	}
+	
+	private static void addChangeAlphaTool(ToolBarManager toolbarManager, final ChangeAlphaAction action, Integer defaultAlpha) {
+		final DirectEditItem directEditItem = new DirectEditItem(action) {
+			@Override
+			protected boolean checkValidValue(String value) {
+				try {
+					Integer iValue = Integer.valueOf(value);
+					if ( iValue>=0x00 && 0xff>=iValue) {
+						return true;
+					}
+				} catch ( Exception e ) {
+				}
+				
+				return false;
+			}
+			
+			protected void valueChanged(String value) {
+				Integer iValue = Integer.valueOf(value);
+				action.setAlpha(iValue);
+				action.run();
+			}
+		};
+		toolbarManager.add(action);
+		toolbarManager.add(directEditItem);
+//		action.setDegree(defaultDegree);
+		directEditItem.changeValue(defaultAlpha.toString());
 	}
 	
 	private static void addChangeRotationTool(ToolBarManager toolbarManager, final ChangeRotateAction action, Double defaultDegree) {

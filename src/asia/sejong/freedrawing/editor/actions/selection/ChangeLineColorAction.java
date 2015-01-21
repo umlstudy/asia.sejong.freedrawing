@@ -6,8 +6,8 @@ import org.eclipse.swt.graphics.RGB;
 
 import asia.sejong.freedrawing.editor.FreedrawingEditor;
 import asia.sejong.freedrawing.model.FDElement;
-import asia.sejong.freedrawing.parts.FDShapeEditPart.command.ColorChangeCommand;
-import asia.sejong.freedrawing.parts.FDShapeEditPart.command.LineColorChangeCommand;
+import asia.sejong.freedrawing.parts.FDElementEditPart.command.ColorChangeCommand;
+import asia.sejong.freedrawing.parts.FDElementEditPart.command.LineColorChangeCommand;
 
 public class ChangeLineColorAction extends ChangeColorAction<FDElement> {
 

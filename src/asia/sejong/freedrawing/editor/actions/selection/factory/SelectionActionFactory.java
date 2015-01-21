@@ -7,6 +7,7 @@ import org.eclipse.ui.actions.ActionFactory;
 import asia.sejong.freedrawing.code.LineStyle;
 import asia.sejong.freedrawing.editor.FreedrawingEditor;
 import asia.sejong.freedrawing.editor.actions.common.LocalActionFactory;
+import asia.sejong.freedrawing.editor.actions.selection.ChangeAlphaAction;
 import asia.sejong.freedrawing.editor.actions.selection.ChangeBackgroundColorAction;
 import asia.sejong.freedrawing.editor.actions.selection.ChangeFontAction;
 import asia.sejong.freedrawing.editor.actions.selection.ChangeFontColorAction;
@@ -299,6 +300,19 @@ public abstract class SelectionActionFactory extends LocalActionFactory {
 			action.setId(getId());
 //			action.setImageDescriptor(ContextManager.getInstance().getIconManager().getFontPickImageDescriptor(IconType.NORMAL));
 			action.setText("글꼴");
+			
+			return action;
+		}
+	};
+	
+	public static final SelectionActionFactory CHANGE_ALPHA = new SelectionActionFactory("CHANGE_ALPHA") {
+		@Override
+		public SelectionAction create(FreedrawingEditor part) {
+			
+			ChangeAlphaAction action = new ChangeAlphaAction(part);
+			action.setId(getId());
+//			action.setImageDescriptor(ContextManager.getInstance().getIconManager().getFontPickImageDescriptor(IconType.NORMAL));
+			action.setText("투명도");
 			
 			return action;
 		}
