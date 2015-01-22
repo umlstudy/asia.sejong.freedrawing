@@ -46,7 +46,9 @@ public class FDWireFigure extends PolylineConnection implements FDElementFigure 
 			g.setForegroundColor(getForegroundColor());
 		}
 		g.setLineWidth(getLineWidth());
-		g.setAlpha(getAlpha());
+		if ( getAlpha() != null ) {
+			g.setAlpha(getAlpha());
+		}
 		g.setInterpolation(SWT.HIGH);
 		
 		// TODO
@@ -187,6 +189,7 @@ public class FDWireFigure extends PolylineConnection implements FDElementFigure 
 		setLineWidthEx(model.getLineWidth());
 		setLineStyleEx(model.getLineStyle());
 		setLineColorEx(model.getLineColor());
+		setAlphaEx(model.getAlpha());
 	}
 
 	@Override
@@ -206,5 +209,10 @@ public class FDWireFigure extends PolylineConnection implements FDElementFigure 
 			color = ApplicationContext.getInstance().getColorManager().get(rgbColor);
 			setForegroundColor(color);
 		}
+	}
+
+	@Override
+	public void setAlphaEx(Integer alpha) {
+		setAlpha(alpha); // TODO repaint....
 	}
 }

@@ -71,6 +71,8 @@ public abstract class FDShapeEditPart extends AbstractGraphicalEditPart implemen
 		}
 		
 		super.refreshVisuals();
+		
+		getFigure().repaint();
 	}
 	
 	protected final FDRoot getRootModel() {

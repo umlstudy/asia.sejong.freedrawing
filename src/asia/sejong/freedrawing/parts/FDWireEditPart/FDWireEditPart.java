@@ -67,9 +67,9 @@ public class FDWireEditPart extends AbstractConnectionEditPart implements FDWire
 		FDWireFigure wireFigure = null;
 		if ( custom ) {
 			wireFigure = (FDWireFigure)FDFigureFactory.createFigure(wire);
-			wireFigure.setLineWidth(3);
-			wireFigure.setAlpha(180);
-			wireFigure.setAntialias(SWT.ON);
+//			wireFigure.setLineWidth(3);
+//			wireFigure.setAlpha(180);
+//			wireFigure.setAntialias(SWT.ON);
 		} else {
 			wireFigure = (FDWireFigure)FDFigureFactory.createFigure(wire);
 			wireFigure.setLineStyle(SWT.LINE_DASH);
@@ -225,10 +225,13 @@ public class FDWireEditPart extends AbstractConnectionEditPart implements FDWire
 		((FDElementFigure)getFigure()).setLineColorEx(m.getLineColor());
 		((FDElementFigure)getFigure()).setLineWidthEx(m.getLineWidth());
 		((FDElementFigure)getFigure()).setLineStyleEx(m.getLineStyle());
+		((FDElementFigure)getFigure()).setAlphaEx(m.getAlpha());
 		
 		refreshBendpoints();
 		
 		super.refreshVisuals();
+		
+		getFigure().repaint();
 	}
 
 	@Override

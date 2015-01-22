@@ -4,7 +4,6 @@ import org.eclipse.gef.ui.actions.DirectEditAction;
 import org.eclipse.gef.ui.actions.SelectionAction;
 import org.eclipse.ui.actions.ActionFactory;
 
-import asia.sejong.freedrawing.code.LineStyle;
 import asia.sejong.freedrawing.editor.FreedrawingEditor;
 import asia.sejong.freedrawing.editor.actions.common.LocalActionFactory;
 import asia.sejong.freedrawing.editor.actions.selection.ChangeAlphaAction;

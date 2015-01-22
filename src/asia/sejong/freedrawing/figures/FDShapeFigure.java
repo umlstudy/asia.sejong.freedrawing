@@ -6,7 +6,7 @@ import org.eclipse.swt.graphics.RGB;
 public interface FDShapeFigure extends FDElementFigure {
 
 //	Integer getAlpha();
-	void setAlphaEx(Integer alpha);
+
 	void setBackgroundColorEx(RGB rgbColor);
 //	void setSelected(boolean selected);
 	void setLocationEx(Point point);

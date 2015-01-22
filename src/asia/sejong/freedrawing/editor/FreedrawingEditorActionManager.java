@@ -610,8 +610,6 @@ public class FreedrawingEditorActionManager implements FreedrawingEditDomainList
 		};
 		toolbarManager.add(action);
 		toolbarManager.add(directEditItem);
-//		action.setDegree(defaultDegree);
-		directEditItem.changeValue(defaultAlpha.toString());
 	}
 	
 	private static void addChangeRotationTool(ToolBarManager toolbarManager, final ChangeRotateAction action, Double defaultDegree) {
@@ -632,33 +630,6 @@ public class FreedrawingEditorActionManager implements FreedrawingEditDomainList
 			protected void valueChanged(String value) {
 				Double dValue = Double.valueOf(value);
 				action.setDegree(dValue);
-				action.run();
-			}
-		};
-		toolbarManager.add(action);
-		toolbarManager.add(directEditItem);
-//		action.setDegree(defaultDegree);
-		directEditItem.changeValue(defaultDegree.toString());
-	}
-	
-	private static void addChangeLineThickTool2(ToolBarManager toolbarManager, final ChangeLineThickAction action) {
-		final DirectEditItem directEditItem = new DirectEditItem(action) {
-			@Override
-			protected boolean checkValidValue(String value) {
-				try {
-					Float fValue = Float.valueOf(value);
-					if ( fValue>0f && 10f>fValue) {
-						return true;
-					}
-				} catch ( Exception e ) {
-				}
-				
-				return false;
-			}
-			
-			protected void valueChanged(String value) {
-				Float fValue = Float.valueOf(value);
-				action.setLineWidth(fValue);
 				action.run();
 			}
 		};
@@ -699,7 +670,16 @@ public class FreedrawingEditorActionManager implements FreedrawingEditDomainList
 		changeEditorScaleItem.setInput(data);
 		int defaultScaleIndex = editor.getEditorContext().getScaleIndex();
 		changeEditorScaleItem.setSelection(defaultScaleIndex);
-
+		
+		//
+		DirectEditItem dei = (DirectEditItem)toolbarManagerSub.find(SelectionActionFactory.CHANGE_ALPHA.getId()+"_DEI");
+		Integer alpah = editor.getEditorContext().getAlpha();
+		dei.changeValue(alpah.toString());
+		
+		//
+		dei = (DirectEditItem)toolbarManagerSub.find(SelectionActionFactory.CHANGE_ROTATION.getId()+"_DEI");
+		Double degree = editor.getEditorContext().getDegree();
+		dei.changeValue(degree.toString());
 	}
 	
 	void dispose() {
