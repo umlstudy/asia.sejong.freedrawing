@@ -13,7 +13,7 @@ public class FDEllipse extends FDTextShape {
 	
 	@Override
 	public FDEllipse clone() {
-		FDEllipse rect = (FDEllipse)super.clone();
-		return rect;
+		FDEllipse ellipse = (FDEllipse)super.clone();
+		return ellipse;
 	}
 }

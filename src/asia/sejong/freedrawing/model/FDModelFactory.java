@@ -20,6 +20,8 @@ public class FDModelFactory {
 			model = new FDLabel();
 		} else if ( modelClass == FDRect.class ) {
 			model = new FDRect();
+		} else if ( modelClass == FDPolygon.class ) {
+			model = new FDPolygon();
 		} else {
 			throw new RuntimeException(modelClass.getName());
 		}

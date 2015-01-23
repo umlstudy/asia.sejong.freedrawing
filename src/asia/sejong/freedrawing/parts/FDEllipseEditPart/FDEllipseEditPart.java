@@ -21,7 +21,7 @@ public class FDEllipseEditPart extends FDTextShapeEditPart implements FDRectList
 		super.refreshVisuals();
 	}
 	
-	protected FDEllipseFigure getRectangleFigure() {
+	protected FDEllipseFigure getEllipseFigure() {
 		return (FDEllipseFigure) getFigure();
 	}
 }

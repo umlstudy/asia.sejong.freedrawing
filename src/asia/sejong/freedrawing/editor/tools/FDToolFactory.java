@@ -26,6 +26,13 @@ public abstract class FDToolFactory {
 		}
 	};
 	
+	public static FDToolFactory POLYGON_CREATION_TOOL = new FDToolFactory() {
+		@Override
+		public AbstractTool createTool(final FreedrawingEditor editor) {
+			return new FDPolygonCreateionTool(editor);
+		}
+	};
+	
 	public static FDToolFactory PANNING_SELECTION_TOOL = new FDToolFactory() {
 		@Override
 		public AbstractTool createTool(FreedrawingEditor editor) {

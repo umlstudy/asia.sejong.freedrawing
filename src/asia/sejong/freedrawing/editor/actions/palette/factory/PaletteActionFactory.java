@@ -89,6 +89,19 @@ public abstract class PaletteActionFactory extends LocalActionFactory {
 		}
 	};
 	
+	public static final PaletteActionFactory CREATE_POLYGON = new PaletteActionFactory("CREATE_POLYGON") {
+		public PaletteAction create(FreedrawingEditor editor) {
+			AbstractTool tool = FDToolFactory.POLYGON_CREATION_TOOL.createTool(editor);
+			PaletteAction action = new PaletteAction(editor, null);
+			action.setId(getId());
+			action.setTool(tool);
+			action.setImageDescriptor(null);
+			action.setText("폴리곤");
+			
+			return action;
+		}
+	};
+	
 	public static final PaletteActionFactory CREATE_CONNECTION = new PaletteActionFactory("CREATE_CONNECTION") {
 		public PaletteAction create(FreedrawingEditor editor) {
 			AbstractTool tool = FDToolFactory.CONNECTION_CREATION_TOOL.createTool(editor);

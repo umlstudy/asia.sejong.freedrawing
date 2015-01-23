@@ -160,6 +160,11 @@ public class FreedrawingEditorActionManager implements FreedrawingEditDomainList
 		action = PaletteActionFactory.CREATE_IMAGE.create(editor);
 		registry.registerAction(action);
 		paletteChangeListeners.add(action);
+		
+		// CREATE_POLYGON
+		action = PaletteActionFactory.CREATE_POLYGON.create(editor);
+		registry.registerAction(action);
+		paletteChangeListeners.add(action);
 
 		// CONNECTION_SELECTION
 		action = PaletteActionFactory.CREATE_CONNECTION.create(editor);
@@ -407,6 +412,7 @@ public class FreedrawingEditorActionManager implements FreedrawingEditDomainList
 			addToPaletteDropDownAction(paletteDropDownAction, PaletteActionFactory.CREATE_RECTANGLE.getId(), true);
 			addToPaletteDropDownAction(paletteDropDownAction, PaletteActionFactory.CREATE_ELLIPSE.getId(), false);
 			addToPaletteDropDownAction(paletteDropDownAction, PaletteActionFactory.CREATE_LABEL.getId(), false);
+			addToPaletteDropDownAction(paletteDropDownAction, PaletteActionFactory.CREATE_POLYGON.getId(), false);
 			addToPaletteDropDownAction(paletteDropDownAction, PaletteActionFactory.CREATE_IMAGE.getId(), false);
 			
 			toolbarManager.add(paletteDropDownAction);

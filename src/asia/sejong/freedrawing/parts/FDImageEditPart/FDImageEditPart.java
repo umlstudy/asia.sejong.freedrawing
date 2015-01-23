@@ -63,7 +63,7 @@ public class FDImageEditPart extends FDShapeEditPart implements FDImageListener 
 		super.refreshVisuals();
 	}
 	
-	protected FDImageFigure getRectangleFigure() {
+	protected FDImageFigure getImageFigure() {
 		return (FDImageFigure) getFigure();
 	}
 

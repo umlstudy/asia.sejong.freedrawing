@@ -12,6 +12,7 @@ import asia.sejong.freedrawing.model.FDElement;
 import asia.sejong.freedrawing.model.FDEllipse;
 import asia.sejong.freedrawing.model.FDImage;
 import asia.sejong.freedrawing.model.FDLabel;
+import asia.sejong.freedrawing.model.FDPolygon;
 import asia.sejong.freedrawing.model.FDRect;
 import asia.sejong.freedrawing.model.FDShape;
 import asia.sejong.freedrawing.model.FDTextShape;
@@ -30,6 +31,8 @@ public class FDFigureFactory {
 			figure = new FDLabelFigure();
 		} else if ( model instanceof FDRect ) {
 			figure = new FDRectFigure();
+		} else if ( model instanceof FDPolygon ) {
+			figure = new FDPolygonFigure();
 		} else if ( model instanceof FDWire ) {
 			figure = new FDWireFigure();
 		} else {
