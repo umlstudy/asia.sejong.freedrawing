@@ -35,6 +35,7 @@ public class FDPolygonFigure extends FDTextShapeFigureImpl {
 			// TODO 
 			//System.out.println(String.format("idx:%d - x:%d,y:%d\n",i, p.x,p.y));
 		}
+		System.out.println("polygon");
 		graphics.drawPolygon(getPoints());
 //		graphics.popState();
 //		graphics.drawLine(-10,-19, 100,100);

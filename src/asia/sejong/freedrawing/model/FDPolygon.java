@@ -10,11 +10,15 @@ public class FDPolygon extends FDTextShape {
 
 	private static final long serialVersionUID = -4826394023152452709L;
 
-	private List<Point> points = new ArrayList<Point>();
+	private List<Point> points;
 	
-	FDPolygon(List<Point> points) {
-		this.setPoints(new ArrayList<Point>());
-		this.getPoints().addAll(points);
+	FDPolygon() {
+		setPoints(new ArrayList<Point>());
+	}
+
+	public FDPolygon setDefaults(List<Point> defaultPoints) {
+		points.addAll(defaultPoints);
+		return this;
 	}
 
 	public List<Point> getPoints() {
@@ -43,4 +47,5 @@ public class FDPolygon extends FDTextShape {
 		points.add(new Point(20,10));
 		return points;
 	}
+
 }
