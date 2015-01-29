@@ -19,7 +19,7 @@ public class FDPolygonEditPart extends FDTextShapeEditPart implements FDRectList
 		
 		super.createEditPolicies();
 		
-		installEditPolicy("POLYGON_ROLE", new FDPoligonCreatePolicy());
+		installEditPolicy("POLYGON_ROLE", new FDPolygonCreatePolicy());
 	}
 	
 	protected void refreshVisuals() {

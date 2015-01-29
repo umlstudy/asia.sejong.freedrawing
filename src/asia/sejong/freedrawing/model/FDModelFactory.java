@@ -21,7 +21,9 @@ public class FDModelFactory {
 		} else if ( modelClass == FDRect.class ) {
 			model = new FDRect();
 		} else if ( modelClass == FDPolygon.class ) {
-			model = new FDPolygon();
+			model = new FDPolygon(FDPolygon.createDefaultPoints());
+		} else if ( modelClass == FDPolyline.class ) {
+			model = new FDPolyline(FDPolyline.createDefaultPoints());
 		} else {
 			throw new RuntimeException(modelClass.getName());
 		}

@@ -43,6 +43,7 @@ import asia.sejong.freedrawing.model.FDWire;
 import asia.sejong.freedrawing.model.FDWireEndPoint;
 import asia.sejong.freedrawing.model.listener.FDRootListener;
 import asia.sejong.freedrawing.parts.FDContainerEditPart.FDContainerXYLayoutEditPolicy;
+import asia.sejong.freedrawing.parts.FDPolygonEditPart.FDPolygonCreatePolicy;
 import asia.sejong.freedrawing.parts.FDWireEditPart.FDWireEditPart;
 import asia.sejong.freedrawing.parts.FDWireEditPart.FDWireEditPolicy;
 import asia.sejong.freedrawing.parts.FDWireEditPart.FDWireableEditPart;
@@ -82,6 +83,8 @@ public class FDRootEditPart extends AbstractGraphicalEditPart implements FDWirea
 		installEditPolicy(EditPolicy.LAYOUT_ROLE, new FDContainerXYLayoutEditPolicy());
 		
 		installEditPolicy("Snap Feedback", new SnapFeedbackPolicy()); //$NON-NLS-1$
+		
+		installEditPolicy("POLYGON_ROLE", new FDPolygonCreatePolicy());
 	}
 	
 	@Override

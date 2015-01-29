@@ -12,11 +12,11 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import asia.sejong.freedrawing.model.FDElement;
 import asia.sejong.freedrawing.model.FDPolygon;
 
-public class FDPolygonFigure extends FDTextShapeFigureImpl {
+public class FDPolylineFigure extends FDTextShapeFigureImpl {
 
 	List<Point> points;
 
-	FDPolygonFigure(List<Point> points) {
+	FDPolylineFigure(List<Point> points) {
 		this.points = new ArrayList<Point>(points);
 		setPreferredSize(100, 100);
 	}
@@ -27,7 +27,6 @@ public class FDPolygonFigure extends FDTextShapeFigureImpl {
 
 	@Override
 	protected void outlineShape(Graphics graphics) {
-		graphics.setForegroundColor(ColorConstants.green);
 //		graphics.pushState();
 //		graphics.translate(getLocation());
 		for (int i=0;i<points.size();i++) {
@@ -35,7 +34,27 @@ public class FDPolygonFigure extends FDTextShapeFigureImpl {
 			// TODO 
 			//System.out.println(String.format("idx:%d - x:%d,y:%d\n",i, p.x,p.y));
 		}
-		graphics.drawPolygon(getPoints());
+		int[] intPoints = getPoints();
+		int sx=intPoints[0];
+		int sy=intPoints[1];
+
+		int oriLineWidth = graphics.getLineWidth();
+
+		graphics.setForegroundColor(ColorConstants.blue);
+		graphics.setBackgroundColor(ColorConstants.darkGray);
+		graphics.setLineWidth(10);
+		graphics.fillOval(sx-5, sy-5, 10, 10);
+		
+		graphics.setLineWidth(oriLineWidth);
+		if ( intPoints.length > 2 ) {
+			for ( int i=2;i<intPoints.length; i+=2) {
+				int ex=intPoints[i];
+				int ey=intPoints[i+1];
+				graphics.drawLine(sx, sy, ex, ey);
+				sx = ex;
+				sy = ey;
+			}
+		}
 //		graphics.popState();
 //		graphics.drawLine(-10,-19, 100,100);
 		

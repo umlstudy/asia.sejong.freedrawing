@@ -13,14 +13,15 @@ import asia.sejong.freedrawing.model.FDEllipse;
 import asia.sejong.freedrawing.model.FDImage;
 import asia.sejong.freedrawing.model.FDLabel;
 import asia.sejong.freedrawing.model.FDPolygon;
+import asia.sejong.freedrawing.model.FDPolyline;
 import asia.sejong.freedrawing.model.FDRect;
 import asia.sejong.freedrawing.model.FDShape;
 import asia.sejong.freedrawing.model.FDTextShape;
 import asia.sejong.freedrawing.model.FDWire;
 
 public class FDFigureFactory {
-
 	public static FDElementFigure createFigure(FDElement model) {
+
 		FDElementFigure figure = null;
 		
 		if ( model instanceof FDEllipse ) {
@@ -31,8 +32,10 @@ public class FDFigureFactory {
 			figure = new FDLabelFigure();
 		} else if ( model instanceof FDRect ) {
 			figure = new FDRectFigure();
+		} else if ( model instanceof FDPolyline ) {
+			figure = new FDPolylineFigure(FDPolygon.createDefaultPoints());
 		} else if ( model instanceof FDPolygon ) {
-			figure = new FDPolygonFigure();
+			figure = new FDPolygonFigure(FDPolygon.createDefaultPoints());
 		} else if ( model instanceof FDWire ) {
 			figure = new FDWireFigure();
 		} else {

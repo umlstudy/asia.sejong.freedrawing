@@ -206,7 +206,8 @@ public abstract class FDShapeFigureImpl extends Figure implements FDShapeFigure 
 		if ( degree > 0 ) {
 			graphics.rotate((float)degree);
 		}
-		System.out.println("DEGREE ? " + degree);
+		// FIXME
+//		System.out.println("DEGREE ? " + degree);
 		
 		return centerPoint;
 	}
@@ -813,7 +814,8 @@ public abstract class FDShapeFigureImpl extends Figure implements FDShapeFigure 
 	@Override
 	public final void setDegreeEx(double degree) {
 		this.degree = degree;
-		System.out.println("DE " + degree);
+		// TODO
+//		System.out.println("DE " + degree);
 	}
 
 	@Override

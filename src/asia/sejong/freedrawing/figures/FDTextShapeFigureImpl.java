@@ -756,7 +756,7 @@ public abstract class FDTextShapeFigureImpl extends FDShapeFigureImpl implements
 	}
 
 	@Override
-	public final void setModelAttributes(FDElement model_) {
+	public void setModelAttributes(FDElement model_) {
 		super.setModelAttributes(model_);
 		
 		FDTextShape model = (FDTextShape)model_;
