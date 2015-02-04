@@ -56,7 +56,13 @@ public class FDFigureFactory {
 	public static FDElementFigure createCustomFeedbackFigure(FDElement model, Rectangle initialFeedbackBounds) {
 		FDElementFigure figure = null;
 		
-		if (model instanceof FDRect) {
+		if (model instanceof FDPolygon) {
+			FDPolygonFigure realFigure = (FDPolygonFigure)createFigure(model);
+			realFigure.setModelAttributes((FDElement)model);
+			//realFigure.setAlpha(128);
+			
+			figure = realFigure;
+		} else if (model instanceof FDRect) {
 			FDRectFigure realFigure = new FDRectFigure();
 			realFigure.setModelAttributes((FDElement)model);
 			//realFigure.setAlpha(128);

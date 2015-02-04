@@ -29,7 +29,7 @@ public class FDWireEndPoint extends FDElement {
 	}
 	
 	public Point getLocation() {
-		return new Point(x,y);
+		return new Point(getX(),getY());
 	}
 	
 	public int getX() {
@@ -40,13 +40,21 @@ public class FDWireEndPoint extends FDElement {
 		return y;
 	}
 
+	protected void setX(int x) {
+		this.x = x;
+	}
+
+	protected void setY(int y) {
+		this.y = y;
+	}
+
 	public boolean setLocation(int newX, int newY) {
-		if (x == newX && y == newY) {
+		if (getX() == newX && getY() == newY) {
 			return false;
 		}
-		x = newX;
-		y = newY;
-		fireLocationChanged(x, y);
+		setX(newX);
+		setY(newY);
+		fireLocationChanged(getX(), getY());
 		return true;
 	}
 
@@ -133,8 +141,8 @@ public class FDWireEndPoint extends FDElement {
 		point.setOutgoingWires(new ArrayList<FDWire>());
 		point.setIncommingWires(new ArrayList<FDWire>());
 		
-		point.x = this.x;
-		point.y = this.y;
+		point.setX(this.getX());
+		point.setY(this.getY());
 		
 		return point;
 	}

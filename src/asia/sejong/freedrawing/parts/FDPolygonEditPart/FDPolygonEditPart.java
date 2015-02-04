@@ -4,6 +4,8 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.GraphicalEditPart;
 
 import asia.sejong.freedrawing.figures.FDPolygonFigure;
+import asia.sejong.freedrawing.figures.FDShapeFigure;
+import asia.sejong.freedrawing.figures.FDTextShapeFigure;
 import asia.sejong.freedrawing.model.FDPolygon;
 import asia.sejong.freedrawing.model.listener.FDRectListener;
 import asia.sejong.freedrawing.parts.FDTextShapeEditPart.FDTextShapeEditPart;
@@ -24,8 +26,12 @@ public class FDPolygonEditPart extends FDTextShapeEditPart implements FDRectList
 	
 	protected void refreshVisuals() {
 		FDPolygon m = (FDPolygon) getModel();
-		Rectangle bounds = new Rectangle(m.getX(), m.getY(), m.getWidth(), m.getHeight());
-		((GraphicalEditPart) getParent()).setLayoutConstraint(this, getFigure(), bounds);
+//		Rectangle bounds = new Rectangle(m.getX(), m.getY(), m.getWidth(), m.getHeight());
+//		((GraphicalEditPart) getParent()).setLayoutConstraint(this, getFigure(), bounds);
+		
+		((FDPolygonFigure)getFigure()).setPointsEx(m.getPoints());
+		getFigure().repaint();
+		
 		super.refreshVisuals();
 	}
 	

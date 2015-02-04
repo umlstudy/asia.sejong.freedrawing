@@ -85,7 +85,7 @@ public class FDPolygonCreatePolicy extends GraphicalEditPolicy {
 			polygon.setPointsEx(cpr.getMovingPoints());
 			
 			addFeedback(feedbackFigure);
-			System.out.println("AAAA " + "child ? " + getFeedbackLayer().getChildren().size() + "_" + feedbackFigure ) ;
+//			System.out.println("AAAA " + "child ? " + getFeedbackLayer().getChildren().size() + "_" + feedbackFigure ) ;
 		}
 	}
 	
@@ -99,11 +99,12 @@ public class FDPolygonCreatePolicy extends GraphicalEditPolicy {
 	
 	private void eraseFeedbackFigure() {
 		if (feedbackFigure != null) {
-			System.out.println("RRRR " + "child ? " + getFeedbackLayer().getChildren().size() + "_" + feedbackFigure ) ;
+//			System.out.println("RRRR " + "child ? " + getFeedbackLayer().getChildren().size() + "_" + feedbackFigure ) ;
 			removeFeedback(feedbackFigure);
 			feedbackFigure = null;
 		} else {
-			System.out.println("E");
+			// TODO
+//			System.out.println("E");
 		}
 	}
 	
