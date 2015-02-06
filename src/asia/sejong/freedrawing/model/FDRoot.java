@@ -91,7 +91,8 @@ public class FDRoot extends FDBase implements FDContainer, Serializable {
 		while ( true ) {
 			boolean alreadyExistInLocation = false;
 			for ( FDShape item : childElements ) {
-				if ( item.getX() == x && item.getY() == y ) {
+				Point loc = item.getLocation();
+				if ( loc.x == x && loc.y == y ) {
 					alreadyExistInLocation = true;
 				}
 			}

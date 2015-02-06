@@ -32,11 +32,11 @@ public class FDWireEndPoint extends FDElement {
 		return new Point(getX(),getY());
 	}
 	
-	public int getX() {
+	private int getX() {
 		return x;
 	}
 	
-	public int getY() {
+	private int getY() {
 		return y;
 	}
 
@@ -54,6 +54,7 @@ public class FDWireEndPoint extends FDElement {
 		}
 		setX(newX);
 		setY(newY);
+		
 		fireLocationChanged(getX(), getY());
 		return true;
 	}

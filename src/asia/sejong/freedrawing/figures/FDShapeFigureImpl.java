@@ -4,6 +4,7 @@ import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.SWTGraphics;
+import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.SWT;
@@ -798,7 +799,7 @@ public abstract class FDShapeFigureImpl extends Figure implements FDShapeFigure 
 		setAlphaEx(model.getAlpha());
 		setDegreeEx(model.getDegree());
 		setLocationEx(model.getLocation());
-		setSizeEx(model.getWidth(), model.getHeight());
+		setSizeEx(model.getSize());
 	}
 	
 	@Override
@@ -807,8 +808,8 @@ public abstract class FDShapeFigureImpl extends Figure implements FDShapeFigure 
 	}
 
 	@Override
-	public final void setSizeEx(int width, int height) {
-		setSize(width, height);
+	public final void setSizeEx(Dimension size) {
+		setSize(size.width, size.height);
 	}
 
 	@Override

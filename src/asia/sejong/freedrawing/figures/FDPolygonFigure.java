@@ -43,12 +43,12 @@ public class FDPolygonFigure extends FDTextShapeFigureImpl {
 //		System.out.println("polygon");
 		graphics.drawPolygon(getIntPoints());
 		//System.out.println("intarray ? " + Arrays.toString(getIntPoints()));
-		System.out.println("points ? " + points);
+//		System.out.println("points ? " + points);
 		// TODO 디버그
 		graphics.setLineStyle(SWT.LINE_DASH);
 		graphics.setForegroundColor(ColorConstants.blue);
 		graphics.drawRectangle(getBoundsInZeroPoint());
-		System.out.println("rect ? " + getBoundsInZeroPoint());
+//		System.out.println("rect ? " + getBoundsInZeroPoint());
 		
 //		graphics.popState();
 //		graphics.drawLine(-10,-19, 100,100);
@@ -77,7 +77,7 @@ public class FDPolygonFigure extends FDTextShapeFigureImpl {
 		}
 //		System.out.println("---- points ? " + points);
 //		System.out.println("-????- points ? " + getBounds());
-		System.out.println("----" + pointList.getFirstPoint().toString() + pointList.getLastPoint() );
+//		System.out.println("----" + pointList.getFirstPoint().toString() + pointList.getLastPoint() );
 		return pointList.toIntArray();
 	}
 //	
@@ -91,19 +91,19 @@ public class FDPolygonFigure extends FDTextShapeFigureImpl {
 	}
 	
 	public void setPointsEx(List<Point> pointOrigins) {
-		Rectangle newBounds = FDPolygon.createBounds(pointOrigins);
+//		Rectangle newBounds = FDPolygon.createBounds(pointOrigins);
 //		System.out.println(" oldBounds ? " + getBounds());
 //		System.out.println(" pointOrigins ? " + pointOrigins);
 //		System.out.println(" newBounds ? " + newBounds);
-		setBounds(newBounds);
+//		setBounds(newBounds);
 		this.points.clear();
 		Rectangle bounds = getBounds();
 		for ( Point elem : pointOrigins ) {
-			System.out.println(String.format("elem.x %d -bounds.x %d ? ", elem.x,bounds.x) );
+//			System.out.println(String.format("elem.x %d -bounds.x %d ? ", elem.x,bounds.x) );
 			points.add(new Point(elem.x-bounds.x, elem.y-bounds.y));
 		}
-		System.out.println(" bounds ? " + bounds);
-		System.out.println(" points ? " + points);
+//		System.out.println(" bounds ? " + bounds);
+//		System.out.println(" points ? " + points);
 	}
 	
 //	public List<Point> getPoints() {
@@ -116,7 +116,7 @@ public class FDPolygonFigure extends FDTextShapeFigureImpl {
 		
 		FDPolygon model = (FDPolygon)model_;
 		
-		model.setSize(model.getSize().width, model.getSize().height);
 		setPointsEx(model.getPoints());
+		setBounds(model.getBounds());
 	}
 }

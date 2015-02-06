@@ -50,10 +50,11 @@ public class PasteFromClipboardAction extends SelectionAction {
 					}
 					
 					Point delta = null;
-					delta = root.getNextLocation(selectedShapes.get(0).getX(), selectedShapes.get(0).getY());
+					Point location = selectedShapes.get(0).getLocation();
+					delta = root.getNextLocation(location.x, location.y);
 					Point deltaNew = getNextLocation(selectedShapes, delta.x, delta.y);
-					deltaNew.x = deltaNew.x - selectedShapes.get(0).getX();
-					deltaNew.y = deltaNew.y - selectedShapes.get(0).getY();
+					deltaNew.x = deltaNew.x - location.x;
+					deltaNew.y = deltaNew.y - location.y;
 					
 					Map<FDShape, List<FDWire>> clonedShapesWithWires = FDShapeCloneCommand.cloneShapesWithWires(selectedShapes, deltaNew);
 					FDShapeCloneCommand command = new FDShapeCloneCommand(root, root, clonedShapesWithWires);
@@ -80,7 +81,8 @@ public class PasteFromClipboardAction extends SelectionAction {
 		while ( true ) {
 			boolean alreadyExistInLocation = false;
 			for ( FDShape item : shapes ) {
-				if ( item.getX() == x && item.getY() == y ) {
+				Point location = item.getLocation();
+				if ( location.x == x && location.y == y ) {
 					alreadyExistInLocation = true;
 				}
 			}

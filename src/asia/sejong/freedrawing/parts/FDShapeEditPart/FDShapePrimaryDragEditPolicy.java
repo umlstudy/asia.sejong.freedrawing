@@ -15,8 +15,10 @@ import org.eclipse.gef.SharedCursors;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.swt.graphics.Cursor;
 
+import asia.sejong.freedrawing.figures.FDPolygonFigure;
 import asia.sejong.freedrawing.figures.FDShapeFigure;
 import asia.sejong.freedrawing.figures.FDFigureFactory;
+import asia.sejong.freedrawing.model.FDPolygon;
 import asia.sejong.freedrawing.model.FDShape;
 import asia.sejong.freedrawing.parts.FDShapeEditPart.request.RotateRequest;
 import asia.sejong.freedrawing.parts.common.FDShapeResizeTracker;
@@ -209,5 +211,30 @@ public class FDShapePrimaryDragEditPolicy extends FDShapeRotateEditPolicy {
 		feedback.repaint();
 		//feedback.setBounds(rect);
 //		feedback.validate();
+	}
+	
+	protected void showChangeBoundsFeedback(ChangeBoundsRequest request) {
+		IFigure feedback = getDragSourceFeedbackFigure();
+
+		if ( feedback instanceof FDPolygonFigure ) {
+			FDPolygonFigure polygonFigure = (FDPolygonFigure)feedback;
+			FDPolygon polygon = (FDPolygon)getHost().getModel();
+			FDPolygon clonedPolygon = polygon.clone();
+			
+			PrecisionRectangle rect = new PrecisionRectangle(getInitialFeedbackBounds().getCopy());
+			getHostFigure().translateToAbsolute(rect);
+			rect.translate(request.getMoveDelta());
+			rect.resize(request.getSizeDelta());
+			
+			clonedPolygon.setLocation(rect.getLocation().x, rect.getLocation().y);
+			clonedPolygon.setSize(rect.getSize().width, rect.getSize().height);
+			
+			polygonFigure.translateToRelative(rect);
+			polygonFigure.setModelAttributes(clonedPolygon);
+			polygonFigure.validate();
+		} else {
+			super.showChangeBoundsFeedback(request);
+		}
+
 	}
 }

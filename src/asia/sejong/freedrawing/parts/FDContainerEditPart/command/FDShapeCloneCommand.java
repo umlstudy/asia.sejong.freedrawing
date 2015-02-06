@@ -78,7 +78,8 @@ public class FDShapeCloneCommand extends Command {
 		Map<FDShape, FDShape> clonedShapesMap = new HashMap<FDShape, FDShape>();
 		for ( FDShape source : selectedShapes ) {
 			FDShape clonedSource = source.clone();
-			clonedSource.setLocation(clonedSource.getX() + delta.x, clonedSource.getY()+delta.y);
+			Point loc = clonedSource.getLocation();
+			clonedSource.setLocation(loc.x+delta.x, loc.y+delta.y);
 			clonedShapesMap.put(source, clonedSource);
 		}
 		

@@ -1,6 +1,5 @@
 package asia.sejong.freedrawing.parts.FDLabelEditPart;
 
-import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.GraphicalEditPart;
 
 import asia.sejong.freedrawing.figures.FDLabelFigure;
@@ -16,8 +15,7 @@ public class FDLabelEditPart extends FDTextShapeEditPart implements TextShapeLis
 	
 	protected void refreshVisuals() {
 		FDLabel m = (FDLabel) getModel();
-		Rectangle bounds = new Rectangle(m.getX(), m.getY(), m.getWidth(), m.getHeight());
-		((GraphicalEditPart) getParent()).setLayoutConstraint(this, getFigure(), bounds);
+		((GraphicalEditPart) getParent()).setLayoutConstraint(this, getFigure(), m.getBounds());
 		super.refreshVisuals();
 	}
 	

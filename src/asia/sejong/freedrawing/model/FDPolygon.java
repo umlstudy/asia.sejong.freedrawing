@@ -30,9 +30,6 @@ public class FDPolygon extends FDTextShape {
 
 	public void setPoints(List<Point> points) {
 		this.points = points;
-		Rectangle bounds = createBounds(points);
-		setLocation(bounds.x, bounds.y);
-		super.setSize(bounds.width, bounds.height);
 	}
 	
 	public static Rectangle createBounds(List<Point> points) {
@@ -42,51 +39,55 @@ public class FDPolygon extends FDTextShape {
 		}
 		return pointList.getBounds();
 	}
-//	
-//	@Override
-//	public Point getLocation() {
-//		System.out.println("1222222222222222222221");
-//		return createBounds(points).getLocation();
-//	}
-//
-//	@Override
-//	public Dimension getSize() {
-//		return createBounds(points).getSize();
-//	}
+	
+	@Override
+	public Point getLocation() {
+		Rectangle oldBounds = createBounds(points);
+		return oldBounds.getLocation();
+	}
+	
+	@Override
+	public Dimension getSize() {
+		Rectangle oldBounds = createBounds(points);
+		return oldBounds.getSize();
+	}
 	
 	@Override
 	public boolean setLocation(int newX, int newY) {
-		System.out.println("7777777777777777777777777777");
-		if (getX() == newX && getY() == newY) {
+		Point oldLoc = getLocation();
+		if (oldLoc.x == newX && oldLoc.y == newY) {
 			return false;
 		}
-		int dx = getX() - newX;
-		int dy = getY() - newY;
+		int dx = oldLoc.x - newX;
+		int dy = oldLoc.y - newY;
 		for ( Point point : points ) {
 			point.translate(-dx, -dy);
 		}
 		
-		return super.setLocation(newX, newY);
+		fireLocationChanged(newX, newY);
+		return true;
 	}
 	
 	@Override
 	public boolean setSize(int newWidth, int newHeight) {
-		Rectangle oldBounds = createBounds(points);
-		if (oldBounds.width == newWidth && oldBounds.height == newHeight) {
+		Dimension oldSize = getSize();
+		if (oldSize.width == newWidth && oldSize.height == newHeight) {
 			return false;
 		}
 		
-		if ( oldBounds.width != 0 && oldBounds.height != 0 ) {
-			float widthRate = (float)newWidth/oldBounds.width -1;
-			float heightRate = (float)newHeight/oldBounds.height -1;
+		Point oldLoc = getLocation();
+		if ( oldSize.width != 0 && oldSize.height != 0 ) {
+			float widthRate = (float)newWidth/oldSize.width -1;
+			float heightRate = (float)newHeight/oldSize.height -1;
 			for ( Point point : points ) {
-				int dx = (int)((point.x - getX()) * widthRate);
-				int dy = (int)((point.y - getY()) * heightRate);
+				int dx = (int)((point.x - oldLoc.x) * widthRate);
+				int dy = (int)((point.y - oldLoc.y) * heightRate);
 				point.translate(dx, dy);
 			}
 		}
 		
-		return super.setSize(newWidth, newHeight);
+		fireSizeChanged(newWidth, newHeight);
+		return true;
 	}
 	
 	//============================================================
@@ -95,7 +96,9 @@ public class FDPolygon extends FDTextShape {
 	@Override
 	public FDPolygon clone() {
 		FDPolygon polygon = (FDPolygon)super.clone();
-		polygon.getPoints().addAll(getPoints());
+		for ( Point point : getPoints() ) {
+			polygon.points.add(point.getCopy());
+		}
 		return polygon;
 	}
 

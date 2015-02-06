@@ -29,7 +29,7 @@ public class FDPolygonEditPart extends FDTextShapeEditPart implements FDRectList
 //		Rectangle bounds = new Rectangle(m.getX(), m.getY(), m.getWidth(), m.getHeight());
 //		((GraphicalEditPart) getParent()).setLayoutConstraint(this, getFigure(), bounds);
 		
-		((FDPolygonFigure)getFigure()).setPointsEx(m.getPoints());
+		((FDPolygonFigure)getFigure()).setModelAttributes(m);
 		getFigure().repaint();
 		
 		super.refreshVisuals();

@@ -1,6 +1,5 @@
 package asia.sejong.freedrawing.parts.FDEllipseEditPart;
 
-import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.GraphicalEditPart;
 
 import asia.sejong.freedrawing.figures.FDEllipseFigure;
@@ -16,8 +15,7 @@ public class FDEllipseEditPart extends FDTextShapeEditPart implements FDRectList
 	
 	protected void refreshVisuals() {
 		FDEllipse m = (FDEllipse) getModel();
-		Rectangle bounds = new Rectangle(m.getX(), m.getY(), m.getWidth(), m.getHeight());
-		((GraphicalEditPart) getParent()).setLayoutConstraint(this, getFigure(), bounds);
+		((GraphicalEditPart) getParent()).setLayoutConstraint(this, getFigure(), m.getBounds());
 		super.refreshVisuals();
 	}
 	

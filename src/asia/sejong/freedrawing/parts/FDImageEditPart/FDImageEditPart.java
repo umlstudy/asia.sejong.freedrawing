@@ -1,7 +1,6 @@
 package asia.sejong.freedrawing.parts.FDImageEditPart;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.swt.graphics.Image;
@@ -45,8 +44,7 @@ public class FDImageEditPart extends FDShapeEditPart implements FDImageListener 
 	
 	protected void refreshVisuals() {
 		FDImage m = (FDImage) getModel();
-		Rectangle bounds = new Rectangle(m.getX(), m.getY(), m.getWidth(), m.getHeight());
-		((GraphicalEditPart) getParent()).setLayoutConstraint(this, getFigure(), bounds);
+		((GraphicalEditPart) getParent()).setLayoutConstraint(this, getFigure(), m.getBounds());
 		
 //		Rectangle clientBounds = bounds;
 //		FDImageFigure figure = (FDImageFigure)getFigure();

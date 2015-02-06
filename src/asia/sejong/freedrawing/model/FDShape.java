@@ -3,6 +3,7 @@ package asia.sejong.freedrawing.model;
 import java.util.ArrayList;
 
 import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.graphics.RGB;
 
@@ -42,13 +43,13 @@ public abstract class FDShape extends FDWireEndPoint {
 		fireBackgroundColorChanged(backgroundColor);
 	}
 
-	public int getWidth() {
-		return width;
-	}
-	
-	public int getHeight() {
-		return height;
-	}
+//	private int getWidth() {
+//		return width;
+//	}
+//	
+//	public int getHeight() {
+//		return height;
+//	}
 	
 	public boolean setSize(int newWidth, int newHeight) {
 		if (width == newWidth && height == newHeight)
@@ -61,6 +62,12 @@ public abstract class FDShape extends FDWireEndPoint {
 	
 	public Dimension getSize() {
 		return new Dimension(width, height);
+	}
+	
+	public Rectangle getBounds() {
+		Point loc = getLocation();
+		Dimension size = getSize();
+		return new Rectangle(loc.x, loc.y, size.width, size.height);
 	}
 	
 	public void setRectangle(Rectangle rect) {

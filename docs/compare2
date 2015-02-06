@@ -1,69 +1,69 @@
-FDEllipseFigure.paintFigure(Graphics) line: 29	
-FDEllipseFigure(Figure).paint(Graphics) line: 1115	
-FreeformLayer(Figure).paintChildren(Graphics) line: 1167	
-FreeformLayer(Figure).paintClientArea(Graphics) line: 1206	
-FreeformLayer(Figure).paint(Graphics) line: 1117	
-FreeformLayer(Figure).paintChildren(Graphics) line: 1167	
-FreeformLayer(Figure).paintClientArea(Graphics) line: 1202	
-FreeformLayer(Figure).paint(Graphics) line: 1117	
-FreeformLayeredPane(Figure).paintChildren(Graphics) line: 1167	
-FreeformLayeredPane(Figure).paintClientArea(Graphics) line: 1202	
-FreeformLayeredPane(Figure).paint(Graphics) line: 1117	
-ScalableFreeformLayeredPane(Figure).paintChildren(Graphics) line: 1167	
-ScalableFreeformLayeredPane(Figure).paintClientArea(Graphics) line: 1202	
-ScalableFreeformLayeredPane.paintClientArea(Graphics) line: 60	
-ScalableFreeformLayeredPane(Figure).paint(Graphics) line: 1117	
-FreeformLayeredPane(Figure).paintChildren(Graphics) line: 1167	
-FreeformLayeredPane(Figure).paintClientArea(Graphics) line: 1202	
-FreeformLayeredPane(Figure).paint(Graphics) line: 1117	
-FreeformViewport(Figure).paintChildren(Graphics) line: 1167	
-FreeformViewport(Figure).paintClientArea(Graphics) line: 1197	
-FreeformViewport(Viewport).paintClientArea(Graphics) line: 160	
-FreeformViewport(Figure).paint(Graphics) line: 1117	
-LightweightSystem$RootFigure(Figure).paintChildren(Graphics) line: 1167	
-LightweightSystem$RootFigure(Figure).paintClientArea(Graphics) line: 1202	
-LightweightSystem$RootFigure(Figure).paint(Graphics) line: 1117	
-DeferredUpdateManager.paint(GC) line: 168	
-LightweightSystem.paint(GC) line: 203	
-LightweightSystem$2.handleEvent(Event) line: 110	
-EventTable.sendEvent(Event) line: 84	
-FigureCanvas(Widget).sendEvent(Event) line: 1053	
-FigureCanvas(Widget).sendEvent(int, Event, boolean) line: 1077	
-FigureCanvas(Widget).sendEvent(int, Event) line: 1062	
-FigureCanvas(Composite).WM_PAINT(long, long) line: 1463	
-FigureCanvas(Control).windowProc(long, int, long, long) line: 4585	
-FigureCanvas(Canvas).windowProc(long, int, long, long) line: 341	
-Display.windowProc(long, long, long, long) line: 4985	
-OS.RedrawWindow(long, RECT, long, int) line: not available [native method]	
-FigureCanvas(Control).update(boolean) line: 4380	
-FigureCanvas(Control).update() line: 4370	
-NativeGraphicsSource.getGraphics(Rectangle) line: 48	
-DeferredUpdateManager.getGraphics(Rectangle) line: 147	
-DeferredUpdateManager.repairDamage() line: 313	
-DeferredUpdateManager.performUpdate() line: 195	
-DeferredUpdateManager$UpdateRequest.run() line: 44	
-RunnableLock.run() line: 35	
-UISynchronizer(Synchronizer).runAsyncMessages(boolean) line: 135	
-Display.runAsyncMessages(boolean) line: 4140	
-Display.readAndDispatch() line: 3757	
-Workbench.runEventLoop(Window$IExceptionHandler, Display) line: 2701	
-Workbench.runUI() line: 2665	
-Workbench.access$4(Workbench) line: 2499	
-Workbench$7.run() line: 679	
-Realm.runWithDefault(Realm, Runnable) line: 332	
-Workbench.createAndRunWorkbench(Display, WorkbenchAdvisor) line: 668	
-PlatformUI.createAndRunWorkbench(Display, WorkbenchAdvisor) line: 149	
-IDEApplication.start(IApplicationContext) line: 123	
-EclipseAppHandle.run(Object) line: 196	
-EclipseAppLauncher.runApplication(Object) line: 110	
-EclipseAppLauncher.start(Object) line: 79	
-EclipseStarter.run(Object) line: 344	
-EclipseStarter.run(String[], Runnable) line: 179	
-NativeMethodAccessorImpl.invoke0(Method, Object, Object[]) line: not available [native method]	
-NativeMethodAccessorImpl.invoke(Object, Object[]) line: 57	
-DelegatingMethodAccessorImpl.invoke(Object, Object[]) line: 43	
-Method.invoke(Object, Object...) line: 606	
-Main.invokeFramework(String[], URL[]) line: 622	
-Main.basicRun(String[]) line: 577	
-Main.run(String[]) line: 1410	
-Main.main(String[]) line: 1386	
+
+
+
+Point(168.0, 48.0)
+asia.sejong.freedrawing.figures.FDRectFigure@592de0e8 fillShape : ( asia.sejong.freedrawing.figures.FDRectFigure: 16)
+java.lang.Thread(1588)
+asia.sejong.freedrawing.figures.FDRectFigure(17)
+asia.sejong.freedrawing.figures.FDShapeFigureImpl(315)
+asia.sejong.freedrawing.figures.FDShapeFigureImpl(190)
+asia.sejong.freedrawing.figures.FDTextShapeFigureImpl(506)
+asia.sejong.freedrawing.figures.FDShapeFigureImpl(133)
+org.eclipse.draw2d.Figure(1167)
+org.eclipse.draw2d.Figure(1206)
+org.eclipse.draw2d.Figure(1117)
+org.eclipse.draw2d.Figure(1167)
+org.eclipse.draw2d.Figure(1202)
+org.eclipse.draw2d.Figure(1117)
+org.eclipse.draw2d.Figure(1167)
+org.eclipse.draw2d.Figure(1202)
+org.eclipse.draw2d.Figure(1117)
+org.eclipse.draw2d.Figure(1167)
+org.eclipse.draw2d.Figure(1202)
+org.eclipse.draw2d.ScalableFreeformLayeredPane(60)
+org.eclipse.draw2d.Figure(1117)
+org.eclipse.draw2d.Figure(1167)
+org.eclipse.draw2d.Figure(1202)
+org.eclipse.draw2d.Figure(1117)
+org.eclipse.draw2d.Figure(1167)
+org.eclipse.draw2d.Figure(1197)
+org.eclipse.draw2d.Viewport(160)
+org.eclipse.draw2d.Figure(1117)
+org.eclipse.draw2d.Figure(1167)
+org.eclipse.draw2d.Figure(1202)
+org.eclipse.draw2d.Figure(1117)
+org.eclipse.draw2d.DeferredUpdateManager(168)
+org.eclipse.draw2d.LightweightSystem(203)
+org.eclipse.draw2d.LightweightSystem$2(110)
+org.eclipse.swt.widgets.EventTable(84)
+org.eclipse.swt.widgets.Widget(1053)
+org.eclipse.swt.widgets.Widget(1077)
+org.eclipse.swt.widgets.Widget(1062)
+org.eclipse.swt.widgets.Composite(1463)
+org.eclipse.swt.widgets.Control(4585)
+org.eclipse.swt.widgets.Canvas(341)
+org.eclipse.swt.widgets.Display(4985)
+org.eclipse.swt.internal.win32.OS(-2)
+org.eclipse.swt.internal.win32.OS(2531)
+org.eclipse.swt.widgets.Display(3752)
+org.eclipse.ui.internal.Workbench(2701)
+org.eclipse.ui.internal.Workbench(2665)
+org.eclipse.ui.internal.Workbench(2499)
+org.eclipse.ui.internal.Workbench$7(679)
+org.eclipse.core.databinding.observable.Realm(332)
+org.eclipse.ui.internal.Workbench(668)
+org.eclipse.ui.PlatformUI(149)
+org.eclipse.ui.internal.ide.application.IDEApplication(123)
+org.eclipse.equinox.internal.app.EclipseAppHandle(196)
+org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher(110)
+org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher(79)
+org.eclipse.core.runtime.adaptor.EclipseStarter(344)
+org.eclipse.core.runtime.adaptor.EclipseStarter(179)
+sun.reflect.NativeMethodAccessorImpl(-2)
+sun.reflect.NativeMethodAccessorImpl(57)
+sun.reflect.DelegatingMethodAccessorImpl(43)
+java.lang.reflect.Method(606)
+org.eclipse.equinox.launcher.Main(622)
+org.eclipse.equinox.launcher.Main(577)
+org.eclipse.equinox.launcher.Main(1410)
+org.eclipse.equinox.launcher.Main(1386)

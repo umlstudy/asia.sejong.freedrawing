@@ -1,5 +1,8 @@
 package asia.sejong.freedrawing.util;
 
+import java.io.OutputStream;
+import java.io.PrintStream;
+
 public class DebugUtil {
 	
 	public static void printLogStart() {
@@ -29,5 +32,12 @@ public class DebugUtil {
 	private static StackTraceElement getSte() {
 		final StackTraceElement[] ste = Thread.currentThread().getStackTrace();
 		return ste[3];
+	}
+	
+	public static void printStackTraceElement(final StackTraceElement[] stackTrace, final OutputStream out) {
+		PrintStream ps = new PrintStream(out);
+		for (StackTraceElement element : stackTrace) {
+			ps.printf("%s(%d)\n", element.getClassName(), element.getLineNumber());
+		}
 	}
 }

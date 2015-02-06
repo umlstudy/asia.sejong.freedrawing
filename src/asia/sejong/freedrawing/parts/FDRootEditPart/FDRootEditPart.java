@@ -248,6 +248,23 @@ public class FDRootEditPart extends AbstractGraphicalEditPart implements FDWirea
 		}
 	}
 	
+	// FIXME
+	// FOR DEBUG
+	@Override
+	protected void removeChild(EditPart child) {
+		Assert.isNotNull(child);
+		int index = getChildren().indexOf(child);
+		if (index < 0)
+			return;
+		fireRemovingChild(child, index);
+		if (isActive())
+			child.deactivate();
+		child.removeNotify();
+		removeChildVisual(child);
+		child.setParent(null);
+		getChildren().remove(child);
+	}
+	
 	@Override
 	public void positionChanged(int newPosition, FDShape child) {
 		Object childPart = getViewer().getEditPartRegistry().get(child);

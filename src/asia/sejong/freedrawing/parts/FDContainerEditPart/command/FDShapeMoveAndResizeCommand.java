@@ -1,5 +1,7 @@
 package asia.sejong.freedrawing.parts.FDContainerEditPart.command;
 
+import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.commands.Command;
 
@@ -18,6 +20,7 @@ public class FDShapeMoveAndResizeCommand extends Command
 	public FDShapeMoveAndResizeCommand(FDShape shape, Rectangle bounds) {
 		this.shape = shape;
 		this.bounds = bounds;
+//		System.out.println(bounds.toString() + "  FDShapeMoveAndResizeCommand");
 		setLabel("Modify " + getShapeType());
 	}
 	
@@ -30,7 +33,7 @@ public class FDShapeMoveAndResizeCommand extends Command
 	 */
 	@Override
 	public void execute() {
-		oldBounds = new Rectangle(shape.getX(), shape.getY(), shape.getWidth(), shape.getHeight());
+		oldBounds = new Rectangle(shape.getLocation(), shape.getSize());
 		shape.setLocation(bounds.x, bounds.y);
 		shape.setSize(bounds.width, bounds.height);
 	}

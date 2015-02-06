@@ -77,12 +77,14 @@ public class FDPolygonCreatePolicy extends GraphicalEditPolicy {
 				|| REQ_POLYGON_CREATE_END.equals(request.getType()) ) {
 
 			CreatePolygonRequest cpr = (CreatePolygonRequest)request;
+			FDPolygon model = (FDPolygon)FDModelFactory.createModel(FDPolygon.class);
+			model.setPoints(cpr.getMovingPoints());
 			if ( feedbackFigure == null ) {
-				feedbackFigure = (FDPolygonFigure)FDFigureFactory.createFigure(FDModelFactory.createModel(FDPolygon.class));
+				feedbackFigure = (FDPolygonFigure)FDFigureFactory.createFigure(model);
+			} else {
+				FDPolygonFigure polygonFigure =  (FDPolygonFigure)feedbackFigure;
+				polygonFigure.setModelAttributes(model);
 			}
-			
-			FDPolygonFigure polygon =  (FDPolygonFigure)feedbackFigure;
-			polygon.setPointsEx(cpr.getMovingPoints());
 			
 			addFeedback(feedbackFigure);
 //			System.out.println("AAAA " + "child ? " + getFeedbackLayer().getChildren().size() + "_" + feedbackFigure ) ;
