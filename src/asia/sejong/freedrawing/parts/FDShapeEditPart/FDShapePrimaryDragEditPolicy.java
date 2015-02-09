@@ -217,6 +217,7 @@ public class FDShapePrimaryDragEditPolicy extends FDShapeRotateEditPolicy {
 		IFigure feedback = getDragSourceFeedbackFigure();
 
 		if ( feedback instanceof FDPolygonFigure ) {
+			// 폴리곤피규어 처리
 			FDPolygonFigure polygonFigure = (FDPolygonFigure)feedback;
 			FDPolygon polygon = (FDPolygon)getHost().getModel();
 			FDPolygon clonedPolygon = polygon.clone();
@@ -235,6 +236,5 @@ public class FDShapePrimaryDragEditPolicy extends FDShapeRotateEditPolicy {
 		} else {
 			super.showChangeBoundsFeedback(request);
 		}
-
 	}
 }

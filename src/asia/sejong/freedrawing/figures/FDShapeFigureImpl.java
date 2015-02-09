@@ -127,6 +127,9 @@ public abstract class FDShapeFigureImpl extends Figure implements FDShapeFigure 
 
 		graphics.pushState();
 		try {
+//			Rectangle r = new Rectangle();
+//			graphics.getClip(r);
+//			System.out.println("CLip " + r);
 			// sejong.lee
 			Point centerPoint = positionToCenterZeroAndClip(graphics);
 
@@ -227,37 +230,53 @@ public abstract class FDShapeFigureImpl extends Figure implements FDShapeFigure 
 	}
 	
 	
-	/* (non-Javadoc)
-	 * Edit By sejong.lee
-	 * @see org.eclipse.draw2d.Figure#repaint()
-	 */
-	@Override
-	public void repaint() {
-		if ( getParent() != null ) {
-			// 상위 피겨를 취하여
-			// 상위 피겨의 특정부분를 리페이트인트 하도록 지정함
-			getParent().repaint(GeometryUtil.createSquare(getBounds()));
-		} else {
-			super.repaint();
-		}
-	}
+//	/* (non-Javadoc)
+//	 * Edit By sejong.lee
+//	 * @see org.eclipse.draw2d.Figure#repaint()
+//	 */
+//	@Override
+//	public void repaint() {
+//		if ( getParent() != null ) {
+//			// 상위 피겨를 취하여
+//			// 상위 피겨의 특정부분를 리페이트인트 하도록 지정함
+//			getParent().repaint(GeometryUtil.createSquare(getBounds()));
+//		} else {
+//			super.repaint();
+//		}
+//	}
+//	
+//	/* (non-Javadoc)
+//	 * Edit By sejong.lee
+//	 * @see org.eclipse.draw2d.Figure#erase()
+//	 */
+//	@Override
+//	public void erase() {
+//		if (getParent() == null || !isVisible()) {
+//			return;
+//		}
+//
+//		// 드로잉역영을 일부러 크게 만듦 - 최적화 필요
+//		// 사각형 회전시 최대길이를 한변으로 하는 정사각형 영역을 
+//		// 드로잉 영역으로 설정함
+//		Rectangle r = GeometryUtil.createSquare(getBounds());
+//		getParent().translateToParent(r);
+//		getParent().repaint(r.x, r.y, r.width, r.height);
+//	}
 	
-	/* (non-Javadoc)
-	 * Edit By sejong.lee
-	 * @see org.eclipse.draw2d.Figure#erase()
-	 */
-	@Override
-	public void erase() {
-		if (getParent() == null || !isVisible()) {
-			return;
-		}
-
+	public void repaint(int x, int y, int w, int h) {
+		// 기존 사이즈 무시
 		// 드로잉역영을 일부러 크게 만듦 - 최적화 필요
 		// 사각형 회전시 최대길이를 한변으로 하는 정사각형 영역을 
 		// 드로잉 영역으로 설정함
 		Rectangle r = GeometryUtil.createSquare(getBounds());
-		getParent().translateToParent(r);
-		getParent().repaint(r.x, r.y, r.width, r.height);
+		System.out.println("R " + r);
+		System.out.println("B " + getBounds());
+		if ( isVisible() && getParent() != null ) {
+			getParent().repaint(r.x, r.y, r.width, r.height);
+			return ;
+		}
+		if (isVisible())
+			getUpdateManager().addDirtyRegion(this, r.x, r.y, r.width, r.height);
 	}
 
 	private void paintOutline(Graphics graphics) {
