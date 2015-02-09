@@ -245,32 +245,37 @@ public abstract class FDShapeFigureImpl extends Figure implements FDShapeFigure 
 //		}
 //	}
 //	
-//	/* (non-Javadoc)
-//	 * Edit By sejong.lee
-//	 * @see org.eclipse.draw2d.Figure#erase()
-//	 */
-//	@Override
-//	public void erase() {
-//		if (getParent() == null || !isVisible()) {
-//			return;
-//		}
-//
-//		// 드로잉역영을 일부러 크게 만듦 - 최적화 필요
-//		// 사각형 회전시 최대길이를 한변으로 하는 정사각형 영역을 
-//		// 드로잉 영역으로 설정함
-//		Rectangle r = GeometryUtil.createSquare(getBounds());
-//		getParent().translateToParent(r);
-//		getParent().repaint(r.x, r.y, r.width, r.height);
-//	}
+	/* (non-Javadoc)
+	 * 겹치는 부분 처리 때문에 일부러 큰 영역 설정
+	 * Edit By sejong.lee
+	 * @see org.eclipse.draw2d.Figure#erase()
+	 */
+	@Override
+	public void erase() {
+		if (getParent() == null || !isVisible()) {
+			return;
+		}
+
+		// 드로잉역영을 일부러 크게 만듦 - 최적화 필요
+		// 사각형 회전시 최대길이를 한변으로 하는 정사각형 영역을 
+		// 드로잉 영역으로 설정함
+		Rectangle r = GeometryUtil.createSquare(getBounds());
+		getParent().translateToParent(r);
+		getParent().repaint(r.x, r.y, r.width, r.height);
+	}
 	
+	/* (non-Javadoc)
+	 * 겹치는 부분 처리 때문에 일부러 큰 영역 설정
+	 * @see org.eclipse.draw2d.Figure#repaint(int, int, int, int)
+	 */
 	public void repaint(int x, int y, int w, int h) {
 		// 기존 사이즈 무시
 		// 드로잉역영을 일부러 크게 만듦 - 최적화 필요
 		// 사각형 회전시 최대길이를 한변으로 하는 정사각형 영역을 
 		// 드로잉 영역으로 설정함
 		Rectangle r = GeometryUtil.createSquare(getBounds());
-		System.out.println("R " + r);
-		System.out.println("B " + getBounds());
+//		System.out.println("R " + r);
+//		System.out.println("B " + getBounds());
 		if ( isVisible() && getParent() != null ) {
 			getParent().repaint(r.x, r.y, r.width, r.height);
 			return ;

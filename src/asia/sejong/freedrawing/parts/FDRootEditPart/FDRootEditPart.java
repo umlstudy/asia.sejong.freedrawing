@@ -14,10 +14,12 @@ import org.eclipse.draw2d.FanRouter;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.FreeformLayer;
 import org.eclipse.draw2d.FreeformLayout;
+import org.eclipse.draw2d.IClippingStrategy;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.MarginBorder;
 import org.eclipse.draw2d.ShortestPathConnectionRouter;
 import org.eclipse.draw2d.XYAnchor;
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.CompoundSnapToHelper;
 import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.EditPart;
@@ -37,6 +39,8 @@ import org.eclipse.gef.requests.DropRequest;
 import org.eclipse.swt.SWT;
 
 import asia.sejong.freedrawing.debug.ForEditPart;
+import asia.sejong.freedrawing.figures.FDShapeFigure;
+import asia.sejong.freedrawing.figures.GeometryUtil;
 import asia.sejong.freedrawing.model.FDRoot;
 import asia.sejong.freedrawing.model.FDShape;
 import asia.sejong.freedrawing.model.FDWire;
@@ -67,6 +71,20 @@ public class FDRootEditPart extends AbstractGraphicalEditPart implements FDWirea
 		Figure figure = new FreeformLayer();
 		figure.setBorder(new MarginBorder(3));
 		figure.setLayoutManager(new FreeformLayout());
+		
+		figure.setClippingStrategy(new IClippingStrategy() {
+
+			@Override
+			public Rectangle[] getClip(IFigure childFigure) {
+				if ( childFigure instanceof FDShapeFigure ) {
+					FDShapeFigure sf = (FDShapeFigure)childFigure;
+					if ( sf.getDegreeEx() != 0 ) {
+						return new Rectangle[] { GeometryUtil.createSquare(sf.getBounds()) };
+					}
+				}
+				return new Rectangle[] {childFigure.getBounds(),};
+			}
+		});
 		
 		return figure;
 	}

@@ -38,6 +38,8 @@ public class FDRectFigure extends FDTextShapeFigureImpl {
 	@Override
 	protected void fillShape(Graphics graphics) {
 		graphics.fillRectangle(getBoundsInZeroPoint());
+		
+//		System.out.println("RECT Drawing : " + getBackgroundColor());
 	}
 
 	@Override

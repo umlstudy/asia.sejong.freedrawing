@@ -1,7 +1,27 @@
 package example2;
 
-import org.eclipse.draw2d.*;
-import org.eclipse.draw2d.geometry.*;
+import org.eclipse.draw2d.ActionEvent;
+import org.eclipse.draw2d.ActionListener;
+import org.eclipse.draw2d.ArrowButton;
+import org.eclipse.draw2d.Button;
+import org.eclipse.draw2d.CheckBox;
+import org.eclipse.draw2d.ColorConstants;
+import org.eclipse.draw2d.Ellipse;
+import org.eclipse.draw2d.Graphics;
+import org.eclipse.draw2d.ImageFigure;
+import org.eclipse.draw2d.ImageUtilities;
+import org.eclipse.draw2d.Label;
+import org.eclipse.draw2d.LightweightSystem;
+import org.eclipse.draw2d.LineBorder;
+import org.eclipse.draw2d.Polygon;
+import org.eclipse.draw2d.Polyline;
+import org.eclipse.draw2d.PositionConstants;
+import org.eclipse.draw2d.RoundedRectangle;
+import org.eclipse.draw2d.Triangle;
+import org.eclipse.draw2d.XYLayout;
+import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -11,9 +31,6 @@ import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-
-import com.qualityeclipse.genealogy.view.GenealogyView;
-import com.sun.crypto.provider.RC2Cipher;
 
 /**
  * A simple shell displaying some of the basic Draw2D figures.
@@ -29,7 +46,7 @@ public class BasicFigures {
 	private static Canvas createDiagram(Composite parent) {
 
 		// Create a root figure and simple layout to contain all other figures
-		final Figure root = new Figure() {
+		final org.eclipse.draw2d.Figure root = new org.eclipse.draw2d.Figure() {
 			public void paint(Graphics graphics) {
 				Rectangle rect = new Rectangle();
 				graphics.getClip(rect);
@@ -42,7 +59,7 @@ public class BasicFigures {
 		
 		// ************ Shapes
 		
-		RectangleFigure rectangleFigure = new RectangleFigure();
+		 org.eclipse.draw2d.RectangleFigure rectangleFigure = new org.eclipse.draw2d.RectangleFigure();
 		rectangleFigure.setBackgroundColor(ColorConstants.lightGray);
 		rectangleFigure.setPreferredSize(60, 40);
 		root.add(rectangleFigure, new Rectangle(new Point(10, 10),

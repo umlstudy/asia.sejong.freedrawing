@@ -22,9 +22,15 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.draw2d.ConnectionLayer;
+import org.eclipse.draw2d.IClippingStrategy;
+import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.ViewportAwareConnectionLayerClippingStrategy;
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.GraphicalViewer;
+import org.eclipse.gef.LayerConstants;
 import org.eclipse.gef.MouseWheelHandler;
 import org.eclipse.gef.SnapToGeometry;
 import org.eclipse.gef.SnapToGrid;
@@ -52,6 +58,8 @@ import org.eclipse.ui.part.FileEditorInput;
 
 import asia.sejong.freedrawing.context.FreedrawingEditorContext;
 import asia.sejong.freedrawing.editor.actions.palette.factory.PaletteActionFactory;
+import asia.sejong.freedrawing.figures.FDShapeFigure;
+import asia.sejong.freedrawing.figures.GeometryUtil;
 import asia.sejong.freedrawing.parts.common.FDEditPartFactory;
 
 public class FreedrawingEditor extends GraphicalEditor implements MouseWheelHandler {
@@ -149,6 +157,41 @@ public class FreedrawingEditor extends GraphicalEditor implements MouseWheelHand
 //		((ConnectionLayer)rootEditPart.getLayer(LayerConstants.CONNECTION_LAYER)).setConnectionRouter(new ShortestPathConnectionRouter(primaryLayer));
 		// SCALED_FEEDBACK_LAYER
 		viewer.setRootEditPart(rootEditPart);
+		
+		
+		IFigure feedbackLayer = rootEditPart.getLayer(LayerConstants.SCALED_FEEDBACK_LAYER);
+		feedbackLayer.setClippingStrategy(new IClippingStrategy() {
+
+			@Override
+			public Rectangle[] getClip(IFigure childFigure) {
+				if ( childFigure instanceof FDShapeFigure ) {
+					FDShapeFigure sf = (FDShapeFigure)childFigure;
+					if ( sf.getDegreeEx() != 0 ) {
+						return new Rectangle[] { GeometryUtil.createSquare(sf.getBounds()) };
+					}
+				}
+				return new Rectangle[] {childFigure.getBounds(),};
+			}
+		});
+		
+//		feedbackLayer = rootEditPart.getLayer(LayerConstants.PRIMARY_LAYER);
+////		feedbackLayer = (IFigure)feedbackLayer.getChildren().get(0);
+//		//((ScalableFreeformRootEditPart)getGraphicalViewer().getRootEditPart()).getLayer(LayerConstants.PRIMARY_LAYER);
+//		feedbackLayer.setClippingStrategy(new IClippingStrategy() {
+//
+//			@Override
+//			public Rectangle[] getClip(IFigure childFigure) {
+//				if ( childFigure instanceof FDShapeFigure ) {
+//					FDShapeFigure sf = (FDShapeFigure)childFigure;
+//					if ( sf.getDegreeEx() != 0 ) {
+//						return new Rectangle[] { GeometryUtil.createSquare(sf.getBounds()) };
+//					}
+//				}
+//				return new Rectangle[] {childFigure.getBounds(),};
+//			}
+//		});
+////		IFigure feedbackLayer = (ConnectionLayer) rootEditPart.getLayer(LayerConstants.FEEDBACK_LAYER);
+		
 		
 		// 마우스 CTRL + 스크롤 이벤트 캐치용
 		viewer.setProperty(MouseWheelHandler.KeyGenerator.getKey(SWT.CTRL), this);
