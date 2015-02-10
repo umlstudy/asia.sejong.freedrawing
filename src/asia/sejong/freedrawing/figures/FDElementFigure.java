@@ -11,6 +11,8 @@ public interface FDElementFigure extends IFigure {
 	void setLineStyleEx(LineStyle lineStyle);
 	void setLineColorEx(RGB rgbColor);
 	void setAlphaEx(Integer alpha);
+	void setFeedbackEx(boolean feedback);
+	boolean isFeedbackEx();
 	
 	void setModelAttributes(FDElement model);
 	

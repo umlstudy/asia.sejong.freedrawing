@@ -506,7 +506,6 @@ public abstract class FDTextShapeFigureImpl extends FDShapeFigureImpl implements
 		super.paintFigure(graphics);
 
 		Rectangle bounds = getBounds();
-//		graphics.translate(bounds.x, bounds.y);
 		if (icon != null)
 			graphics.drawImage(icon, getIconLocation());
 		if (!isEnabled()) {
@@ -520,7 +519,6 @@ public abstract class FDTextShapeFigureImpl extends FDShapeFigureImpl implements
 		textLocation.x -= bounds.width/2;
 		textLocation.y -= bounds.height/2;
 		graphics.drawText(getSubStringText(), textLocation);
-//		graphics.translate(-bounds.x, -bounds.y);
 	}
 
 	/**

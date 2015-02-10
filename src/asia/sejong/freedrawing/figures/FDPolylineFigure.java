@@ -27,13 +27,6 @@ public class FDPolylineFigure extends FDTextShapeFigureImpl {
 
 	@Override
 	protected void outlineShape(Graphics graphics) {
-//		graphics.pushState();
-//		graphics.translate(getLocation());
-		for (int i=0;i<points.size();i++) {
-			Point p = points.get(i);
-			// TODO 
-			//System.out.println(String.format("idx:%d - x:%d,y:%d\n",i, p.x,p.y));
-		}
 		int[] intPoints = getPoints();
 		int sx=intPoints[0];
 		int sy=intPoints[1];

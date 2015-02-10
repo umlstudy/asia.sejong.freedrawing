@@ -127,9 +127,6 @@ public abstract class FDShapeFigureImpl extends Figure implements FDShapeFigure 
 
 		graphics.pushState();
 		try {
-//			Rectangle r = new Rectangle();
-//			graphics.getClip(r);
-//			System.out.println("CLip " + r);
 			// sejong.lee
 			Point centerPoint = positionToCenterZeroAndClip(graphics);
 
@@ -210,8 +207,6 @@ public abstract class FDShapeFigureImpl extends Figure implements FDShapeFigure 
 		if ( degree > 0 ) {
 			graphics.rotate((float)degree);
 		}
-		// FIXME
-//		System.out.println("DEGREE ? " + degree);
 		
 		return centerPoint;
 	}
@@ -228,23 +223,7 @@ public abstract class FDShapeFigureImpl extends Figure implements FDShapeFigure 
 	protected Rectangle getBoundsInZeroPoint() {
 		return GeometryUtil.createRectangleCenterIsZero(getBounds());
 	}
-	
-	
-//	/* (non-Javadoc)
-//	 * Edit By sejong.lee
-//	 * @see org.eclipse.draw2d.Figure#repaint()
-//	 */
-//	@Override
-//	public void repaint() {
-//		if ( getParent() != null ) {
-//			// 상위 피겨를 취하여
-//			// 상위 피겨의 특정부분를 리페이트인트 하도록 지정함
-//			getParent().repaint(GeometryUtil.createSquare(getBounds()));
-//		} else {
-//			super.repaint();
-//		}
-//	}
-//	
+
 	/* (non-Javadoc)
 	 * 겹치는 부분 처리 때문에 일부러 큰 영역 설정
 	 * Edit By sejong.lee
@@ -274,14 +253,14 @@ public abstract class FDShapeFigureImpl extends Figure implements FDShapeFigure 
 		// 사각형 회전시 최대길이를 한변으로 하는 정사각형 영역을 
 		// 드로잉 영역으로 설정함
 		Rectangle r = GeometryUtil.createSquare(getBounds());
-//		System.out.println("R " + r);
-//		System.out.println("B " + getBounds());
-		if ( isVisible() && getParent() != null ) {
-			getParent().repaint(r.x, r.y, r.width, r.height);
-			return ;
+		if ( isVisible() ) {
+			if ( getParent() != null ) {
+				getParent().repaint(r.x, r.y, r.width, r.height);
+				return;
+			} else {
+				getUpdateManager().addDirtyRegion(this, r.x, r.y, r.width, r.height);
+			}				
 		}
-		if (isVisible())
-			getUpdateManager().addDirtyRegion(this, r.x, r.y, r.width, r.height);
 	}
 
 	private void paintOutline(Graphics graphics) {
@@ -774,6 +753,8 @@ public abstract class FDShapeFigureImpl extends Figure implements FDShapeFigure 
 	// FDShapeFigure Implementation
 
 	private double degree = 0;
+	private Color lineColor = null;
+	private boolean feedback;
 	
 	@Override
 	public final void setAlphaEx(Integer alpha) {
@@ -799,8 +780,6 @@ public abstract class FDShapeFigureImpl extends Figure implements FDShapeFigure 
 		setLineStyle(lineStyle.getStyle());
 	}
 	
-	private Color lineColor = null;
-
 	@Override
 	public final void setLineColorEx(RGB rgbColor) {
 		if ( rgbColor != null ) {
@@ -839,13 +818,20 @@ public abstract class FDShapeFigureImpl extends Figure implements FDShapeFigure 
 	@Override
 	public final void setDegreeEx(double degree) {
 		this.degree = degree;
-		// TODO
-//		System.out.println("DE " + degree);
 	}
 
 	@Override
 	public final double getDegreeEx() {
 		return degree;
 	}
+	
+	@Override
+	public void setFeedbackEx(boolean feedback) {
+		this.feedback = feedback;
+	}
 
+	@Override
+	public boolean isFeedbackEx() {
+		return feedback;
+	}
 }

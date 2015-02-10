@@ -18,6 +18,7 @@ import asia.sejong.freedrawing.model.FDWire;
 public class FDWireFigure extends PolylineConnection implements FDElementFigure {
 	
 	private boolean roundedCorner = false;
+	private boolean feedback;
 	
 	FDWireFigure() {
 		super();
@@ -185,7 +186,6 @@ public class FDWireFigure extends PolylineConnection implements FDElementFigure 
 	public void setModelAttributes(FDElement model_) {
 		FDWire model = (FDWire)model_;
 		
-		//setAlpah(model.getAlpha());
 		setLineWidthEx(model.getLineWidth());
 		setLineStyleEx(model.getLineStyle());
 		setLineColorEx(model.getLineColor());
@@ -214,5 +214,15 @@ public class FDWireFigure extends PolylineConnection implements FDElementFigure 
 	@Override
 	public void setAlphaEx(Integer alpha) {
 		setAlpha(alpha); // TODO repaint....
+	}
+
+	@Override
+	public void setFeedbackEx(boolean feedback) {
+		this.feedback = feedback;
+	}
+
+	@Override
+	public boolean isFeedbackEx() {
+		return feedback;
 	}
 }

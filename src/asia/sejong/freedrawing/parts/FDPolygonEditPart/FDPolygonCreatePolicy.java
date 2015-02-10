@@ -80,7 +80,9 @@ public class FDPolygonCreatePolicy extends GraphicalEditPolicy {
 			FDPolygon model = (FDPolygon)FDModelFactory.createModel(FDPolygon.class);
 			model.setPoints(cpr.getMovingPoints());
 			if ( feedbackFigure == null ) {
-				feedbackFigure = (FDPolygonFigure)FDFigureFactory.createFigure(model);
+				FDPolygonFigure polygonFigure = (FDPolygonFigure)FDFigureFactory.createFigure(model);
+				polygonFigure.setFeedbackEx(true);
+				feedbackFigure = polygonFigure;
 			} else {
 				FDPolygonFigure polygonFigure =  (FDPolygonFigure)feedbackFigure;
 				polygonFigure.setModelAttributes(model);
