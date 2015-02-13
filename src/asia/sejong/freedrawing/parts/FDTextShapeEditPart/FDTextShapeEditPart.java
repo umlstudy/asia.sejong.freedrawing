@@ -19,7 +19,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
 import asia.sejong.freedrawing.context.ApplicationContext;
-import asia.sejong.freedrawing.figures.FDTextShapeFigure;
+import asia.sejong.freedrawing.draw2d.figures.FDTextShapeFigure;
 import asia.sejong.freedrawing.model.FDTextShape;
 import asia.sejong.freedrawing.model.FontInfo;
 import asia.sejong.freedrawing.model.listener.TextShapeListener;

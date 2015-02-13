@@ -1,4 +1,4 @@
-package asia.sejong.freedrawing.figures;
+package asia.sejong.freedrawing.draw2d.figures;
 
 import java.util.ArrayList;
 import java.util.Iterator;

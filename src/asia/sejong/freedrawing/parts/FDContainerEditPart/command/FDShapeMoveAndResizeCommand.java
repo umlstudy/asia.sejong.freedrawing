@@ -1,7 +1,5 @@
 package asia.sejong.freedrawing.parts.FDContainerEditPart.command;
 
-import org.eclipse.draw2d.geometry.Dimension;
-import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.commands.Command;
 

@@ -6,7 +6,7 @@ import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.swt.graphics.Image;
 
 import asia.sejong.freedrawing.context.ApplicationContext;
-import asia.sejong.freedrawing.figures.FDImageFigure;
+import asia.sejong.freedrawing.draw2d.figures.FDImageFigure;
 import asia.sejong.freedrawing.model.FDImage;
 import asia.sejong.freedrawing.model.listener.FDImageListener;
 import asia.sejong.freedrawing.parts.FDShapeEditPart.FDShapeEditPart;

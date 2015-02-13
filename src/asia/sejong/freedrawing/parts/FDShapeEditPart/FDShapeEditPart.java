@@ -24,8 +24,8 @@ import org.eclipse.swt.graphics.RGB;
 
 import asia.sejong.freedrawing.code.LineStyle;
 import asia.sejong.freedrawing.debug.ForEditPart;
-import asia.sejong.freedrawing.figures.FDFigureFactory;
-import asia.sejong.freedrawing.figures.FDShapeFigure;
+import asia.sejong.freedrawing.draw2d.figures.FDFigureFactory;
+import asia.sejong.freedrawing.draw2d.figures.FDShapeFigure;
 import asia.sejong.freedrawing.model.FDRoot;
 import asia.sejong.freedrawing.model.FDShape;
 import asia.sejong.freedrawing.model.FDWire;

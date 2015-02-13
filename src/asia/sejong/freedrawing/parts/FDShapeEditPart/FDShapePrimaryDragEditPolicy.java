@@ -15,9 +15,9 @@ import org.eclipse.gef.SharedCursors;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.swt.graphics.Cursor;
 
-import asia.sejong.freedrawing.figures.FDPolygonFigure;
-import asia.sejong.freedrawing.figures.FDShapeFigure;
-import asia.sejong.freedrawing.figures.FDFigureFactory;
+import asia.sejong.freedrawing.draw2d.figures.FDFigureFactory;
+import asia.sejong.freedrawing.draw2d.figures.FDPolygonFigure;
+import asia.sejong.freedrawing.draw2d.figures.FDShapeFigure;
 import asia.sejong.freedrawing.model.FDPolygon;
 import asia.sejong.freedrawing.model.FDShape;
 import asia.sejong.freedrawing.parts.FDShapeEditPart.request.RotateRequest;

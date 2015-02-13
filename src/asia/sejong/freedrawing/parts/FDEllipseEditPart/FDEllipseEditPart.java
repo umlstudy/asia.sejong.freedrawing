@@ -2,7 +2,7 @@ package asia.sejong.freedrawing.parts.FDEllipseEditPart;
 
 import org.eclipse.gef.GraphicalEditPart;
 
-import asia.sejong.freedrawing.figures.FDEllipseFigure;
+import asia.sejong.freedrawing.draw2d.figures.FDEllipseFigure;
 import asia.sejong.freedrawing.model.FDEllipse;
 import asia.sejong.freedrawing.model.listener.FDRectListener;
 import asia.sejong.freedrawing.parts.FDTextShapeEditPart.FDTextShapeEditPart;

@@ -2,7 +2,7 @@ package asia.sejong.freedrawing.parts.FDLabelEditPart;
 
 import org.eclipse.gef.GraphicalEditPart;
 
-import asia.sejong.freedrawing.figures.FDLabelFigure;
+import asia.sejong.freedrawing.draw2d.figures.FDLabelFigure;
 import asia.sejong.freedrawing.model.FDLabel;
 import asia.sejong.freedrawing.model.listener.TextShapeListener;
 import asia.sejong.freedrawing.parts.FDTextShapeEditPart.FDTextShapeEditPart;

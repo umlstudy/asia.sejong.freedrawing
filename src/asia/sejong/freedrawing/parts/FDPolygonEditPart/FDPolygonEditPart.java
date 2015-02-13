@@ -1,11 +1,6 @@
 package asia.sejong.freedrawing.parts.FDPolygonEditPart;
 
-import org.eclipse.draw2d.geometry.Rectangle;
-import org.eclipse.gef.GraphicalEditPart;
-
-import asia.sejong.freedrawing.figures.FDPolygonFigure;
-import asia.sejong.freedrawing.figures.FDShapeFigure;
-import asia.sejong.freedrawing.figures.FDTextShapeFigure;
+import asia.sejong.freedrawing.draw2d.figures.FDPolygonFigure;
 import asia.sejong.freedrawing.model.FDPolygon;
 import asia.sejong.freedrawing.model.listener.FDRectListener;
 import asia.sejong.freedrawing.parts.FDTextShapeEditPart.FDTextShapeEditPart;

@@ -5,7 +5,7 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 
-import asia.sejong.freedrawing.figures.GeometryUtil;
+import asia.sejong.freedrawing.draw2d.figures.GeometryUtil;
 
 public class RotateRequest extends ChangeBoundsRequest {
 

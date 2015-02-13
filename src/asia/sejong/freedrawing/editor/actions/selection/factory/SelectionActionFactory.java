@@ -16,8 +16,10 @@ import asia.sejong.freedrawing.editor.actions.selection.ChangeLineThickAction;
 import asia.sejong.freedrawing.editor.actions.selection.ChangeRotateAction;
 import asia.sejong.freedrawing.editor.actions.selection.ChangeZOrderAction;
 import asia.sejong.freedrawing.editor.actions.selection.ChangeZOrderAction.ZOrderDirection;
+import asia.sejong.freedrawing.editor.actions.selection.GroupingAction;
 import asia.sejong.freedrawing.editor.actions.selection.MoveAction;
 import asia.sejong.freedrawing.editor.actions.selection.MoveAction.Direction;
+import asia.sejong.freedrawing.editor.actions.selection.UngroupingAction;
 
 public abstract class SelectionActionFactory extends LocalActionFactory {
 
@@ -336,6 +338,30 @@ public abstract class SelectionActionFactory extends LocalActionFactory {
 			ChangeLineThickAction action = new ChangeLineThickAction(part);
 			action.setId(getId());
 			action.setText("선두께");
+			
+			return action;
+		}
+	};
+	
+	public static final SelectionActionFactory GROUPING = new SelectionActionFactory("GROUPING") {
+		@Override
+		public SelectionAction create(FreedrawingEditor part) {
+			
+			GroupingAction action = new GroupingAction(part);
+			action.setId(getId());
+			action.setText("그룹화");
+			
+			return action;
+		}
+	};
+	
+	public static final SelectionActionFactory UNGROUPING = new SelectionActionFactory("UNGROUPING") {
+		@Override
+		public SelectionAction create(FreedrawingEditor part) {
+			
+			UngroupingAction action = new UngroupingAction(part);
+			action.setId(getId());
+			action.setText("언그룹화");
 			
 			return action;
 		}

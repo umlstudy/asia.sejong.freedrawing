@@ -6,8 +6,8 @@ import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.GraphicalEditPolicy;
 
-import asia.sejong.freedrawing.figures.FDFigureFactory;
-import asia.sejong.freedrawing.figures.FDPolygonFigure;
+import asia.sejong.freedrawing.draw2d.figures.FDFigureFactory;
+import asia.sejong.freedrawing.draw2d.figures.FDPolygonFigure;
 import asia.sejong.freedrawing.model.FDContainer;
 import asia.sejong.freedrawing.model.FDModelFactory;
 import asia.sejong.freedrawing.model.FDPolygon;

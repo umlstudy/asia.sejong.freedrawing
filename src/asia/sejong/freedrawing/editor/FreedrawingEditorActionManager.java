@@ -220,6 +220,16 @@ public class FreedrawingEditorActionManager implements FreedrawingEditDomainList
 		registry.registerAction(action);
 		selectionActions.add(action.getId());
 		
+		// GROUPING
+		action = SelectionActionFactory.GROUPING.create(editor);
+		registry.registerAction(action);
+		selectionActions.add(action.getId());
+		
+		// UNGROUPING
+		action = SelectionActionFactory.UNGROUPING.create(editor);
+		registry.registerAction(action);
+		selectionActions.add(action.getId());
+		
 		// MOVE_LEFT
 		action = SelectionActionFactory.MOVE_LEFT.create(editor);
 		registry.registerAction(action);
@@ -728,6 +738,8 @@ public class FreedrawingEditorActionManager implements FreedrawingEditDomainList
 				contextMenuManger.add(registry.getAction(SelectionActionFactory.CHANGE_LINE_WIDTH.getId()));
 				contextMenuManger.add(registry.getAction(SelectionActionFactory.ZORDER_TO_FRONT.getId()));
 				contextMenuManger.add(registry.getAction(SelectionActionFactory.ZORDER_TO_BACK.getId()));
+				contextMenuManger.add(registry.getAction(SelectionActionFactory.GROUPING.getId()));
+				contextMenuManger.add(registry.getAction(SelectionActionFactory.UNGROUPING.getId()));
 			} else {
 				contextMenuManger.add(registry.getAction(PaletteActionFactory.CREATE_RECTANGLE.getId()));
 			}

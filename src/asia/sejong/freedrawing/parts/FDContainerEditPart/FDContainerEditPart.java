@@ -1,4 +1,4 @@
-package asia.sejong.freedrawing.parts.FDRootEditPart;
+package asia.sejong.freedrawing.parts.FDContainerEditPart;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +46,7 @@ import asia.sejong.freedrawing.model.FDRoot;
 import asia.sejong.freedrawing.model.FDShape;
 import asia.sejong.freedrawing.model.FDWire;
 import asia.sejong.freedrawing.model.FDWireEndPoint;
+import asia.sejong.freedrawing.model.listener.FDContainerListener;
 import asia.sejong.freedrawing.model.listener.FDRootListener;
 import asia.sejong.freedrawing.parts.FDContainerEditPart.FDContainerXYLayoutEditPolicy;
 import asia.sejong.freedrawing.parts.FDPolygonEditPart.FDPolygonCreatePolicy;
@@ -58,9 +59,9 @@ import asia.sejong.freedrawing.parts.FDWireEditPart.FDWireableEditPart;
  * responsible for creating the layer in which all other figures are placed and for
  * returning the collection of top level model objects to be displayed in that layer.
  */
-public class FDRootEditPart extends AbstractGraphicalEditPart implements FDWireableEditPart, NodeEditPart, FDRootListener {
+public class FDContainerEditPart extends AbstractGraphicalEditPart implements FDWireableEditPart, NodeEditPart, FDContainerListener  {
 	
-	public FDRootEditPart(FDRoot nodeRoot) {
+	public FDContainerEditPart(FDRoot nodeRoot) {
 		setModel(nodeRoot);
 	}
 
@@ -165,79 +166,6 @@ public class FDRootEditPart extends AbstractGraphicalEditPart implements FDWirea
 		return command;
 	}
 	
-	// ==========================================================================
-	// FDRootListener
-	
-	@Override
-	public void wireAdded(FDWire wire) {
-		FDWireEndPoint source = wire.getSource();
-		FDWireEndPoint target = wire.getTarget();
-		
-		FDWireEditPart wireEditPart = (FDWireEditPart)findEditPart(wire);
-		Assert.isTrue(wireEditPart == null);
-		wireEditPart = (FDWireEditPart)createConnection(wire);
-		
-		// source edit part
-		FDWireableEditPart sourceEditPart = null;
-		if ( source instanceof FDShape ) {
-			sourceEditPart = (FDWireableEditPart)findEditPart(source);
-		} else {
-			sourceEditPart = this;
-		}
-		Assert.isTrue(sourceEditPart != null);
-		sourceEditPart.addSourceConnection(wireEditPart);
-		
-		// target edit part
-		FDWireableEditPart targetEditPart = null;
-		if ( target instanceof FDShape ) {
-			targetEditPart = (FDWireableEditPart)findEditPart(target);
-		} else {
-			targetEditPart = this;
-		}
-		Assert.isTrue(targetEditPart != null);
-		targetEditPart.addTargetConnection(wireEditPart);
-		
-		for ( int idx=0; idx<wire.getBendpoints().size(); idx++ ) {
-			wireEditPart.bendpointAdded(idx, wire.getBendpoints().get(idx));
-		}
-	}
-
-	@Override
-	public void wireRemoved(FDWire wire) {
-		FDWireEndPoint source = wire.getSource();
-		FDWireEndPoint target = wire.getTarget();
-		
-		FDWireEditPart wireEditPart = (FDWireEditPart)findEditPart(wire);
-		Assert.isTrue(wireEditPart != null);
-		
-		// source edit part
-		FDWireableEditPart sourceEditPart = null;
-		if ( source instanceof FDShape ) {
-			sourceEditPart = (FDWireableEditPart)findEditPart(source);
-		} else {
-			sourceEditPart = this;
-		}
-		Assert.isTrue(sourceEditPart != null);
-		sourceEditPart.removeSourceConnection_(wireEditPart);
-		
-		// target edit part
-		FDWireableEditPart targetEditPart = null;
-		if ( target instanceof FDShape ) {
-			targetEditPart = (FDWireableEditPart)findEditPart(target);
-		} else {
-			targetEditPart = this;
-		}
-		Assert.isTrue(targetEditPart != null);
-		targetEditPart.removeTargetConnection_(wireEditPart);
-		
-		removeChild(wireEditPart);
-	} 
-	
-	@Override
-	public void routerChanged(Integer newConnectionRouter) {
-		refreshVisuals();
-	}
-	
 	// ===============================================================
 	// FDContainerListener
 
@@ -290,12 +218,12 @@ public class FDRootEditPart extends AbstractGraphicalEditPart implements FDWirea
 	@Override
 	public void addNotify() {
 		super.addNotify();
-		getModel().addNodeRootListener(this);
+		// TODO getModel().addNodeRootListener(this);
 	}
 	
 	@Override
 	public void removeNotify() {
-		getModel().removeNodeRootListener(this);
+		// TODO getModel().removeNodeRootListener(this);
 		super.removeNotify();
 	}
 

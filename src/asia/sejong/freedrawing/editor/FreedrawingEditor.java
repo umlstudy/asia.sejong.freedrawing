@@ -57,9 +57,10 @@ import org.eclipse.ui.dialogs.SaveAsDialog;
 import org.eclipse.ui.part.FileEditorInput;
 
 import asia.sejong.freedrawing.context.FreedrawingEditorContext;
+import asia.sejong.freedrawing.draw2d.ContainerClippingStrategy;
+import asia.sejong.freedrawing.draw2d.figures.FDShapeFigure;
+import asia.sejong.freedrawing.draw2d.figures.GeometryUtil;
 import asia.sejong.freedrawing.editor.actions.palette.factory.PaletteActionFactory;
-import asia.sejong.freedrawing.figures.FDShapeFigure;
-import asia.sejong.freedrawing.figures.GeometryUtil;
 import asia.sejong.freedrawing.parts.common.FDEditPartFactory;
 
 public class FreedrawingEditor extends GraphicalEditor implements MouseWheelHandler {
@@ -160,19 +161,7 @@ public class FreedrawingEditor extends GraphicalEditor implements MouseWheelHand
 		
 		
 		IFigure feedbackLayer = rootEditPart.getLayer(LayerConstants.SCALED_FEEDBACK_LAYER);
-		feedbackLayer.setClippingStrategy(new IClippingStrategy() {
-
-			@Override
-			public Rectangle[] getClip(IFigure childFigure) {
-				if ( childFigure instanceof FDShapeFigure ) {
-					FDShapeFigure sf = (FDShapeFigure)childFigure;
-					if ( sf.getDegreeEx() != 0 ) {
-						return new Rectangle[] { GeometryUtil.createSquare(sf.getBounds()) };
-					}
-				}
-				return new Rectangle[] {childFigure.getBounds(),};
-			}
-		});
+		feedbackLayer.setClippingStrategy(ContainerClippingStrategy.INSTANCE);
 		
 //		feedbackLayer = rootEditPart.getLayer(LayerConstants.PRIMARY_LAYER);
 ////		feedbackLayer = (IFigure)feedbackLayer.getChildren().get(0);

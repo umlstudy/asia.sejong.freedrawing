@@ -2,7 +2,7 @@ package asia.sejong.freedrawing.parts.FDRectEditPart;
 
 import org.eclipse.gef.GraphicalEditPart;
 
-import asia.sejong.freedrawing.figures.FDRectFigure;
+import asia.sejong.freedrawing.draw2d.figures.FDRectFigure;
 import asia.sejong.freedrawing.model.FDRect;
 import asia.sejong.freedrawing.model.listener.FDRectListener;
 import asia.sejong.freedrawing.parts.FDTextShapeEditPart.FDTextShapeEditPart;

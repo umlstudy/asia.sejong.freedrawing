@@ -24,6 +24,8 @@ public class FDModelFactory {
 			model = new FDPolygon().setDefaults(FDPolygon.createDefaultPoints());
 		} else if ( modelClass == FDPolyline.class ) {
 			model = new FDPolyline().setDefaults(FDPolyline.createDefaultPoints());
+		} else if ( modelClass == FDGroupShape.class ) {
+			model = new FDGroupShape();
 		} else {
 			throw new RuntimeException(modelClass.getName());
 		}
