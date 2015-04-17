@@ -2,9 +2,11 @@ package asia.sejong.freedrawing.context;
 
 import java.io.Serializable;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.graphics.RGB;
 
+import asia.sejong.freedrawing.Activator;
 import asia.sejong.freedrawing.code.LineStyle;
 import asia.sejong.freedrawing.editor.FreedrawingEditor;
 import asia.sejong.freedrawing.model.FDRoot;
@@ -51,7 +53,17 @@ public class FreedrawingEditorContext implements Serializable {
 		setDegree(0f);
 		setBackgroundColor(new RGB(0xff,0xff,0xff));
 		setLineColor(new RGB(0,0,0));
+		
+		// DEBUG TODO
+//		IStatus status = new org.eclipse.core.runtime.Status(IStatus.ERROR, Activator.PLUGIN_ID, "start");
+//		Activator.getDefault().getLog().log(status);
+//		status = new org.eclipse.core.runtime.Status(IStatus.ERROR, Activator.PLUGIN_ID, ">> " + LineStyle.SOLID);
+//		Activator.getDefault().getLog().log(status);
+		
 		setLineStyle(LineStyle.SOLID.getStyle());
+//		status = new org.eclipse.core.runtime.Status(IStatus.ERROR, Activator.PLUGIN_ID, ">> END");
+//		Activator.getDefault().getLog().log(status);
+		
 		setLineWidth(2);
 		FontInfo fontInfo = FontInfo.create(JFaceResources.getDefaultFont().getFontData()[0]);
 		fontInfo.setHeight(12);
