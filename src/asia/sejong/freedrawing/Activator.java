@@ -1,5 +1,10 @@
 package asia.sejong.freedrawing;
 
+import org.eclipse.core.runtime.ILog;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.statushandlers.StatusAdapter;
 import org.eclipse.ui.statushandlers.StatusManager;
@@ -20,6 +25,13 @@ public class Activator extends AbstractUIPlugin {
 	 * The constructor
 	 */
 	public Activator() {
+		System.out.println("플러그인생성 " + this.getClass().getName());
+		
+		//DEBUG TODO
+		ILog log = Platform.getPlugin(WorkbenchPlugin.PI_WORKBENCH).getLog();
+		Status status1 = new Status(IStatus.ERROR, WorkbenchPlugin.PI_WORKBENCH, "플러그인생성 ");
+		log.log(status1);
+
 	}
 
 	StatusManager.INotificationListener notiListener = new StatusManager.INotificationListener() {
@@ -35,6 +47,8 @@ public class Activator extends AbstractUIPlugin {
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+		System.out.println("플러그인초기 " + this.getClass().getName());
+
 		plugin = this;
 		
 		StatusManager.getManager().addListener(notiListener);

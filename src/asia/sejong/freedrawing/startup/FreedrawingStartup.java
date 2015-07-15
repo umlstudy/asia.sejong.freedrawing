@@ -2,12 +2,14 @@ package asia.sejong.freedrawing.startup;
 
 import java.io.PrintStream;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.IStartup;
 
 public class FreedrawingStartup implements IStartup {
 
 	@Override
 	public void earlyStartup() {
+		System.out.println("log loc : " + Platform.getLogFileLocation());
 		System.out.println("EAREY STARTUP--------------");
 		System.out.println("1.표준출력 출력 내용 변경");
 		
